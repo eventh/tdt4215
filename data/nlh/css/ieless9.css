@@ -1,0 +1,18 @@
+header,
+nav,
+section,
+article,
+aside,
+footer { display: block; }
+
+#mainframe {
+	border: 1px #2461a4 solid;
+	border-width: 0 1px;
+}
+form#search input { width: 252px; }
+form#search button { font-size: 11px; }
+section#frontpage nav ul { width: 343px; }
+section#page #content { overflow: none; }
+footer a { color: #fff; }
+
+form#search { height: 22px; }

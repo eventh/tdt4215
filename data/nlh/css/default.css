@@ -1,0 +1,1046 @@
+body {
+
+	font-family: Helvetica;
+
+	background-color: #fff;
+
+	margin: 0;
+
+	padding: 0;
+
+	font-size: 10pt;
+
+}
+
+a {
+
+	text-decoration: none;
+
+	color: rgb(36, 97, 164);
+
+}
+
+#bodyframe:after { content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0; }
+
+#mainframe {
+
+	width: 960px;
+
+	margin: 0 auto;
+
+	box-shadow: 0 0 20px #666;
+
+	margin-bottom: 30px;
+
+	position: relative;
+
+}
+
+header {
+
+	background-color: rgb(36, 97, 164);
+
+	height: 100px;
+
+	position: relative;
+
+}
+
+table{
+
+	margin-bottom : 30px !important;
+
+}
+
+header img { display: none; }
+
+header h1 {
+
+	background: transparent url('../gfx/logo80.png') no-repeat 10px 10px;
+
+	margin: 0 ;
+
+	padding: 20px 0 10px 96px;
+
+	width: 10em;
+
+	color: #fff;
+
+	font-size: 30px;
+
+	line-height: 30px;
+
+	font-family: Times;
+
+	font-weight: normal;
+
+}
+
+
+
+header nav {
+
+	position: absolute;
+
+	top: 15px;
+
+	right: 0;
+
+}
+
+header nav ul {
+
+	list-style: none;
+
+	margin: 0;
+
+}
+
+header nav ul li {
+
+	display: inline;
+
+	position: relative;
+
+}
+
+header nav>ul>li>a {
+
+	display: inline-block;
+
+	padding-top: 55px;
+
+	margin-right: 10px;
+
+	background: transparent url('../gfx/icon40_box.png') no-repeat center 10px;
+
+	text-align: center;
+
+	color: #fff;
+
+}
+
+header nav li#navTerapi>a { background-image: url('../gfx/icon40_diagnostics.png'); }
+
+header nav li#navLegemiddel>a { background-image: url('../gfx/icon40_medicine.png'); }
+
+header nav li#navGenerel>a { background-image: url('../gfx/icon40_medical.png'); }
+
+header nav li#navStikkord>a { background-image: url('../gfx/icon40_list.png'); }
+
+header nav li#navAkutt>a { background-image: url('../gfx/icon40_alert.png'); }
+
+header nav li ul {
+
+	display: none;
+
+	position: absolute;
+
+	right: 0;
+
+	padding: 15px 0 0 0;
+
+	width: 256px;
+
+	border: 1px rgb(36, 97, 164) solid;
+
+	border-top-width: 0;
+
+}
+
+header nav li:hover ul {
+
+	display: block;
+
+	z-index: 666;
+
+}
+
+header nav li ul li a {
+
+	display: block;
+
+	border-top: 1px #fff solid;
+
+	color: rgb(36, 97, 164);
+
+	background-color: rgb(199, 216, 234);
+
+	padding: 3px 5px 1px 5px;
+
+	font-size: 9pt;
+
+	text-shadow: 1px 1px #fff;
+
+}
+
+header nav li ul li a:hover {
+
+	background-color: rgb(36, 97, 164);
+
+	color: #fff;
+
+	text-shadow: 1px 1px #000;
+
+}
+
+form#search {
+
+	position: absolute;
+
+	top:24px;
+
+	left:350px;
+
+	padding: 3px 2px 2px 4px;
+
+	background-color: rgb(199, 216, 234);
+
+	border: 4px #C7D8EA solid;
+
+}
+
+#frontpage form#search {
+
+	width: 33%;
+
+	margin: 66px auto;
+
+}
+
+/*
+
+form#search:after { content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0; }
+
+*/
+
+form#search input {
+
+	width: 190px;
+
+	border: 1px rgb(36, 97, 164) solid;
+
+	-webkit-appearance: textfield;
+
+	font-size: 11pt;
+
+}
+
+form#search button {
+
+	padding: 0 70px;
+
+	background-color: rgb(36, 97, 164);
+
+	border: 1px rgb(36, 97, 164) solid;
+
+	font-size: 11pt;
+
+	font-weight:bold;
+
+	color: #fff;
+
+	text-transform: uppercase;
+
+}
+
+
+
+section#frontpage { position: relative; }
+
+section#frontpage .notis {
+
+	position: absolute;
+
+	top: -50px;
+
+	right: 15px;
+
+	display: block;
+
+	width: 222px;
+
+	padding: 10px 10px 10px 40px;
+
+	background: transparent url('../gfx/icon30_point.png') no-repeat left 10px;
+
+	border: 1px rgb(36, 97, 164) solid;
+
+	border-radius: 10px;
+
+	background-color: #F4F4F4;
+
+	box-shadow: 5px 5px 10px #999;
+
+}
+
+section#frontpage .notis a { color: #666; }
+
+section#frontpage .notis p {
+
+	max-height: 100px;
+
+	overflow: auto;
+
+}
+
+section#frontpage .notis span {
+
+	position: absolute;
+
+	top: 2px;
+
+	right: 2px;
+
+	width: 16px;
+
+	height: 16px;
+
+	background: transparent url('../gfx/icon16_close_i.png') no-repeat left top;
+
+	text-indent: -6666px;
+
+	cursor: pointer;
+
+}
+
+section#frontpage .notis span:hover { background-image: url('../gfx/icon16_close_a.png'); }
+
+section#frontpage .notis.hidden { display: none; }
+
+section#frontpage nav {
+
+	width: 766px;
+
+	margin: 66px auto 0 auto;
+
+}
+
+section#frontpage nav:after { content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0; }
+
+section#frontpage nav ul {
+
+	width: 50%;
+
+	padding: 0;
+
+	float: left;
+
+	list-style: none;
+
+}
+
+
+
+section#frontpage nav a {
+
+	display: block;
+
+	margin-bottom: 20px;
+
+	padding: 0 20px 0 40px;
+
+	background: transparent url('../gfx/icon30_alert.png') no-repeat left 0;
+
+	color: #666;
+
+	min-height: 5.5em;
+
+}
+
+section#frontpage nav li a.terapi       { background-image: url('../gfx/icon30_diagnostics.png'); }
+
+section#frontpage nav li a.legemiddel   { background-image: url('../gfx/icon30_medicine.png'); }
+
+section#frontpage nav li a.generelle		{ background-image: url('../gfx/icon30_medical.png'); }
+
+section#frontpage nav li a.refusjon     { background-image: url('../gfx/icon30_coins.png'); }
+
+section#frontpage nav li a.hast      		{ background-image: url('../gfx/icon30_alert.png'); }
+
+section#frontpage nav li a.notiser  		{ background-image: url('../gfx/icon30_point.png'); }
+
+section#frontpage nav li a.stikkord     { background-image: url('../gfx/icon30_list.png'); }
+
+section#frontpage nav li a.omoss  			{ background-image: url('../gfx/logo30_a.png'); }
+
+section#frontpage h2 {
+
+	margin: 0;
+
+	font-size: 12pt;
+
+	font-weight: normal;
+
+	color: rgb(36, 97, 164);
+
+}
+
+
+
+section#page {
+
+	width: 940px;
+
+	margin: 0 10px;
+
+}
+
+section#page:after { content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0; }
+
+#menu {
+
+	float: left;
+
+	width: 200px;
+
+	padding: 10px;
+
+	overflow-y: auto;
+
+	overflow-x: hidden;
+
+}
+
+#menu ul {
+
+	list-style: none;
+
+	padding: 0;
+
+}
+
+#menu ul li a {
+
+	display: block;
+
+	font-size: 8pt;
+
+	color: #666;
+
+	text-indent: -4ex;
+
+	margin: 0 15px 10px 4ex;
+
+}
+
+
+
+#menu ul ul {
+
+	list-style: none;
+
+	padding-left: 10px;
+
+}
+
+
+
+
+
+
+
+nav#menu ul#path { margin-bottom: 30px; }
+
+nav#menu ul#path li { position: relative; }
+
+nav#menu ul#path li a {
+
+	font-weight: bold;
+
+	color: #000;
+
+}
+
+nav#menu ul#path li span {
+
+	position: absolute;
+
+	top: 0;
+
+	right: -8px;
+
+	width: 16px;
+
+	height: 16px;
+
+	background: #fff url('../gfx/icon16_print_i.png') no-repeat 0 0;
+
+	text-indent: -6666px;
+
+	cursor: pointer;
+
+}
+
+nav#menu ul#path li span:hover { background-image: url('../gfx/icon16_print_a.png'); }
+
+nav#menu ul#path li span.wait { background-image: url('../gfx/loader16.gif'); }
+
+nav#menu ul li.selected a {
+
+	font-weight: bold;
+
+	color: #000;
+
+}
+
+nav #fasets li {
+
+	margin-bottom: 10px;
+
+	padding: 3px 20px 2px 25px;
+
+	background: transparent url('../gfx/icon30_alert.png') no-repeat left 0;
+
+	color: #666;
+
+	cursor: pointer;
+
+}
+
+nav #fasets li.alt					  			{ background-image: url('../gfx/logo20_i.png'); }
+
+#page.search article.terapi a,
+
+nav #fasets li.terapi								{ background-image: url('../gfx/icon20_diagnostics_i.png'); }
+
+#page.search article.legemiddel a,
+
+nav #fasets li.legemiddel						{ background-image: url('../gfx/icon20_medicine_i.png'); }
+
+#page.search article.generelle a,
+
+nav #fasets li.generelle						{ background-image: url('../gfx/icon20_medical_i.png'); }
+
+#page.search article.hast a,
+
+nav #fasets li.hast									{ background-image: url('../gfx/icon20_alert_i.png'); }
+
+#page.search article.stikkord a,
+
+nav #fasets li.stikkord							{ background-image: url('../gfx/icon20_list_i.png'); }
+
+#page.search article.andre a,
+
+nav #fasets li.andre    						{ background-image: url('../gfx/icon20_slice_i.png'); }
+
+nav #fasets li.alt.active,
+
+nav #fasets li.alt:hover						{ background-image: url('../gfx/logo20_a.png'); }
+
+#page.search article.terapi a:hover,
+
+nav #fasets li.terapi.active,
+
+nav #fasets li.terapi:hover					{ background-image: url('../gfx/icon20_diagnostics_a.png'); }
+
+#page.search article.legemiddel a:hover,
+
+nav #fasets li.legemiddel.active,
+
+nav #fasets li.legemiddel:hover			{ background-image: url('../gfx/icon20_medicine_a.png'); }
+
+#page.search article.generelle a:hover,
+
+nav #fasets li.generelle.active,
+
+nav #fasets li.generelle:hover			{ background-image: url('../gfx/icon20_medical_a.png'); }
+
+#page.search article.hast a:hover,
+
+nav #fasets li.hast.active,
+
+nav #fasets li.hast:hover						{ background-image: url('../gfx/icon20_alert_a.png'); }
+
+#page.search article.stikkord a:hover,
+
+nav #fasets li.stikkord.active,
+
+nav #fasets li.stikkord:hover				{ background-image: url('../gfx/icon20_list_a.png'); }
+
+#page.search article.andre a:hover,
+
+nav #fasets li.andre.active,
+
+nav #fasets li.andre:hover					{ background-image: url('../gfx/icon20_slice_a.png'); }
+
+nav #fasets li.active {
+
+	font-weight: bold;
+
+	color: #000;
+
+}
+
+
+
+section#page #content {
+
+	position: relative;
+
+	float: left;
+
+	width: 500px;
+
+	height: 333px;
+
+	overflow: auto;
+
+	margin: 0 10px;
+
+	padding: 10px;
+
+	background-color: #F4F4F4;
+
+}
+
+section#page aside {
+
+	float: left;
+
+	width: 200px;
+
+	padding: 10px 0;
+
+	overflow-y: auto;
+
+	overflow-x: hidden;
+
+}
+
+#page form#search {
+
+	border-width: 0 0 1px 1px;
+
+	margin: -10px 0 0 0;
+
+}
+
+#page form#search input { width: 100px; }
+
+section#page aside h3 {
+
+	font-weight: normal;
+
+	font-size: 11pt;
+
+	margin: 10px 0 5px 0;
+
+}
+
+section#page aside ul {
+
+	list-style: none;
+
+	padding: 0;
+
+	margin: 0;
+
+}
+
+section#page aside ul li { margin-bottom: 5px; }
+
+section#page aside ul li a {
+
+	font-size: 8pt;
+
+	color: #666;
+
+}
+
+
+
+footer {
+
+	background-color: rgb(36, 97, 164);
+
+	text-align: center;
+
+	color: #fff;
+
+	padding: 5px;
+
+}
+
+footer * {
+
+	font-weight: normal;
+
+	font-size: 8pt;
+
+	font-style: normal;
+
+	line-height: 150%;
+
+	margin: 0;
+
+	color: #fff;
+
+}
+
+footer .revidertDato {
+	position: absolute;
+	left:20px;
+}
+
+/* search */
+
+
+
+#page.search article a {
+
+	display: block;
+
+	min-height: 20px;
+
+	background: transparent url('../gfx/icon20_slice_i.png') no-repeat 5px 10px;
+
+	color: #666;
+
+	padding: 10px 10px 10px 30px;
+
+}
+
+#page.search article a .searchterm { font-style: italic; }
+
+#page.search article { border-bottom: 1px #fff solid; }
+
+#page.search article:hover { background-color: rgb(199, 216, 234); }
+
+#page.search article a:hover { color: #000; }
+
+#page.search article h1 {
+
+	margin: 0;
+
+	font-size: 11pt;
+
+}
+
+#page.search article p { margin: 0; }
+
+
+
+/* contentstyling */
+
+
+
+#content ul,
+
+#content ol {
+
+	padding-left: 20px;
+
+	margin-top: 0;
+
+}
+
+
+
+table td { vertical-align: top; }
+
+
+
+#content{
+
+	float: left;
+
+	width: 500px;
+
+}
+
+#content:after { content:".";display:block;clear:both;visibility:hidden;line-height:0;height:0; }
+
+#content div div,
+
+p { margin: 0 0 1em 0; }
+
+
+
+h6 {
+
+	font-size: 10pt;
+
+	margin: 0 0 1ex 0;
+
+}
+
+.hidden { display: none; }
+
+.def { margin: 1em 0; }
+
+
+
+a.ref {
+
+	display: inline-block;
+
+	width: 15px;
+
+	height: 13px;
+
+	background: #fff url('../gfx/icon12_open_i.png') no-repeat left 1px;
+
+	text-indent: -6666px;
+
+}
+
+a.ref:hover { background-image: url('../gfx/icon12_open_a.png'); }
+
+.showDropdown {
+
+	display: inline-block;
+
+	height: 13px;
+
+	padding-right: 18px;
+
+	background: transparent url('../gfx/icon12_panel_a.png') no-repeat right 1px;
+
+	text-indent: 0;
+
+	color: rgb(36, 97, 164);
+
+	cursor: pointer;
+
+}
+
+.showDropdown.active { background-image: url('../gfx/icon12_panel_i.png'); }
+
+.dropdown.visible,
+
+.dropdownAtc.visible {
+
+	display: block;
+
+	border: 1px rgb(36, 97, 164) solid;
+
+	border-radius: 10px;
+
+	background-color: #fefefe;
+
+	padding: 5px;
+
+	color: #666;
+
+}
+
+.ATone h3.gruppenavn { margin: .5ex 0; }
+
+.ATone h4.berettigetbruk {
+
+	font-style: italic;
+
+	margin: 10px 0 0 0;
+
+}
+
+table.maintable,
+
+table.maintable.a {
+
+	border: 1px rgb(36, 97, 164)Light solid;
+
+	margin: 10px 0;
+
+	border-collapse: collapse;
+
+	width: 100%;
+
+}
+
+table.maintable caption,
+
+table.a caption {
+
+	text-align: left;
+
+	font-weight: bold;
+
+}
+
+table.maintable th,
+
+table.a th {
+
+	text-align: left;
+
+	background-color: rgb(36, 97, 164);
+
+	color: #fff;
+
+	padding: 1px 3px;
+
+	font-size: 8pt;
+
+}
+
+table.maintable tfoot th {
+
+	font-weight: normal;
+
+	background-color: transparent;
+
+	color: #000;
+
+}
+
+table.maintable tfoot ol {
+
+	padding-left: 20px;
+
+	margin: 5px 0;
+
+}
+
+table.maintable tfoot ol div { margin: 0; }
+
+table.maintable th p,
+
+table.a th p { margin: 0; }
+
+table.maintable td {
+
+	border: 1px #C7D8EA solid;
+
+	padding: 1px 3px;
+
+	font-size: 8pt
+
+}
+
+ table td p:last-child,
+
+table.a td p:last-child { margin-bottom: 0; }
+
+table.a .dropdown.visible {
+
+	border-width: 0;
+
+	padding: 0;
+
+}
+
+table.aRows th,
+
+table.aRows td { font-size: 10pt; }
+
+table.aRows th.sorter {
+
+	padding-left: 18px;
+
+	background: rgb(36, 97, 164) url('../gfx/icon16_sort_i.png') no-repeat 0 center;
+
+	cursor: pointer;
+
+}
+
+table.aRows th.sorter:hover,
+
+table.aRows th.sorter.active { background-image: url('../gfx/icon16_sort_a.png') }
+
+table.aRows tr:hover td {
+
+	background-color: rgb(199, 216, 234);
+
+	cursor: pointer;
+
+}
+
+
+
+.sub-box h6,
+
+.sub-box p { display: inline; }
+
+.sub-box p { margin: 0; }
+
+
+
+dt { width: 30px; }
+
+dd { margin-top: -1.15em; }
+
+
+
+#content img { max-width: 100%; }
+
+#content .oppdatert {
+
+	position: absolute;
+
+	top: 5px;
+
+	right: 10px;
+
+	font-size: 8pt;
+
+	color: #999;
+
+}
+
+#content .revidert h1 {
+
+	background: transparent url('../gfx/icon16_star_a.png') no-repeat 0 -1px;
+
+	padding-left: 17px;
+
+}
+
+#content .revidert p { color: grey  }
+
+#mainmenulist .revidert a { color: rgb(183, 33, 33);	}
+
+#content .seksjon3 .revidert { display: none }
+
+
+#content.stikkord ul {
+
+	list-style: none;
+
+	padding: 0;
+
+}
+
+#content.stikkord ul ul { padding-left: 1em; }
+
+#content.stikkord ul li { margin: 1ex 0; }
+
+
+
+#content h5{
+
+	margin-bottom: 0;
+
+}
+
+
+
+.searchterm {
+
+	background-color: #ffff66;
+
+	padding : 0 2px;
+
+	margin: 0 -2px;
+
+}
+
+
+
+#content .boks{
+
+	margin: 0 0 10px 20px;
+
+}
+
+#content .boks h5{
+
+	font-size: 16px;
+
+}
+
+
+
+/*	outline: 1px #f00 dotted; */
+

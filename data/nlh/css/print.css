@@ -1,0 +1,33 @@
+@import url(default.css) print;
+
+header nav,
+footer,
+#menu,
+#aside {
+	display: none;
+}
+#mainframe { box-shadow: 0 0 0 0; }
+header img {
+	display: block;
+	height: 80px;
+	width: 80px;
+}
+header h1 {
+	margin: -33px 0 0 100px;
+	color: #000;
+}
+#content {
+	width: 100% !important;
+	background-color: transparent !important;
+	overflow: visible !important;
+	height: auto !important;
+}
+#content .oppdatert {
+	display: block;
+	text-align: right;
+}
+.dropdown {
+	display: block !important;
+	border-width: 0 !important;
+	padding: 0 !important;
+}
