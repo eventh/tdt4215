@@ -19,7 +19,10 @@ def parse_xml_file(path):
 
 
 def traverse_tree(root):
-    print root
+    nodes = root.findall('{http://www.w3.org/2002/07/owl#}Class')
+    print "Nodes:", len(nodes)
+    for node in nodes:
+        print node.attrib
 
 
 def main(script, path=None):
