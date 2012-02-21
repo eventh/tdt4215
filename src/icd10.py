@@ -1,7 +1,9 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-A module for loading ICD10 objects from either XML or JSON file into index.
+A module for loading ICD10 objects.
+
+ICD10 objects can be loaded from either XML or JSON file into a Whoosh index.
 """
 import sys
 import os
@@ -18,6 +20,14 @@ from schemas import ICD10_SCHEMA, INDEX_DIR
 
 
 class ICD10(object):
+    """Classification of Diseases and Health Problems.
+
+    The International Statistical Classification of Diseases and Related
+    Health Problems, 10th Revision (known as "ICD-10") is a medical
+    classification list for the coding of diseases, signs and symptoms,
+    abnormal findings, complaints, social circumstances, and external
+    causes of injury or diseases.
+    """
 
     lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
     fields = ('short', 'code', 'label', 'formatted', 'type', 'icpc2_label')
@@ -30,17 +40,17 @@ class ICD10(object):
             setattr(self, i, None)
 
     def __str__(self):
+        """Present the object as a string."""
         output = "%s: %s" % (self.short, self.label)
         return output.encode('ascii', 'ignore')
 
     def to_json(self):
-        return {i: getattr(self, i) for i in self.lists + self.fields}
-
-    def get_whoosh_args(self):
+        """Create a dictionary representing the object."""
         return {i: getattr(self, i) for i in self.lists + self.fields}
 
     @classmethod
     def from_json(cls, values):
+        """Create an object from json value dictionary."""
         obj = cls()
         for i in cls.lists + cls.fields:
             setattr(obj, i, values[i])
@@ -105,9 +115,11 @@ def parse_xml_file(path):
 def main(script, path='', command=''):
     """Read ICD10 objects from file and load into index.
 
+    'path' to the ICD10 input file, either JSON or XML format.
+    'command' is either 'store' into database or 'clean' database.
     Usage: python icd10.py <input file> <store|clean>
-    Path is the path to the input file, either JSON or XML.
-    Command is either 'store' into database or 'clean' database.
+    To store ICD10 in whoosh index from icd10no.json file perform:
+        'python icd10.py icd10no.json store'
     """
     if not path:
         print "Need to supply icd10 file or json file to parse"
@@ -142,7 +154,7 @@ def main(script, path='', command=''):
         ix = open_dir(INDEX_DIR, indexname='icd10')
         writer = ix.writer()
         for obj in objects:
-            writer.add_document(**obj.get_whoosh_args())
+            writer.add_document(**obj.to_json())
         writer.commit()
         print "Stored %s ICD10 objects in index" % len(objects)
 
