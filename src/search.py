@@ -24,7 +24,7 @@ def search_icd10(query, result_func=None):
         # Handle result
         if result_func is None:
             result_func = print_result
-        result_func(result)
+        return result_func(result)
 
 
 def print_result(result):
