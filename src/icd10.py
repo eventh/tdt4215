@@ -73,9 +73,11 @@ def traverse_tree(root):
             elif tag == 'icpc2_label':
                 obj.icpc2_label = child.text
             elif tag == 'underterm':
-                obj.terms.append(child.text.strip())
+                if child.text:
+                    obj.terms.append(child.text.strip())
             elif tag == 'synonym':
-                obj.synonym.append(child.text.strip())
+                if child.text:
+                    obj.synonym.append(child.text.strip())
             elif tag == 'inclusion':
                 obj.inclusion.append(child.text)
             elif tag == 'exclusion':
@@ -92,12 +94,14 @@ def main(script, path=None):
         print "Need to supply icd10 file or json file to parse"
         sys.exit(2)
 
+    # Parse XML file
     root = parse_xml_file(path)
     objects = traverse_tree(root)
 
+    # Generate a json file
     folder, filename = os.path.split(path)
     filename, ext = os.path.splitext(filename)
-    with open("%s/%s.json" % (folder, filename), 'w') as f:
+    with open("%s.json" % filename, 'w') as f:
         json.dump(objects, f)
 
     sys.exit(None)
