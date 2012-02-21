@@ -11,10 +11,10 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-try:
-    import ujson as json
-except ImportError:
-    import json
+#try:
+#    import ujson as json
+#except ImportError:
+import json
 
 
 class ICD10(object):
@@ -101,7 +101,7 @@ def main(script, path=None):
     folder, filename = os.path.split(path)
     filename, ext = os.path.splitext(filename)
     with open("%s.json" % filename, 'w') as f:
-        json.dump([i.to_json() for i in objects], f)
+        json.dump([i.to_json() for i in objects], f, indent=4)
 
     sys.exit(None)
 
