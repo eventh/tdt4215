@@ -11,7 +11,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-from whoosh import index
+from whoosh.index import create_in, open_dir
 
 from schemas import ICD10_SCHEMA, INDEX_DIR
 
@@ -134,12 +134,12 @@ def main(script, path='', command=''):
         os.mkdir(INDEX_DIR)
 
     if not index.exists_in(INDEX_DIR, indexname="icd10"):
-        ix = index.create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
+        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
         print "Created ICD10 index"
 
     # Store ICD10 objects in index
     if command == 'store':
-        ix = index.open_dir(INDEX_DIR, indexname="icd10")
+        ix = open_dir(INDEX_DIR, indexname="icd10")
         writer = ix.writer()
         for obj in objects:
             writer.add_document(**obj.get_whoosh_args())
@@ -148,7 +148,7 @@ def main(script, path='', command=''):
 
     # Create or empty ICD10 index
     elif command == 'clean':
-        ix = index.create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
+        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
         print "Emptied ICD10 index"
 
     # Unknown command
