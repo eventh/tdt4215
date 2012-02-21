@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-A module for converting icd10no.xml file to json format.
+A module for loading ICD10 objects from either XML or JSON file into index.
 """
 import sys
 import os
@@ -40,7 +40,17 @@ class ICD10(object):
         return obj
 
 
+def load_into_icd10_index(objects):
+    if not os.path.exists("indexdir"):
+        os.mkdir("indexdir")
+
+
+
 def parse_xml_file(path):
+    """Parse an XML file which contains ICD10 codes.
+
+    Returns a list of ICD10 objects which are populated from the file.
+    """
     ignore_tags = ('subClassOf', 'umls_tui', 'umls_conceptId', 'umls_atomId')
 
     # Parse XML file
@@ -92,6 +102,7 @@ def parse_xml_file(path):
 
 
 def main(script, path=None, load=False):
+    """Read ICD10 objects from file and load into index."""
     if path is None:
         print "Need to supply icd10 file or json file to parse"
         sys.exit(2)
@@ -118,7 +129,7 @@ def main(script, path=None, load=False):
 
     # Load ICD10 objects into whoosh database
     if load:
-        pass
+        load_into_icd10_index(objects)
 
     sys.exit(None)
 
