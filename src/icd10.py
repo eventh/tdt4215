@@ -1,5 +1,8 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+A module for converting icd10no.xml file to json format.
+"""
 import sys
 import os
 
@@ -16,56 +19,51 @@ except ImportError:
 
 class ICD10(object):
 
-    def __init__(self):
-        self.inclusion = []
-        self.exclusion = []
-        self.terms = []
-        self.synonym = []
+    lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
+    fields = ('short', 'code', 'label', 'formatted', 'type', 'icpc2_label')
 
-        self.short = None
-        self.code = None
-        self.label = None
-        self.formatted = None
-        self.type = None
-        self.icpc2_label = None
+    def __init__(self):
+        """Create a new ICD10 object."""
+        for i in self.lists:
+            setattr(self, i, [])
+        for i in self.fields:
+            setattr(self, i, None)
 
     def __str__(self):
         output = "%s: %s" % (self.short, self.label)
         return output.encode('ascii', 'ignore')
 
+    def to_json(self):
+        values = {}
+        for i in self.lists:
+            values[i] = getattr(self, i)
+        for i in self.fields:
+            values[i] = getattr(self, i)
+        return values
+
 
 def parse_xml_file(path):
+    ignore_tags = ('subClassOf', 'umls_tui', 'umls_conceptId', 'umls_atomId')
+
+    # Parse XML file
     tree = ET.parse(path)
-    return tree.getroot()
+    nodes = tree.getroot().findall('{http://www.w3.org/2002/07/owl#}Class')
 
-
-def simplify_tag(tag):
-    return tag.split('}')[1]
-
-
-def traverse_tree(root):
+    # Traverse nodes to create and populate ICD10 objects
     objects = []
-    nodes = root.findall('{http://www.w3.org/2002/07/owl#}Class')
-
     for node in nodes:
         obj = ICD10()
         for child in node:
-            tag = simplify_tag(child.tag)
+            tag = child.tag.split('}')[1]
 
-            if tag == 'label':
+            if tag in ignore_tags:
+                pass
+            elif tag == 'label':
                 obj.label = child.text
             elif tag == 'code_compacted':
                 obj.short = child.text
             elif tag == 'code_formatted':
                 obj.formatted = child.text
-            elif tag == 'subClassOf':
-                pass
-            elif tag == 'umls_atomId':
-                pass
-            elif tag == 'umls_conceptId':
-                pass
-            elif tag == 'umls_tui':
-                pass
             elif tag == 'umls_semanticType':
                 obj.type = child.text
             elif tag == 'icpc2_code':
@@ -77,13 +75,15 @@ def traverse_tree(root):
                     obj.terms.append(child.text.strip())
             elif tag == 'synonym':
                 if child.text:
-                    obj.synonym.append(child.text.strip())
+                    obj.synonyms.append(child.text.strip())
             elif tag == 'inclusion':
-                obj.inclusion.append(child.text)
+                if child.text:
+                    obj.inclusions.append(child.text.strip())
             elif tag == 'exclusion':
-                obj.exclusion.append(child.text)
+                if child.text:
+                    obj.exclusions.append(child.text.strip())
             else:
-                print simplify_tag(child.tag), ":", child.text, child.tail
+                print "Unknown tag", tag, ":", child.text, child.tail
 
         objects.append(obj)
     return objects
@@ -94,15 +94,14 @@ def main(script, path=None):
         print "Need to supply icd10 file or json file to parse"
         sys.exit(2)
 
-    # Parse XML file
-    root = parse_xml_file(path)
-    objects = traverse_tree(root)
+    # Build ICD10 objects from XML file
+    objects = parse_xml_file(path)
 
     # Generate a json file
     folder, filename = os.path.split(path)
     filename, ext = os.path.splitext(filename)
     with open("%s.json" % filename, 'w') as f:
-        json.dump(objects, f)
+        json.dump([i.to_json() for i in objects], f)
 
     sys.exit(None)
 
