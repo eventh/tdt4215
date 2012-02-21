@@ -1,6 +1,4 @@
 TDT4215 Web-intelligence Spring 2012
 
+TOO MANY SECRETS == SETEC ASTRONOMY
 
-
-IT WORKS!
-dfd fdsjl;fk jdsflkdsa  Äã·Åµ½
