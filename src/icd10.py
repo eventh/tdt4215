@@ -5,16 +5,12 @@ A module for converting icd10no.xml file to json format.
 """
 import sys
 import os
+import json
 
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
-
-#try:
-#    import ujson as json
-#except ImportError:
-import json
 
 
 class ICD10(object):
@@ -34,12 +30,14 @@ class ICD10(object):
         return output.encode('ascii', 'ignore')
 
     def to_json(self):
-        values = {}
-        for i in self.lists:
-            values[i] = getattr(self, i)
-        for i in self.fields:
-            values[i] = getattr(self, i)
-        return values
+        return {i: getattr(self, i) for i in self.lists + self.fields}
+
+    @classmethod
+    def from_json(cls, values):
+        obj = cls()
+        for i in cls.lists + cls.fields:
+            setattr(obj, i, values[i])
+        return obj
 
 
 def parse_xml_file(path):
@@ -89,19 +87,32 @@ def parse_xml_file(path):
     return objects
 
 
-def main(script, path=None):
+def main(script, path=None, load=False):
     if path is None:
         print "Need to supply icd10 file or json file to parse"
         sys.exit(2)
 
-    # Build ICD10 objects from XML file
-    objects = parse_xml_file(path)
-
-    # Generate a json file
+    # Split path in folder, filename, file extension
     folder, filename = os.path.split(path)
     filename, ext = os.path.splitext(filename)
-    with open("%s.json" % filename, 'w') as f:
-        json.dump([i.to_json() for i in objects], f, indent=4)
+
+    # Populate ICD10 objects from either JSON or XML
+    if ext == '.json':
+        with open(path, 'r') as f:
+            json_objects = json.load(f)
+            objects = [ICD10.from_json(i) for i in json_objects]
+
+    else:
+        # Build ICD10 objects from XML file
+        objects = parse_xml_file(path)
+
+        # Generate a json file
+        with open("%s.json" % filename, 'w') as f:
+            json.dump([i.to_json() for i in objects], f, indent=4)
+
+    # Load ICD10 objects into whoosh database
+    if load:
+        pass
 
     sys.exit(None)
 
