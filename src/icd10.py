@@ -6,11 +6,15 @@ A module for loading ICD10 objects from either XML or JSON file into index.
 import sys
 import os
 import json
-
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
+
+from whoosh import index
+
+from schemas import ICD10_SCHEMA, INDEX_DIR
+
 
 
 class ICD10(object):
@@ -32,18 +36,15 @@ class ICD10(object):
     def to_json(self):
         return {i: getattr(self, i) for i in self.lists + self.fields}
 
+    def get_whoosh_args(self):
+        return {i: getattr(self, i) for i in self.lists + self.fields}
+
     @classmethod
     def from_json(cls, values):
         obj = cls()
         for i in cls.lists + cls.fields:
             setattr(obj, i, values[i])
         return obj
-
-
-def load_into_icd10_index(objects):
-    if not os.path.exists("indexdir"):
-        os.mkdir("indexdir")
-
 
 
 def parse_xml_file(path):
@@ -101,9 +102,14 @@ def parse_xml_file(path):
     return objects
 
 
-def main(script, path=None, load=False):
-    """Read ICD10 objects from file and load into index."""
-    if path is None:
+def main(script, path='', command=''):
+    """Read ICD10 objects from file and load into index.
+
+    Usage: python icd10.py <input file> <store|clean>
+    Path is the path to the input file, either JSON or XML.
+    Command is either 'store' into database or 'clean' database.
+    """
+    if not path:
         print "Need to supply icd10 file or json file to parse"
         sys.exit(2)
 
@@ -119,17 +125,36 @@ def main(script, path=None, load=False):
         print "Loaded %s objects from %s" % (len(objects), path)
 
     else:
-        # Build ICD10 objects from XML file
         objects = parse_xml_file(path)
-
-        # Generate a json file
         with open("%s.json" % filename, 'w') as f:
             json.dump([i.to_json() for i in objects], f, indent=4)
         print "Dumped %s objects to %s.json" % (len(objects), filename)
 
-    # Load ICD10 objects into whoosh database
-    if load:
-        load_into_icd10_index(objects)
+    if not os.path.exists(INDEX_DIR):
+        os.mkdir(INDEX_DIR)
+
+    if not index.exists_in(INDEX_DIR, indexname="icd10"):
+        ix = index.create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
+        print "Created ICD10 index"
+
+    # Store ICD10 objects in index
+    if command == 'store':
+        ix = index.open_dir(INDEX_DIR, indexname="icd10")
+        writer = ix.writer()
+        for obj in objects:
+            writer.add_document(**obj.get_whoosh_args())
+        writer.commit()
+        print "Stored %s ICD10 objects in index" % len(objects)
+
+    # Create or empty ICD10 index
+    elif command == 'clean':
+        ix = index.create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
+        print "Emptied ICD10 index"
+
+    # Unknown command
+    elif command:
+        print "Unknown command '%s'" % command
+        sys.exit(2)
 
     sys.exit(None)
 
