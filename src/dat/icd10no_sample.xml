@@ -1,0 +1,190 @@
+﻿<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY icd10no "http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#"
+     xml:base="http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:icd10no="http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#">
+    <owl:Ontology rdf:about="http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#"/>
+    
+
+
+    <!--   
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:AnnotationProperty rdf:about="&icd10no;umls_semanticType"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;icpc2_label"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;synonym"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;code_compacted"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;code_formatted"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;umls_tui"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;exclusion"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;umls_conceptId"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;umls_atomId"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;inclusion"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;underterm"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;umls_semanticType"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;umls_semanticType"/>
+    <owl:AnnotationProperty rdf:about="&icd10no;icpc2_code"/>
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl# -->
+
+    <owl:Class rdf:about="http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#">
+        <rdfs:subClassOf rdf:resource="&icd10no;M00-M99"/>
+    </owl:Class>
+
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A00 -->
+
+    <owl:Class rdf:about="&icd10no;A00">
+        <rdfs:label rdf:datatype="&xsd;string">Kolera (cholera)</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A00-A09"/>
+        <code_compacted rdf:datatype="&xsd;string">A00</code_compacted>
+        <code_formatted rdf:datatype="&xsd;string">A00</code_formatted>
+        <umls_atomId rdf:datatype="&xsd;string">A0038562</umls_atomId>
+        <umls_conceptId rdf:datatype="&xsd;string">C0008354</umls_conceptId>
+        <umls_semanticType rdf:datatype="&xsd;string">Disease or Syndrome</umls_semanticType>
+        <umls_tui rdf:datatype="&xsd;string">T047</umls_tui>
+    </owl:Class>
+
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A00-A09 -->
+
+    <owl:Class rdf:about="&icd10no;A00-A09">
+        <rdfs:label rdf:datatype="&xsd;string">Infeksiøse tarmsykdommer</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A00-B99"/>
+        <code_compacted rdf:datatype="&xsd;string">A00-A09</code_compacted>
+    </owl:Class>
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A00-B99 -->
+
+    <owl:Class rdf:about="&icd10no;A00-B99">
+        <rdfs:label rdf:datatype="&xsd;string">Visse infeksjonssykdommer og parasittsykdommer</rdfs:label>
+        <code_compacted rdf:datatype="&xsd;string">A00-B99</code_compacted>
+        <inclusion rdf:datatype="&xsd;string">sykdommer som er allment godtatte som smittsomme eller overførbare</inclusion>
+        <exclusion rdf:resource="&icd10no;J00-J06"/>
+        <exclusion rdf:resource="&icd10no;J09-J18"/>
+        <exclusion rdf:resource="&icd10no;J20-J22"/>
+        <exclusion rdf:resource="&icd10no;O98"/>
+        <exclusion rdf:resource="&icd10no;P35-P39"/>
+        <exclusion rdf:resource="&icd10no;Z22"/>
+    </owl:Class>
+
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A000 -->
+
+    <owl:Class rdf:about="&icd10no;A000">
+        <rdfs:label rdf:datatype="&xsd;string">Kolera som skyldes Vibrio cholerae 01, biovar cholerae</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A00"/>
+        <code_formatted rdf:datatype="&xsd;string">A00.0</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">A000</code_compacted>
+        <icpc2_code rdf:datatype="&xsd;string">D70</icpc2_code>
+        <underterm rdf:datatype="&xsd;string">Klassisk kolera</underterm>
+        <icpc2_label rdf:datatype="&xsd;string">Tarminfeksjon</icpc2_label>
+    </owl:Class>
+
+    <owl:Class rdf:about="&icd10no;A010">
+        <rdfs:label rdf:datatype="&xsd;string">Tyfoidfeber</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A01"/>
+        <code_formatted rdf:datatype="&xsd;string">A01.0</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">A010</code_compacted>
+        <icpc2_code rdf:datatype="&xsd;string">D70</icpc2_code>
+        <underterm rdf:datatype="&xsd;string">Infeksjon som skyldes Salmonella typhi</underterm>
+        <icpc2_label rdf:datatype="&xsd;string">Tarminfeksjon</icpc2_label>
+    </owl:Class>
+
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A011 -->
+
+    <owl:Class rdf:about="&icd10no;A011">
+        <rdfs:label rdf:datatype="&xsd;string">Paratyfoidfeber A</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A01"/>
+        <code_formatted rdf:datatype="&xsd;string">A01.1</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">A011</code_compacted>
+        <icpc2_code rdf:datatype="&xsd;string">D70</icpc2_code>
+        <icpc2_label rdf:datatype="&xsd;string">Tarminfeksjon</icpc2_label>
+    </owl:Class>
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A045 -->
+
+    <owl:Class rdf:about="&icd10no;A045">
+        <rdfs:label rdf:datatype="&xsd;string">Enteritt som skyldes Campylobacter</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A04"/>
+        <code_formatted rdf:datatype="&xsd;string">A04.5</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">A045</code_compacted>
+        <icpc2_code rdf:datatype="&xsd;string">D70</icpc2_code>
+        <icpc2_label rdf:datatype="&xsd;string">Tarminfeksjon</icpc2_label>
+        <synonym rdf:datatype="&xsd;string">gastroenteritt</synonym>
+        <synonym rdf:datatype="&xsd;string">tarmbetennelse</synonym>
+    </owl:Class>
+
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#A046 -->
+
+    <owl:Class rdf:about="&icd10no;A046">
+        <rdfs:label rdf:datatype="&xsd;string">Enteritt som skyldes Yersinia enterocolitica</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;A04"/>
+        <code_formatted rdf:datatype="&xsd;string">A04.6</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">A046</code_compacted>
+        <icpc2_code rdf:datatype="&xsd;string">D70</icpc2_code>
+        <icpc2_label rdf:datatype="&xsd;string">Tarminfeksjon</icpc2_label>
+        <synonym rdf:datatype="&xsd;string">gastroenteritt</synonym>
+        <synonym rdf:datatype="&xsd;string">tarmbetennelse</synonym>
+        <exclusion rdf:resource="&icd10no;A282"/>
+    </owl:Class>
+
+
+   <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#Z998 -->
+
+    <owl:Class rdf:about="&icd10no;Z998">
+        <rdfs:label rdf:datatype="&xsd;string">Avhengighet av andre tekniske hjelpemidler og innretninger</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;Z99"/>
+        <icpc2_code rdf:datatype="&xsd;string">A28</icpc2_code>
+        <icpc2_label rdf:datatype="&xsd;string">Redusert funksjonsevne IKA</icpc2_label>
+        <code_formatted rdf:datatype="&xsd;string">Z99.8</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">Z998</code_compacted>
+        <synonym rdf:datatype="&xsd;string">status med permanent blærekateter</synonym>
+    </owl:Class>
+
+
+
+    <!-- http://research.idi.ntnu.no/hilab/ehr/ontologies/icd10no.owl#Z999 -->
+
+    <owl:Class rdf:about="&icd10no;Z999">
+        <rdfs:label rdf:datatype="&xsd;string">Avhengighet av ikke spesifisert teknisk hjelpemiddel og innretning</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&icd10no;Z99"/>
+        <icpc2_code rdf:datatype="&xsd;string">A28</icpc2_code>
+        <icpc2_label rdf:datatype="&xsd;string">Redusert funksjonsevne IKA</icpc2_label>
+        <code_formatted rdf:datatype="&xsd;string">Z99.9</code_formatted>
+        <code_compacted rdf:datatype="&xsd;string">Z999</code_compacted>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.2.1789) http://owlapi.sourceforge.net -->
+
