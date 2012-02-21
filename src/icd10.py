@@ -133,13 +133,13 @@ def main(script, path='', command=''):
     if not os.path.exists(INDEX_DIR):
         os.mkdir(INDEX_DIR)
 
-    if not index.exists_in(INDEX_DIR, indexname="icd10"):
-        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
+    if not index.exists_in(INDEX_DIR, indexname='icd10'):
+        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname='icd10')
         print "Created ICD10 index"
 
     # Store ICD10 objects in index
     if command == 'store':
-        ix = open_dir(INDEX_DIR, indexname="icd10")
+        ix = open_dir(INDEX_DIR, indexname='icd10')
         writer = ix.writer()
         for obj in objects:
             writer.add_document(**obj.get_whoosh_args())
@@ -148,7 +148,7 @@ def main(script, path='', command=''):
 
     # Create or empty ICD10 index
     elif command == 'clean':
-        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname="icd10")
+        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname='icd10')
         print "Emptied ICD10 index"
 
     # Unknown command
