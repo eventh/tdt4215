@@ -83,7 +83,11 @@ def parse_xml_file(path):
             else:
                 print "Unknown tag", tag, ":", child.text, child.tail
 
-        objects.append(obj)
+        if obj.short and obj.label:
+            objects.append(obj)
+        else:
+            del obj
+
     return objects
 
 
@@ -100,7 +104,8 @@ def main(script, path=None, load=False):
     if ext == '.json':
         with open(path, 'r') as f:
             json_objects = json.load(f)
-            objects = [ICD10.from_json(i) for i in json_objects]
+        objects = [ICD10.from_json(i) for i in json_objects]
+        print "Loaded %s objects from %s" % (len(objects), path)
 
     else:
         # Build ICD10 objects from XML file
@@ -109,6 +114,7 @@ def main(script, path=None, load=False):
         # Generate a json file
         with open("%s.json" % filename, 'w') as f:
             json.dump([i.to_json() for i in objects], f, indent=4)
+        print "Dumped %s objects to %s.json" % (len(objects), filename)
 
     # Load ICD10 objects into whoosh database
     if load:
