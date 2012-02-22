@@ -3,12 +3,12 @@
 """
 A module for converting data to JSON, and for loading it into whoosh index.
 
-Usage:
-To convert xml file to json run the following command:
-    'python icd10.py ../data/icd10no.xml'
+Example usage:
+To convert ICD XML file to JSON run the following command:
+    'python data.py ../data/icd10no.xml'
 
-To insert ICD10 into whoosh index from json run the following command:
-    'python icd10.py icd10no.json store'
+To insert ATC into whoosh index from JSON run the following command:
+    'python data.py etc/atcname.json store'
 """
 import sys
 import os
@@ -139,6 +139,10 @@ def parse_xml_file(path):
 
 
 def parse_pl_file(path):
+    """Parse a Prolog fact file which contains ATC codes.
+
+    Returns a list of ATC objects which are populated from the file.
+    """
     objects = []
     with open(path, 'r') as f:
         for line in f:
@@ -152,6 +156,10 @@ def parse_pl_file(path):
 
 
 def main(script, path='', command=''):
+    """Convert data files to JSON, or load data into index.
+
+    Usage: python data.py <path> <store|clean>
+    """
     if not path:
         print "Need to supply a path to a file to parse"
         sys.exit(2)
