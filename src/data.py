@@ -1,9 +1,7 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-A module for loading ICD10 objects.
-
-ICD10 objects can be loaded from either XML or JSON file into a Whoosh index.
+A module for converting data to JSON, and for loading it into whoosh index.
 
 Usage:
 To convert xml file to json run the following command:
@@ -20,7 +18,39 @@ import xml.etree.ElementTree as ET
 
 from whoosh.index import create_in, open_dir, exists_in
 
-from schemas import ICD10_SCHEMA, INDEX_DIR
+from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
+
+
+class ATC(object):
+    """Anatomical Therapeutic Chemical classification system of drugs.
+
+    The drugs are divided into fourteen main groups (1st level), with
+    pharmacological/therapeutic subgroups (2nd level). The 3rd and 4th levels
+    are chemical/pharmacological/therapeutic subgroups and the 5th level is
+    the chemical substance.
+    """
+
+    SCHEMA = ATC_SCHEMA
+    NAME = 'atc'
+
+    def __init__(self, code, name):
+        """Create a new ATC object."""
+        self.code = code
+        self.name = name
+
+    def __str__(self):
+        """Present the object as a string."""
+        output = '%s: %s' % (self.code, self.name)
+        return output.encode('ascii', 'ignore')
+
+    def to_json(self):
+        """Create a dictionary representing the object."""
+        return {'code': self.code, 'name': self.name}
+
+    @classmethod
+    def from_json(cls, values):
+        """Create an object from json value dictionary."""
+        return cls(values['code'], values['name'])
 
 
 class ICD10(object):
@@ -33,6 +63,8 @@ class ICD10(object):
     causes of injury or diseases.
     """
 
+    SCHEMA = ICD10_SCHEMA
+    NAME = 'icd10'
     lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
     fields = ('short', 'code', 'label', 'formatted', 'type', 'icpc2_label')
 
@@ -103,66 +135,89 @@ def parse_xml_file(path):
             objects.append(obj)
         else:
             del obj
+    return objects
 
+
+def parse_pl_file(path):
+    objects = []
+    with open(path, 'r') as f:
+        for line in f:
+            if line.startswith('atcname( [') and line.endswith(').\n'):
+                code, rest = line[10:-3].split(']', 1)
+                code = u''.join(code.split(','))
+                name = rest.split("'")[1]
+                name = unicode(name, errors='ignore')  # TODO
+                objects.append(ATC(code, name))
     return objects
 
 
 def main(script, path='', command=''):
-    """Read ICD10 objects from file and load into index.
-
-    'path' to the ICD10 input file, either JSON or XML format.
-    'command' is either 'store' into database or 'clean' database.
-    Usage: python icd10.py <input file> <store|clean>
-    To store ICD10 in whoosh index from icd10no.json file perform:
-        'python icd10.py icd10no.json store'
-    """
     if not path:
-        print "Need to supply icd10 file or json file to parse"
+        print "Need to supply a path to a file to parse"
         sys.exit(2)
 
     # Split path in folder, filename, file extension
     folder, filename = os.path.split(path)
     filename, ext = os.path.splitext(filename)
 
-    # Populate ICD10 objects from either JSON or XML
-    if ext == '.json':
-        now = time.time()
-        with open(path, 'r') as f:
-            json_objects = json.load(f)
-        objects = [ICD10.from_json(i) for i in json_objects]
-        print "Loaded %s objects from %s in %.2f seconds" % (
-                len(objects), path, time.time() - now)
+    now = time.time()
 
-    else:
-        now = time.time()
-        objects = parse_xml_file(path)
+    # Convert to JSON
+    if ext in ('.pl', '.xml'):
+        if ext == '.pl':
+            objects = parse_pl_file(path)
+        else:
+            objects = parse_xml_file(path)
+
         with open("%s.json" % filename, 'w') as f:
             json.dump([i.to_json() for i in objects], f, indent=4)
         print "Dumped %s objects to %s.json in %.2f seconds" % (
                 len(objects), filename, time.time() - now)
 
+    # Load from JSON
+    elif ext == '.json':
+        with open(path, 'r') as f:
+            json_objects = json.load(f)
+
+        if filename == 'atcname':
+            cls = ATC  # Hack
+        else:
+            cls = ICD10
+
+        objects = [cls.from_json(i) for i in json_objects]
+        print "Loaded %s objects from %s in %.2f seconds" % (
+                len(objects), path, time.time() - now)
+
+    else:
+        print "Unknown file, must be JSON, XML or PL filetype: %s" % path
+        sys.exit(2)
+
+    if not command or not objects:
+        sys.exit(None)
+    cls = objects[0].__class__
+
+    # Create index if necesseary
     if not os.path.exists(INDEX_DIR):
         os.mkdir(INDEX_DIR)
+    if not exists_in(INDEX_DIR, indexname=cls.NAME):
+        ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
+        print "Created %s index" % cls.__name__
 
-    if not exists_in(INDEX_DIR, indexname='icd10'):
-        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname='icd10')
-        print "Created ICD10 index"
-
-    # Store ICD10 objects in index
+    # Store objects in index
     if command == 'store':
         now = time.time()
-        ix = open_dir(INDEX_DIR, indexname='icd10')
+        ix = open_dir(INDEX_DIR, indexname=cls.NAME)
         writer = ix.writer()
         for obj in objects:
             writer.add_document(**obj.to_json())
         writer.commit()
-        print "Stored %s ICD10 objects in index in %.2f seconds" % (
-                len(objects), time.time() - now)
+        print "Stored %s %s objects in index in %.2f seconds" % (
+                len(objects), cls.__name__, time.time() - now)
 
-    # Create or empty ICD10 index
+    # Empty index
     elif command == 'clean':
-        ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname='icd10')
-        print "Emptied ICD10 index"
+        ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
+        print "Emptied %s index" % cls.__name__
 
     # Unknown command
     elif command:
