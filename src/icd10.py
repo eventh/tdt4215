@@ -8,12 +8,10 @@ ICD10 objects can be loaded from either XML or JSON file into a Whoosh index.
 import sys
 import os
 import json
-try:
-    import xml.etree.cElementTree as ET
-except ImportError:
-    import xml.etree.ElementTree as ET
+import time
+import xml.etree.ElementTree as ET
 
-from whoosh.index import create_in, open_dir
+from whoosh.index import create_in, open_dir, exists_in
 
 from schemas import ICD10_SCHEMA, INDEX_DIR
 
@@ -35,7 +33,7 @@ class ICD10(object):
     def __init__(self):
         """Create a new ICD10 object."""
         for i in self.lists:
-            setattr(self, i, [])
+            setattr(self, i, u'')
         for i in self.fields:
             setattr(self, i, None)
 
@@ -46,14 +44,16 @@ class ICD10(object):
 
     def to_json(self):
         """Create a dictionary representing the object."""
-        return {i: getattr(self, i) for i in self.lists + self.fields}
+        return {i: getattr(self, i)
+                    for i in self.lists + self.fields if getattr(self, i)}
 
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
         obj = cls()
         for i in cls.lists + cls.fields:
-            setattr(obj, i, values[i])
+            if i in values:
+                setattr(obj, i, values[i])
         return obj
 
 
@@ -62,7 +62,13 @@ def parse_xml_file(path):
 
     Returns a list of ICD10 objects which are populated from the file.
     """
+    # Tags found in XML file
     ignore_tags = ('subClassOf', 'umls_tui', 'umls_conceptId', 'umls_atomId')
+    list_mapping = {'underterm': 'terms', 'synonym': 'synonyms',
+                    'inclusion': 'inclusions', 'exclusion': 'exclusions'}
+    tag_mapping = {'label': 'label', 'code_compacted': 'short',
+                   'code_formatted': 'formatted', 'umls_semanticType': 'type',
+                   'icpc2_label': 'icpc2_label', 'icpc2_code': 'code'}
 
     # Parse XML file
     tree = ET.parse(path)
@@ -77,30 +83,13 @@ def parse_xml_file(path):
 
             if tag in ignore_tags:
                 pass
-            elif tag == 'label':
-                obj.label = child.text
-            elif tag == 'code_compacted':
-                obj.short = child.text
-            elif tag == 'code_formatted':
-                obj.formatted = child.text
-            elif tag == 'umls_semanticType':
-                obj.type = child.text
-            elif tag == 'icpc2_code':
-                obj.code = child.text
-            elif tag == 'icpc2_label':
-                obj.icpc2_label = child.text
-            elif tag == 'underterm':
+            elif tag in list_mapping:
                 if child.text:
-                    obj.terms.append(child.text.strip())
-            elif tag == 'synonym':
-                if child.text:
-                    obj.synonyms.append(child.text.strip())
-            elif tag == 'inclusion':
-                if child.text:
-                    obj.inclusions.append(child.text.strip())
-            elif tag == 'exclusion':
-                if child.text:
-                    obj.exclusions.append(child.text.strip())
+                    value = getattr(obj, list_mapping[tag])
+                    value += child.text.strip() + u'\n'
+                    setattr(obj, list_mapping[tag], value)
+            elif tag in tag_mapping:
+                setattr(obj, tag_mapping[tag], child.text)
             else:
                 print "Unknown tag", tag, ":", child.text, child.tail
 
@@ -131,32 +120,38 @@ def main(script, path='', command=''):
 
     # Populate ICD10 objects from either JSON or XML
     if ext == '.json':
+        now = time.time()
         with open(path, 'r') as f:
             json_objects = json.load(f)
         objects = [ICD10.from_json(i) for i in json_objects]
-        print "Loaded %s objects from %s" % (len(objects), path)
+        print "Loaded %s objects from %s in %.2f seconds" % (
+                len(objects), path, time.time() - now)
 
     else:
+        now = time.time()
         objects = parse_xml_file(path)
         with open("%s.json" % filename, 'w') as f:
             json.dump([i.to_json() for i in objects], f, indent=4)
-        print "Dumped %s objects to %s.json" % (len(objects), filename)
+        print "Dumped %s objects to %s.json in %.2f seconds" % (
+                len(objects), filename, time.time() - now)
 
     if not os.path.exists(INDEX_DIR):
         os.mkdir(INDEX_DIR)
 
-    if not index.exists_in(INDEX_DIR, indexname='icd10'):
+    if not exists_in(INDEX_DIR, indexname='icd10'):
         ix = create_in(INDEX_DIR, schema=ICD10_SCHEMA, indexname='icd10')
         print "Created ICD10 index"
 
     # Store ICD10 objects in index
     if command == 'store':
+        now = time.time()
         ix = open_dir(INDEX_DIR, indexname='icd10')
         writer = ix.writer()
         for obj in objects:
             writer.add_document(**obj.to_json())
         writer.commit()
-        print "Stored %s ICD10 objects in index" % len(objects)
+        print "Stored %s ICD10 objects in index in %.2f seconds" % (
+                len(objects), time.time() - now)
 
     # Create or empty ICD10 index
     elif command == 'clean':
