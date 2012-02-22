@@ -47,6 +47,10 @@ class ATC(object):
         """Create a dictionary representing the object."""
         return {'code': self.code, 'name': self.name}
 
+    def to_index(self):
+        """Create a dictionary with values to store in whoosh index."""
+        return self.to_json()
+
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
@@ -65,6 +69,7 @@ class ICD10(object):
 
     SCHEMA = ICD10_SCHEMA
     NAME = 'icd10'
+
     lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
     fields = ('short', 'code', 'label', 'formatted', 'type', 'icpc2_label')
 
@@ -81,9 +86,13 @@ class ICD10(object):
         return output.encode('ascii', 'ignore')
 
     def to_json(self):
-        """Create a dictionary representing the object."""
+        """Create a dictionary with object values for JSON dump."""
         return {i: getattr(self, i)
                     for i in self.lists + self.fields if getattr(self, i)}
+
+    def to_index(self):
+        """Create a dictionary with values to store in whoosh index."""
+        return self.to_json()
 
     @classmethod
     def from_json(cls, values):
@@ -119,16 +128,14 @@ def parse_xml_file(path):
         for child in node:
             tag = child.tag.split('}')[1]
 
-            if tag in ignore_tags:
-                pass
-            elif tag in list_mapping:
+            if tag in list_mapping:
                 if child.text:
                     value = getattr(obj, list_mapping[tag])
                     value += child.text.strip() + u'\n'
                     setattr(obj, list_mapping[tag], value)
             elif tag in tag_mapping:
                 setattr(obj, tag_mapping[tag], child.text)
-            else:
+            elif tag not in ignore_tags:
                 print "Unknown tag", tag, ":", child.text, child.tail
 
         if obj.short and obj.label:
