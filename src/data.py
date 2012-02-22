@@ -44,7 +44,7 @@ class ATC(object):
         return output.encode('ascii', 'ignore')
 
     def to_json(self):
-        """Create a dictionary representing the object."""
+        """Create a dictionary with object values for JSON dump."""
         return {'code': self.code, 'name': self.name}
 
     def to_index(self):
@@ -224,7 +224,7 @@ def main(script, path='', command=''):
         ix = open_dir(INDEX_DIR, indexname=cls.NAME)
         writer = ix.writer()
         for obj in objects:
-            writer.add_document(**obj.to_json())
+            writer.add_document(**obj.to_index())
         writer.commit()
         print "Stored %s %s objects in index in %.2f seconds" % (
                 len(objects), cls.__name__, time.time() - now)
