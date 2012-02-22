@@ -45,7 +45,7 @@ class ICD10(object):
 
     def __str__(self):
         """Present the object as a string."""
-        output = "%s: %s" % (self.short, self.label)
+        output = '%s: %s' % (self.short, self.label)
         return output.encode('ascii', 'ignore')
 
     def to_json(self):
