@@ -4,6 +4,13 @@
 A module for loading ICD10 objects.
 
 ICD10 objects can be loaded from either XML or JSON file into a Whoosh index.
+
+Usage:
+To convert xml file to json run the following command:
+    'python icd10.py ../data/icd10no.xml'
+
+To insert ICD10 into whoosh index from json run the following command:
+    'python icd10.py icd10no.json store'
 """
 import sys
 import os
@@ -14,7 +21,6 @@ import xml.etree.ElementTree as ET
 from whoosh.index import create_in, open_dir, exists_in
 
 from schemas import ICD10_SCHEMA, INDEX_DIR
-
 
 
 class ICD10(object):

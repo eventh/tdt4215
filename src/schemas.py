@@ -12,4 +12,3 @@ INDEX_DIR = 'indexdir'
 ICD10_SCHEMA = Schema(short=ID(stored=True), label=TEXT, formatted=ID,
                       code=ID, type=TEXT, icpc2_label=TEXT, synonyms=TEXT,
                       terms=TEXT, inclusions=TEXT, exclusions=TEXT)
-
