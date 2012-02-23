@@ -201,7 +201,7 @@ def main(script, path='', command=''):
         with open(path, 'r') as f:
             json_objects = json.load(f)
 
-        if filename == 'atcname':
+        if filename.startswith('atcname'):
             cls = ATC  # Hack
         else:
             cls = ICD10
@@ -238,7 +238,7 @@ def main(script, path='', command=''):
                 len(objects), cls.__name__, time.time() - now))
 
     # Empty index
-    elif command == 'clean':
+    elif command in ('clean', 'clear'):
         ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
         print("Emptied %s index" % cls.__name__)
 

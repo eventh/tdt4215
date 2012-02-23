@@ -309,7 +309,7 @@
     }, 
     {
         "code": "a2ad1", 
-        "name": "ordinre saltkombinasjoner"
+        "name": "ordin\u00e6re saltkombinasjoner"
     }, 
     {
         "code": "a2ad2", 
@@ -337,7 +337,7 @@
     }, 
     {
         "code": "a2af2", 
-        "name": "ordinre saltkombinasjoner og midler mot flatulens"
+        "name": "ordin\u00e6re saltkombinasjoner og midler mot flatulens"
     }, 
     {
         "code": "a2ag", 
@@ -657,7 +657,7 @@
     }, 
     {
         "code": "a3aa", 
-        "name": "syntetiske antikolinergika, estre med en tertir aminogruppe"
+        "name": "syntetiske antikolinergika, estre med en terti\u00e6r aminogruppe"
     }, 
     {
         "code": "a3aa1", 
@@ -697,7 +697,7 @@
     }, 
     {
         "code": "a3ab", 
-        "name": "syntetiske antikolinergika, kvartre ammoniumforbindelser"
+        "name": "syntetiske antikolinergika, kvart\u00e6re ammoniumforbindelser"
     }, 
     {
         "code": "a3ab1", 
@@ -793,7 +793,7 @@
     }, 
     {
         "code": "a3ac", 
-        "name": "syntetiske spasmolytika, amider med tertire aminer"
+        "name": "syntetiske spasmolytika, amider med terti\u00e6re aminer"
     }, 
     {
         "code": "a3ac2", 
@@ -825,7 +825,7 @@
     }, 
     {
         "code": "a3ae", 
-        "name": "midler med virkning p serotoninreseptorer"
+        "name": "midler med virkning p\u00e5 serotoninreseptorer"
     }, 
     {
         "code": "a3ae1", 
@@ -925,7 +925,7 @@
     }, 
     {
         "code": "a3ba", 
-        "name": "belladonnaalkaloider, tertire aminer"
+        "name": "belladonnaalkaloider, terti\u00e6re aminer"
     }, 
     {
         "code": "a3ba1", 
@@ -949,7 +949,7 @@
     }, 
     {
         "code": "a3bb", 
-        "name": "belladonnaalkaloider halvsyntetiske, kvartre ammonium forbindelser"
+        "name": "belladonnaalkaloider halvsyntetiske, kvart\u00e6re ammonium forbindelser"
     }, 
     {
         "code": "a3bb1", 
@@ -1357,7 +1357,7 @@
     }, 
     {
         "code": "a6aa", 
-        "name": "bltgjrende midler"
+        "name": "bl\u00f8tgj\u00f8rende midler"
     }, 
     {
         "code": "a6aa1", 
@@ -1473,11 +1473,11 @@
     }, 
     {
         "code": "a6ac", 
-        "name": "volumkende midler"
+        "name": "volum\u00f8kende midler"
     }, 
     {
         "code": "a6ac1", 
-        "name": "ispaghula (loppefr)"
+        "name": "ispaghula (loppefr\u00f8)"
     }, 
     {
         "code": "a6ac1", 
@@ -1497,7 +1497,7 @@
     }, 
     {
         "code": "a6ac5", 
-        "name": "linfr"
+        "name": "linfr\u00f8"
     }, 
     {
         "code": "a6ac6", 
@@ -1521,7 +1521,7 @@
     }, 
     {
         "code": "a6ac55", 
-        "name": "linfr, kombinasjoner"
+        "name": "linfr\u00f8, kombinasjoner"
     }, 
     {
         "code": "a6ad", 
@@ -2109,7 +2109,7 @@
     }, 
     {
         "code": "a7xa2", 
-        "name": "johannesbrdmel"
+        "name": "johannesbr\u00f8dmel"
     }, 
     {
         "code": "a7xa3", 
@@ -3089,7 +3089,7 @@
     }, 
     {
         "code": "a11d", 
-        "name": "vitamin b1, ogs i kombinasjoner med b6 og b12"
+        "name": "vitamin b1, ogs\u00e5 i kombinasjoner med b6 og b12"
     }, 
     {
         "code": "a11ea", 
@@ -3373,7 +3373,7 @@
     }, 
     {
         "code": "a12ax", 
-        "name": "idos"
+        "name": "id\u00e9os"
     }, 
     {
         "code": "a12ax", 
@@ -3617,7 +3617,7 @@
     }, 
     {
         "code": "a14ab2", 
-        "name": "etylstrenol"
+        "name": "etyl\u00f8strenol"
     }, 
     {
         "code": "a14ab3", 
@@ -3637,7 +3637,7 @@
     }, 
     {
         "code": "a16", 
-        "name": "andre fordyelses- og stoffskiftepreparater"
+        "name": "andre ford\u00f8yelses- og stoffskiftepreparater"
     }, 
     {
         "code": "a16aa", 
@@ -3753,7 +3753,7 @@
     }, 
     {
         "code": "a16ax", 
-        "name": "andre fordyelses- og stoffskiftepreparater"
+        "name": "andre ford\u00f8yelses- og stoffskiftepreparater"
     }, 
     {
         "code": "a16ax1", 
@@ -3801,7 +3801,7 @@
     }, 
     {
         "code": "a16a", 
-        "name": "andre fordyelses- og stoffskiftepreparater"
+        "name": "andre ford\u00f8yelses- og stoffskiftepreparater"
     }, 
     {
         "code": "b1", 
@@ -5025,7 +5025,7 @@
     }, 
     {
         "code": "b5ba", 
-        "name": "lsninger for parenteral ernring"
+        "name": "l\u00f8sninger for parenteral ern\u00e6ring"
     }, 
     {
         "code": "b5ba1", 
@@ -5209,7 +5209,7 @@
     }, 
     {
         "code": "b5bb", 
-        "name": "lsning med effekt p elektrolyttbalansen"
+        "name": "l\u00f8sning med effekt p\u00e5 elektrolyttbalansen"
     }, 
     {
         "code": "b5bb1", 
@@ -5281,7 +5281,7 @@
     }, 
     {
         "code": "b5bc", 
-        "name": "lsning for fremkalling av osmotisk diurese"
+        "name": "l\u00f8sning for fremkalling av osmotisk diurese"
     }, 
     {
         "code": "b5bc1", 
@@ -5297,7 +5297,7 @@
     }, 
     {
         "code": "b5b", 
-        "name": "infusjonslsninger"
+        "name": "infusjonsl\u00f8sninger"
     }, 
     {
         "code": "b5ca", 
@@ -5349,7 +5349,7 @@
     }, 
     {
         "code": "b5cb", 
-        "name": "saltlsninger"
+        "name": "saltl\u00f8sninger"
     }, 
     {
         "code": "b5cb1", 
@@ -5373,7 +5373,7 @@
     }, 
     {
         "code": "b5cx", 
-        "name": "andre skyllevsker"
+        "name": "andre skyllev\u00e6sker"
     }, 
     {
         "code": "b5cx1", 
@@ -5397,7 +5397,7 @@
     }, 
     {
         "code": "b5c", 
-        "name": "skyllevsker"
+        "name": "skyllev\u00e6sker"
     }, 
     {
         "code": "b5da", 
@@ -5413,11 +5413,11 @@
     }, 
     {
         "code": "b5da", 
-        "name": "isotone lsninger"
+        "name": "isotone l\u00f8sninger"
     }, 
     {
         "code": "b5da", 
-        "name": "isotoniske opplsninger"
+        "name": "isotoniske oppl\u00f8sninger"
     }, 
     {
         "code": "b5db", 
@@ -5437,7 +5437,7 @@
     }, 
     {
         "code": "b5db", 
-        "name": "hypertoniske opplsninger"
+        "name": "hypertoniske oppl\u00f8sninger"
     }, 
     {
         "code": "b5db", 
@@ -5557,7 +5557,7 @@
     }, 
     {
         "code": "b5xa16", 
-        "name": "kardioplegilsninger"
+        "name": "kardioplegil\u00f8sninger"
     }, 
     {
         "code": "b5xa17", 
@@ -5633,7 +5633,7 @@
     }, 
     {
         "code": "b5x", 
-        "name": "i.v: opplsning tilsetninger"
+        "name": "i.v: oppl\u00f8sning tilsetninger"
     }, 
     {
         "code": "b5za", 
@@ -6601,7 +6601,7 @@
     }, 
     {
         "code": "c2bb", 
-        "name": "sekundre og tertire aminer"
+        "name": "sekund\u00e6re og terti\u00e6re aminer"
     }, 
     {
         "code": "c2bb1", 
@@ -6609,7 +6609,7 @@
     }, 
     {
         "code": "c2bc", 
-        "name": "biskvartre ammoniumforbindelser"
+        "name": "biskvart\u00e6re ammoniumforbindelser"
     }, 
     {
         "code": "c2b", 
@@ -6745,7 +6745,7 @@
     }, 
     {
         "code": "c2d", 
-        "name": "antihypertensiva med virkning p arteriolr glatt muskel"
+        "name": "antihypertensiva med virkning p\u00e5 arteriol\u00e6r glatt muskel"
     }, 
     {
         "code": "c2ka", 
@@ -7157,7 +7157,7 @@
     }, 
     {
         "code": "c3bc", 
-        "name": "kvikkslvdiuretika"
+        "name": "kvikks\u00f8lvdiuretika"
     }, 
     {
         "code": "c3bc1", 
@@ -7853,7 +7853,7 @@
     }, 
     {
         "code": "c5cx", 
-        "name": "andre kapillrstabiliserende midler"
+        "name": "andre kapill\u00e6rstabiliserende midler"
     }, 
     {
         "code": "c5cx1", 
@@ -7861,7 +7861,7 @@
     }, 
     {
         "code": "c5c", 
-        "name": "kapillrstabiliserende midler"
+        "name": "kapill\u00e6rstabiliserende midler"
     }, 
     {
         "code": "c7", 
@@ -8441,7 +8441,7 @@
     }, 
     {
         "code": "c8cx", 
-        "name": "andre selektive kalsiumantagonister med primrt vaskulr virkning"
+        "name": "andre selektive kalsiumantagonister med prim\u00e6rt vaskul\u00e6r virkning"
     }, 
     {
         "code": "c8cx1", 
@@ -8449,7 +8449,7 @@
     }, 
     {
         "code": "c8c", 
-        "name": "selektive kalsiumantagonister med primrt vaskulr virkning"
+        "name": "selektive kalsiumantagonister med prim\u00e6rt vaskul\u00e6r virkning"
     }, 
     {
         "code": "c8da", 
@@ -8501,7 +8501,7 @@
     }, 
     {
         "code": "c8d", 
-        "name": "selektive kalsiumantagonister med direkte virkning p hjertet"
+        "name": "selektive kalsiumantagonister med direkte virkning p\u00e5 hjertet"
     }, 
     {
         "code": "c8ea", 
@@ -8545,7 +8545,7 @@
     }, 
     {
         "code": "c9", 
-        "name": "midler med virkning p renin-angiotensinsystemet"
+        "name": "midler med virkning p\u00e5 renin-angiotensinsystemet"
     }, 
     {
         "code": "c9aa", 
@@ -9049,7 +9049,7 @@
     }, 
     {
         "code": "c9x", 
-        "name": "andre midler  med virkning p renin-angiotensin systemet"
+        "name": "andre midler  med virkning p\u00e5 renin-angiotensin systemet"
     }, 
     {
         "code": "c10", 
@@ -9217,7 +9217,7 @@
     }, 
     {
         "code": "c10ac", 
-        "name": "midler som ker utskillelsen av gallesyre"
+        "name": "midler som \u00f8ker utskillelsen av gallesyre"
     }, 
     {
         "code": "c10ac1", 
@@ -9721,7 +9721,7 @@
     }, 
     {
         "code": "d2", 
-        "name": "bltgjrende og hudbeskyttende midler"
+        "name": "bl\u00f8tgj\u00f8rende og hudbeskyttende midler"
     }, 
     {
         "code": "d2aa", 
@@ -9761,15 +9761,15 @@
     }, 
     {
         "code": "d2ax", 
-        "name": "diverse bltgjrende og hudbeskyttende midler"
+        "name": "diverse bl\u00f8tgj\u00f8rende og hudbeskyttende midler"
     }, 
     {
         "code": "d2a", 
-        "name": "bltgjrende og hudbeskyttende midler"
+        "name": "bl\u00f8tgj\u00f8rende og hudbeskyttende midler"
     }, 
     {
         "code": "d2ba", 
-        "name": "beskyttelsesmidler ved uv bestrling, lokalt bruk"
+        "name": "beskyttelsesmidler ved uv bestr\u00e5ling, lokalt bruk"
     }, 
     {
         "code": "d2ba1", 
@@ -9781,7 +9781,7 @@
     }, 
     {
         "code": "d2bb", 
-        "name": "beskyttelsesmidler ved uv-bestrling, systemisk bruk"
+        "name": "beskyttelsesmidler ved uv-bestr\u00e5ling, systemisk bruk"
     }, 
     {
         "code": "d2bb1", 
@@ -9789,11 +9789,11 @@
     }, 
     {
         "code": "d2b", 
-        "name": "beskyttelsesmidler ved uv bestrling"
+        "name": "beskyttelsesmidler ved uv bestr\u00e5ling"
     }, 
     {
         "code": "d3", 
-        "name": "midler til srbehandling"
+        "name": "midler til s\u00e5rbehandling"
     }, 
     {
         "code": "d3aa", 
@@ -9805,7 +9805,7 @@
     }, 
     {
         "code": "d3ax", 
-        "name": "diverse srhelende midler"
+        "name": "diverse s\u00e5rhelende midler"
     }, 
     {
         "code": "d3ax1", 
@@ -9849,7 +9849,7 @@
     }, 
     {
         "code": "d3a", 
-        "name": "srhelende midler"
+        "name": "s\u00e5rhelende midler"
     }, 
     {
         "code": "d3ba", 
@@ -9873,7 +9873,7 @@
     }, 
     {
         "code": "d4", 
-        "name": "klemidler, antihistaminer, anestetika"
+        "name": "kl\u00f8emidler, antihistaminer, anestetika"
     }, 
     {
         "code": "d4aa", 
@@ -9973,7 +9973,7 @@
     }, 
     {
         "code": "d4ax", 
-        "name": "andre klemidler"
+        "name": "andre kl\u00f8emidler"
     }, 
     {
         "code": "d4ax", 
@@ -9981,11 +9981,11 @@
     }, 
     {
         "code": "d4ax", 
-        "name": "klestillende midler"
+        "name": "kl\u00f8estillende midler"
     }, 
     {
         "code": "d4a", 
-        "name": "klemidler, antihistaminer, anestetika"
+        "name": "kl\u00f8emidler, antihistaminer, anestetika"
     }, 
     {
         "code": "d5", 
@@ -9997,7 +9997,7 @@
     }, 
     {
         "code": "d5aa", 
-        "name": "tjreholdige preparater"
+        "name": "tj\u00e6reholdige preparater"
     }, 
     {
         "code": "d5ac", 
@@ -10237,7 +10237,7 @@
     }, 
     {
         "code": "d6ba1", 
-        "name": "slvsulfadiazin"
+        "name": "s\u00f8lvsulfadiazin"
     }, 
     {
         "code": "d6ba2", 
@@ -10261,7 +10261,7 @@
     }, 
     {
         "code": "d6ba51", 
-        "name": "slvsulfadiazin, kombinasjoner"
+        "name": "s\u00f8lvsulfadiazin, kombinasjoner"
     }, 
     {
         "code": "d6bb", 
@@ -11005,7 +11005,7 @@
     }, 
     {
         "code": "d8aj", 
-        "name": "kvartre ammoniumforbindelser"
+        "name": "kvart\u00e6re ammoniumforbindelser"
     }, 
     {
         "code": "d8aj1", 
@@ -11049,7 +11049,7 @@
     }, 
     {
         "code": "d8ak", 
-        "name": "kvikkslvpreparater"
+        "name": "kvikks\u00f8lvpreparater"
     }, 
     {
         "code": "d8ak1", 
@@ -11061,7 +11061,7 @@
     }, 
     {
         "code": "d8ak3", 
-        "name": "kvikkslvklorid"
+        "name": "kvikks\u00f8lvklorid"
     }, 
     {
         "code": "d8ak4", 
@@ -11069,7 +11069,7 @@
     }, 
     {
         "code": "d8ak5", 
-        "name": "kvikkslv, metallisk"
+        "name": "kvikks\u00f8lv, metallisk"
     }, 
     {
         "code": "d8ak6", 
@@ -11081,15 +11081,15 @@
     }, 
     {
         "code": "d8al", 
-        "name": "slvforbindelser"
+        "name": "s\u00f8lvforbindelser"
     }, 
     {
         "code": "d8al1", 
-        "name": "slvnitrat"
+        "name": "s\u00f8lvnitrat"
     }, 
     {
         "code": "d8al30", 
-        "name": "slv"
+        "name": "s\u00f8lv"
     }, 
     {
         "code": "d8ax", 
@@ -12049,7 +12049,7 @@
     }, 
     {
         "code": "g2bb1", 
-        "name": "vaginal ring med progestogen og strogen"
+        "name": "vaginal ring med progestogen og \u00f8strogen"
     }, 
     {
         "code": "g2b", 
@@ -12149,11 +12149,11 @@
     }, 
     {
         "code": "g3", 
-        "name": "kjnnshormoner og midler  med effekt p genitalia"
+        "name": "kj\u00f8nnshormoner og midler  med effekt p\u00e5 genitalia"
     }, 
     {
         "code": "g3aa", 
-        "name": "etinylstradiol"
+        "name": "etinyl\u00f8stradiol"
     }, 
     {
         "code": "g3aa", 
@@ -12173,27 +12173,27 @@
     }, 
     {
         "code": "g3aa", 
-        "name": "progestogener og strogener, faste kombinasjoner"
+        "name": "progestogener og \u00f8strogener, faste kombinasjoner"
     }, 
     {
         "code": "g3aa1", 
-        "name": "etynodiol og strogen"
+        "name": "etynodiol og \u00f8strogen"
     }, 
     {
         "code": "g3aa2", 
-        "name": "kvingestanol og strogen"
+        "name": "kvingestanol og \u00f8strogen"
     }, 
     {
         "code": "g3aa3", 
-        "name": "lynestrenol og strogen"
+        "name": "lynestrenol og \u00f8strogen"
     }, 
     {
         "code": "g3aa4", 
-        "name": "megestrol og strogen"
+        "name": "megestrol og \u00f8strogen"
     }, 
     {
         "code": "g3aa5", 
-        "name": "noretisteron og strogen"
+        "name": "noretisteron og \u00f8strogen"
     }, 
     {
         "code": "g3aa6", 
@@ -12201,7 +12201,7 @@
     }, 
     {
         "code": "g3aa6", 
-        "name": "norgestrel og strogen"
+        "name": "norgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3aa7", 
@@ -12209,7 +12209,7 @@
     }, 
     {
         "code": "g3aa7", 
-        "name": "levonorgestrel og strogen"
+        "name": "levonorgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3aa7", 
@@ -12225,11 +12225,11 @@
     }, 
     {
         "code": "g3aa8", 
-        "name": "medroksyprogesteron og strogen"
+        "name": "medroksyprogesteron og \u00f8strogen"
     }, 
     {
         "code": "g3aa9", 
-        "name": "desogestrel og strogen"
+        "name": "desogestrel og \u00f8strogen"
     }, 
     {
         "code": "g3aa9", 
@@ -12241,15 +12241,15 @@
     }, 
     {
         "code": "g3aa10", 
-        "name": "gestoden og strogen"
+        "name": "gestoden og \u00f8strogen"
     }, 
     {
         "code": "g3aa11", 
-        "name": "norgestimat og strogen"
+        "name": "norgestimat og \u00f8strogen"
     }, 
     {
         "code": "g3aa12", 
-        "name": "drospirenon og strogen"
+        "name": "drospirenon og \u00f8strogen"
     }, 
     {
         "code": "g3aa12", 
@@ -12273,11 +12273,11 @@
     }, 
     {
         "code": "g3aa13", 
-        "name": "norelgestromin og strogen"
+        "name": "norelgestromin og \u00f8strogen"
     }, 
     {
         "code": "g3ab", 
-        "name": "etinylstradiol"
+        "name": "etinyl\u00f8stradiol"
     }, 
     {
         "code": "g3ab", 
@@ -12285,19 +12285,19 @@
     }, 
     {
         "code": "g3ab", 
-        "name": "progestogener og strogener, sekvenspreparater"
+        "name": "progestogener og \u00f8strogener, sekvenspreparater"
     }, 
     {
         "code": "g3ab1", 
-        "name": "megestrol og strogen"
+        "name": "megestrol og \u00f8strogen"
     }, 
     {
         "code": "g3ab2", 
-        "name": "lynestrenol og strogen"
+        "name": "lynestrenol og \u00f8strogen"
     }, 
     {
         "code": "g3ab3", 
-        "name": "levonorgestrel og strogen"
+        "name": "levonorgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3ab3", 
@@ -12309,7 +12309,7 @@
     }, 
     {
         "code": "g3ab4", 
-        "name": "noretisteron og strogen"
+        "name": "noretisteron og \u00f8strogen"
     }, 
     {
         "code": "g3ab4", 
@@ -12317,15 +12317,15 @@
     }, 
     {
         "code": "g3ab5", 
-        "name": "desogestrel og strogen"
+        "name": "desogestrel og \u00f8strogen"
     }, 
     {
         "code": "g3ab6", 
-        "name": "gestoden og strogen"
+        "name": "gestoden og \u00f8strogen"
     }, 
     {
         "code": "g3ab7", 
-        "name": "klormadinon og strogen"
+        "name": "klormadinon og \u00f8strogen"
     }, 
     {
         "code": "g3ac", 
@@ -12405,7 +12405,7 @@
     }, 
     {
         "code": "g3ad", 
-        "name": "ndprevensjon"
+        "name": "n\u00f8dprevensjon"
     }, 
     {
         "code": "g3ad2", 
@@ -12485,11 +12485,11 @@
     }, 
     {
         "code": "g3ca", 
-        "name": "naturlige og halvsyntetiske strogener, usammensatte"
+        "name": "naturlige og halvsyntetiske \u00f8strogener, usammensatte"
     }, 
     {
         "code": "g3ca1", 
-        "name": "etinylstradiol"
+        "name": "etinyl\u00f8stradiol"
     }, 
     {
         "code": "g3ca3", 
@@ -12545,7 +12545,7 @@
     }, 
     {
         "code": "g3ca4", 
-        "name": "striol"
+        "name": "\u00f8striol"
     }, 
     {
         "code": "g3ca6", 
@@ -12553,7 +12553,7 @@
     }, 
     {
         "code": "g3ca7", 
-        "name": "stron"
+        "name": "\u00f8stron"
     }, 
     {
         "code": "g3ca9", 
@@ -12561,27 +12561,27 @@
     }, 
     {
         "code": "g3ca53", 
-        "name": "stradiol, sammensatte preparater"
+        "name": "\u00f8stradiol, sammensatte preparater"
     }, 
     {
         "code": "g3ca57", 
-        "name": "konjugerte strogener"
+        "name": "konjugerte \u00f8strogener"
     }, 
     {
         "code": "g3cb", 
-        "name": "syntetiske strogener, usammensatte preparater"
+        "name": "syntetiske \u00f8strogener, usammensatte preparater"
     }, 
     {
         "code": "g3cb1", 
-        "name": "dienstrol"
+        "name": "dien\u00f8strol"
     }, 
     {
         "code": "g3cb2", 
-        "name": "dietylstilbstrol"
+        "name": "dietylstilb\u00f8strol"
     }, 
     {
         "code": "g3cb3", 
-        "name": "metallenstrol"
+        "name": "metallen\u00f8strol"
     }, 
     {
         "code": "g3cb4", 
@@ -12589,31 +12589,31 @@
     }, 
     {
         "code": "g3cc", 
-        "name": "strogener i kombinasjoner med andre stoffer"
+        "name": "\u00f8strogener i kombinasjoner med andre stoffer"
     }, 
     {
         "code": "g3cc2", 
-        "name": "dienstrol"
+        "name": "dien\u00f8strol"
     }, 
     {
         "code": "g3cc3", 
-        "name": "metallenstrol"
+        "name": "metallen\u00f8strol"
     }, 
     {
         "code": "g3cc4", 
-        "name": "stron"
+        "name": "\u00f8stron"
     }, 
     {
         "code": "g3cc5", 
-        "name": "dietylstilbstrol"
+        "name": "dietylstilb\u00f8strol"
     }, 
     {
         "code": "g3cc6", 
-        "name": "striol"
+        "name": "\u00f8striol"
     }, 
     {
         "code": "g3cx", 
-        "name": "andre strogener"
+        "name": "andre \u00f8strogener"
     }, 
     {
         "code": "g3cx1", 
@@ -12625,7 +12625,7 @@
     }, 
     {
         "code": "g3c", 
-        "name": "strogener"
+        "name": "\u00f8strogener"
     }, 
     {
         "code": "g3da", 
@@ -12697,7 +12697,7 @@
     }, 
     {
         "code": "g3dc1", 
-        "name": "allylstrenol"
+        "name": "allyl\u00f8strenol"
     }, 
     {
         "code": "g3dc2", 
@@ -12733,7 +12733,7 @@
     }, 
     {
         "code": "g3dc31", 
-        "name": "metylstrenolon"
+        "name": "metyl\u00f8strenolon"
     }, 
     {
         "code": "g3d", 
@@ -12741,23 +12741,23 @@
     }, 
     {
         "code": "g3ea", 
-        "name": "androgener og strogener"
+        "name": "androgener og \u00f8strogener"
     }, 
     {
         "code": "g3ea1", 
-        "name": "metyltestosteron og strogen"
+        "name": "metyltestosteron og \u00f8strogen"
     }, 
     {
         "code": "g3ea2", 
-        "name": "testosteron og strogen"
+        "name": "testosteron og \u00f8strogen"
     }, 
     {
         "code": "g3ea3", 
-        "name": "prasteron og strogen"
+        "name": "prasteron og \u00f8strogen"
     }, 
     {
         "code": "g3eb", 
-        "name": "androgen, progestogen og strogen i kombinasjon"
+        "name": "androgen, progestogen og \u00f8strogen i kombinasjon"
     }, 
     {
         "code": "g3ek1", 
@@ -12765,11 +12765,11 @@
     }, 
     {
         "code": "g3e", 
-        "name": "androgener og kvinnelige kjnnshormoner i kombinasjon"
+        "name": "androgener og kvinnelige kj\u00f8nnshormoner i kombinasjon"
     }, 
     {
         "code": "g3fa", 
-        "name": "progestogener og strogener, faste kombinasjoner"
+        "name": "progestogener og \u00f8strogener, faste kombinasjoner"
     }, 
     {
         "code": "g3fa1", 
@@ -12785,47 +12785,47 @@
     }, 
     {
         "code": "g3fa1", 
-        "name": "noretisteron og strogen"
+        "name": "noretisteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa2", 
-        "name": "oksyprogesteron og strogen"
+        "name": "oksyprogesteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa3", 
-        "name": "etisteron og strogen"
+        "name": "etisteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa4", 
-        "name": "progesteron og strogen"
+        "name": "progesteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa5", 
-        "name": "metylnortestosteron og strogen"
+        "name": "metylnortestosteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa6", 
-        "name": "etynodiol og strogen"
+        "name": "etynodiol og \u00f8strogen"
     }, 
     {
         "code": "g3fa7", 
-        "name": "lynestrenol og strogen"
+        "name": "lynestrenol og \u00f8strogen"
     }, 
     {
         "code": "g3fa8", 
-        "name": "megestrol og strogen"
+        "name": "megestrol og \u00f8strogen"
     }, 
     {
         "code": "g3fa9", 
-        "name": "noretynodrel og strogen"
+        "name": "noretynodrel og \u00f8strogen"
     }, 
     {
         "code": "g3fa10", 
-        "name": "norgestrel og strogen"
+        "name": "norgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3fa11", 
-        "name": "levonorgestrel og strogen"
+        "name": "levonorgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3fa12", 
@@ -12833,15 +12833,15 @@
     }, 
     {
         "code": "g3fa12", 
-        "name": "medroksyprogesteron og strogen"
+        "name": "medroksyprogesteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa13", 
-        "name": "norgestimat og strogen"
+        "name": "norgestimat og \u00f8strogen"
     }, 
     {
         "code": "g3fa14", 
-        "name": "dydrogesteron og strogen"
+        "name": "dydrogesteron og \u00f8strogen"
     }, 
     {
         "code": "g3fa15", 
@@ -12849,19 +12849,19 @@
     }, 
     {
         "code": "g3fa15", 
-        "name": "dienogest og strogen"
+        "name": "dienogest og \u00f8strogen"
     }, 
     {
         "code": "g3fa16", 
-        "name": "trimegeston og strogen"
+        "name": "trimegeston og \u00f8strogen"
     }, 
     {
         "code": "g3fa17", 
-        "name": "drospirenon og strogen"
+        "name": "drospirenon og \u00f8strogen"
     }, 
     {
         "code": "g3fb", 
-        "name": "progestogener og strogener, sekvenspreparater"
+        "name": "progestogener og \u00f8strogener, sekvenspreparater"
     }, 
     {
         "code": "g3fb1", 
@@ -12869,19 +12869,19 @@
     }, 
     {
         "code": "g3fb1", 
-        "name": "norgestrel og strogen"
+        "name": "norgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3fb2", 
-        "name": "lynestrenol og strogen"
+        "name": "lynestrenol og \u00f8strogen"
     }, 
     {
         "code": "g3fb3", 
-        "name": "klormadinon og strogen"
+        "name": "klormadinon og \u00f8strogen"
     }, 
     {
         "code": "g3fb4", 
-        "name": "megestrol og strogen"
+        "name": "megestrol og \u00f8strogen"
     }, 
     {
         "code": "g3fb5", 
@@ -12889,7 +12889,7 @@
     }, 
     {
         "code": "g3fb5", 
-        "name": "noretisteron og strogen"
+        "name": "noretisteron og \u00f8strogen"
     }, 
     {
         "code": "g3fb5", 
@@ -12905,31 +12905,31 @@
     }, 
     {
         "code": "g3fb6", 
-        "name": "medroxyprogesteron og strogen"
+        "name": "medroxyprogesteron og \u00f8strogen"
     }, 
     {
         "code": "g3fb7", 
-        "name": "medrogeston og strogen"
+        "name": "medrogeston og \u00f8strogen"
     }, 
     {
         "code": "g3fb8", 
-        "name": "dydrogesteron og strogen"
+        "name": "dydrogesteron og \u00f8strogen"
     }, 
     {
         "code": "g3fb9", 
-        "name": "levonorgestrel og strogen"
+        "name": "levonorgestrel og \u00f8strogen"
     }, 
     {
         "code": "g3fb10", 
-        "name": "desogestrel og strogen"
+        "name": "desogestrel og \u00f8strogen"
     }, 
     {
         "code": "g3fb11", 
-        "name": "trimegeston og strogen"
+        "name": "trimegeston og \u00f8strogen"
     }, 
     {
         "code": "g3f", 
-        "name": "progestogener og strogener i kombinasjon"
+        "name": "progestogener og \u00f8strogener i kombinasjon"
     }, 
     {
         "code": "g3ga", 
@@ -13057,11 +13057,11 @@
     }, 
     {
         "code": "g3hb", 
-        "name": "antiandrogener og strogener"
+        "name": "antiandrogener og \u00f8strogener"
     }, 
     {
         "code": "g3hb", 
-        "name": "etinylstradiol"
+        "name": "etinyl\u00f8stradiol"
     }, 
     {
         "code": "g3hb", 
@@ -13073,7 +13073,7 @@
     }, 
     {
         "code": "g3hb1", 
-        "name": "cyproteron og strogen"
+        "name": "cyproteron og \u00f8strogen"
     }, 
     {
         "code": "g3hb1", 
@@ -13117,7 +13117,7 @@
     }, 
     {
         "code": "g3xc", 
-        "name": "midler med selektiv strogenreseptor modulerende effekt"
+        "name": "midler med selektiv \u00f8strogenreseptor modulerende effekt"
     }, 
     {
         "code": "g3xc1", 
@@ -13137,7 +13137,7 @@
     }, 
     {
         "code": "g3x", 
-        "name": "andre kjnnshormoner og midler  med effekt p genitalia"
+        "name": "andre kj\u00f8nnshormoner og midler  med effekt p\u00e5 genitalia"
     }, 
     {
         "code": "g4", 
@@ -13177,7 +13177,7 @@
     }, 
     {
         "code": "g4ba", 
-        "name": "surgjrende midler"
+        "name": "surgj\u00f8rende midler"
     }, 
     {
         "code": "g4ba1", 
@@ -13189,7 +13189,7 @@
     }, 
     {
         "code": "g4bc", 
-        "name": "midler til opplsning av urinsyrekonkrementer"
+        "name": "midler til oppl\u00f8sning av urinsyrekonkrementer"
     }, 
     {
         "code": "g4bd", 
@@ -14081,7 +14081,7 @@
     }, 
     {
         "code": "h5", 
-        "name": "kalsium homostase"
+        "name": "kalsium hom\u00f8ostase"
     }, 
     {
         "code": "h5aa", 
@@ -14405,7 +14405,7 @@
     }, 
     {
         "code": "j1ce", 
-        "name": "beta-laktamasemfintlige penicilliner"
+        "name": "beta-laktamase\u00f8mfintlige penicilliner"
     }, 
     {
         "code": "j1ce1", 
@@ -14769,7 +14769,7 @@
     }, 
     {
         "code": "j1db", 
-        "name": "frstegenerasjons cefalosporiner"
+        "name": "f\u00f8rstegenerasjons cefalosporiner"
     }, 
     {
         "code": "j1db1", 
@@ -16577,7 +16577,7 @@
     }, 
     {
         "code": "j6ba1", 
-        "name": "immunglobulin, normal human, til ekstravaskulr adm"
+        "name": "immunglobulin, normal human, til ekstravaskul\u00e6r adm"
     }, 
     {
         "code": "j6ba1", 
@@ -16585,7 +16585,7 @@
     }, 
     {
         "code": "j6ba2", 
-        "name": "immunglobulin, normal human, til intravaskulr adm."
+        "name": "immunglobulin, normal human, til intravaskul\u00e6r adm."
     }, 
     {
         "code": "j6ba2", 
@@ -16645,7 +16645,7 @@
     }, 
     {
         "code": "j6bb6", 
-        "name": "immunglobulin mot rde hunder"
+        "name": "immunglobulin mot r\u00f8de hunder"
     }, 
     {
         "code": "j6bb7", 
@@ -16669,7 +16669,7 @@
     }, 
     {
         "code": "j6bb12", 
-        "name": "encefalitt, skogflttbren immunglobulin"
+        "name": "encefalitt, skogfl\u00e5ttb\u00e5ren immunglobulin"
     }, 
     {
         "code": "j6bb13", 
@@ -17017,7 +17017,7 @@
     }, 
     {
         "code": "j7ba1", 
-        "name": "encefalitt, skogflttbren, inaktivert helvirus"
+        "name": "encefalitt, skogfl\u00e5ttb\u00e5ren, inaktivert helvirus"
     }, 
     {
         "code": "j7ba1", 
@@ -18429,11 +18429,11 @@
     }, 
     {
         "code": "l2aa", 
-        "name": "strogener"
+        "name": "\u00f8strogener"
     }, 
     {
         "code": "l2aa1", 
-        "name": "dietylstilbstrol"
+        "name": "dietylstilb\u00f8strol"
     }, 
     {
         "code": "l2aa2", 
@@ -18445,11 +18445,11 @@
     }, 
     {
         "code": "l2aa2", 
-        "name": "polystradiolfosfat"
+        "name": "poly\u00f8stradiolfosfat"
     }, 
     {
         "code": "l2aa3", 
-        "name": "etinylstradiol"
+        "name": "etinyl\u00f8stradiol"
     }, 
     {
         "code": "l2aa4", 
@@ -18485,7 +18485,7 @@
     }, 
     {
         "code": "l2ae", 
-        "name": "gonadotropinfrigjrende hormonanaloger"
+        "name": "gonadotropinfrigj\u00f8rende hormonanaloger"
     }, 
     {
         "code": "l2ae1", 
@@ -18553,7 +18553,7 @@
     }, 
     {
         "code": "l2ba", 
-        "name": "antistrogener"
+        "name": "anti\u00f8strogener"
     }, 
     {
         "code": "l2ba1", 
@@ -20073,7 +20073,7 @@
     }, 
     {
         "code": "m3ac", 
-        "name": "andre kvartre ammoniumforbindelser"
+        "name": "andre kvart\u00e6re ammoniumforbindelser"
     }, 
     {
         "code": "m3ac1", 
@@ -20253,7 +20253,7 @@
     }, 
     {
         "code": "m3bc", 
-        "name": "etere, kjemisk nrstende antihistaminer"
+        "name": "etere, kjemisk n\u00e6rst\u00e5ende antihistaminer"
     }, 
     {
         "code": "m3bc1", 
@@ -20369,7 +20369,7 @@
     }, 
     {
         "code": "m4ab", 
-        "name": "preparater som ker urinsyreutskillelsen"
+        "name": "preparater som \u00f8ker urinsyreutskillelsen"
     }, 
     {
         "code": "m4ab1", 
@@ -20393,7 +20393,7 @@
     }, 
     {
         "code": "m4ac", 
-        "name": "preparater uten virkning p urinsyreomsetningen"
+        "name": "preparater uten virkning p\u00e5 urinsyreomsetningen"
     }, 
     {
         "code": "m4ac1", 
@@ -20581,7 +20581,7 @@
     }, 
     {
         "code": "m5b", 
-        "name": "midler med effekt p benstruktur og mineralisering"
+        "name": "midler med effekt p\u00e5 benstruktur og mineralisering"
     }, 
     {
         "code": "m9aa", 
@@ -22257,7 +22257,7 @@
     }, 
     {
         "code": "n4aa", 
-        "name": "tertire aminer"
+        "name": "terti\u00e6re aminer"
     }, 
     {
         "code": "n4aa1", 
@@ -22305,7 +22305,7 @@
     }, 
     {
         "code": "n4ab", 
-        "name": "etere, kjemisk nrstende antihistaminer"
+        "name": "etere, kjemisk n\u00e6rst\u00e5ende antihistaminer"
     }, 
     {
         "code": "n4ab1", 
@@ -24317,7 +24317,7 @@
     }, 
     {
         "code": "n7", 
-        "name": "andre midler med virkning p nervesystemet"
+        "name": "andre midler med virkning p\u00e5 nervesystemet"
     }, 
     {
         "code": "n7aa", 
@@ -24525,7 +24525,7 @@
     }, 
     {
         "code": "n7xx", 
-        "name": "andre midler med virkning p nervesystemet"
+        "name": "andre midler med virkning p\u00e5 nervesystemet"
     }, 
     {
         "code": "n7xx1", 
@@ -24565,7 +24565,7 @@
     }, 
     {
         "code": "n7x", 
-        "name": "andre midler med virkning p nervesystemet"
+        "name": "andre midler med virkning p\u00e5 nervesystemet"
     }, 
     {
         "code": "p1", 
@@ -24681,7 +24681,7 @@
     }, 
     {
         "code": "p1ax", 
-        "name": "andre midler mot ambesykdommer og andre protozosykdommer"
+        "name": "andre midler mot am\u00f8besykdommer og andre protozosykdommer"
     }, 
     {
         "code": "p1ax1", 
@@ -24737,7 +24737,7 @@
     }, 
     {
         "code": "p1a", 
-        "name": "midler til behandling av ambesykdommer og andre protozosykdommer"
+        "name": "midler til behandling av am\u00f8besykdommer og andre protozosykdommer"
     }, 
     {
         "code": "p1ba", 
@@ -26441,7 +26441,7 @@
     }, 
     {
         "code": "r5", 
-        "name": "hoste- og forkjlelsesmidler"
+        "name": "hoste- og forkj\u00f8lelsesmidler"
     }, 
     {
         "code": "r5ca", 
@@ -26809,7 +26809,7 @@
     }, 
     {
         "code": "r5x", 
-        "name": "andre forkjlelsesmidler, kombinasjoner"
+        "name": "andre forkj\u00f8lelsesmidler, kombinasjoner"
     }, 
     {
         "code": "r6", 
@@ -27273,7 +27273,7 @@
     }, 
     {
         "code": "r7", 
-        "name": "andre preparater med virkning p respirasjonssystemet"
+        "name": "andre preparater med virkning p\u00e5 respirasjonssystemet"
     }, 
     {
         "code": "r7aa", 
@@ -27353,7 +27353,7 @@
     }, 
     {
         "code": "r7ax", 
-        "name": "andre preparater med virkning p respirasjonsorganene"
+        "name": "andre preparater med virkning p\u00e5 respirasjonsorganene"
     }, 
     {
         "code": "r7ax", 
@@ -27369,11 +27369,11 @@
     }, 
     {
         "code": "r7a", 
-        "name": "andre preparater med virkning p respirasjonssystemet"
+        "name": "andre preparater med virkning p\u00e5 respirasjonssystemet"
     }, 
     {
         "code": "s1", 
-        "name": "yemidler"
+        "name": "\u00f8yemidler"
     }, 
     {
         "code": "s1aa", 
@@ -27577,11 +27577,11 @@
     }, 
     {
         "code": "s1ax1", 
-        "name": "kvikkslvforbindelser"
+        "name": "kvikks\u00f8lvforbindelser"
     }, 
     {
         "code": "s1ax2", 
-        "name": "slvforbindelser"
+        "name": "s\u00f8lvforbindelser"
     }, 
     {
         "code": "s1ax3", 
@@ -28513,7 +28513,7 @@
     }, 
     {
         "code": "s1ja", 
-        "name": "midler til farging av yet"
+        "name": "midler til farging av \u00f8yet"
     }, 
     {
         "code": "s1ja1", 
@@ -28537,7 +28537,7 @@
     }, 
     {
         "code": "s1jx", 
-        "name": "andre diagnostiske yemidler"
+        "name": "andre diagnostiske \u00f8yemidler"
     }, 
     {
         "code": "s1j", 
@@ -28565,7 +28565,7 @@
     }, 
     {
         "code": "s1kx", 
-        "name": "andre midler til bruk ved yeoperasjoner"
+        "name": "andre midler til bruk ved \u00f8yeoperasjoner"
     }, 
     {
         "code": "s1kx1", 
@@ -28573,7 +28573,7 @@
     }, 
     {
         "code": "s1k", 
-        "name": "midler til bruk ved yeoperasjoner"
+        "name": "midler til bruk ved \u00f8yeoperasjoner"
     }, 
     {
         "code": "s1la1", 
@@ -28597,7 +28597,7 @@
     }, 
     {
         "code": "s1xa", 
-        "name": "andre yemidler"
+        "name": "andre \u00f8yemidler"
     }, 
     {
         "code": "s1xa1", 
@@ -28681,7 +28681,7 @@
     }, 
     {
         "code": "s1xa20", 
-        "name": "kunstig trevske pva"
+        "name": "kunstig t\u00e5rev\u00e6ske pva"
     }, 
     {
         "code": "s1xa20", 
@@ -28709,11 +28709,11 @@
     }, 
     {
         "code": "s1x", 
-        "name": "andre yemidler"
+        "name": "andre \u00f8yemidler"
     }, 
     {
         "code": "s2", 
-        "name": "remidler"
+        "name": "\u00f8remidler"
     }, 
     {
         "code": "s2aa", 
@@ -28881,11 +28881,11 @@
     }, 
     {
         "code": "s2d", 
-        "name": "andre remidler"
+        "name": "andre \u00f8remidler"
     }, 
     {
         "code": "s3", 
-        "name": "ye-og remidler"
+        "name": "\u00f8ye-og \u00f8remidler"
     }, 
     {
         "code": "s3aa", 
@@ -29005,7 +29005,7 @@
     }, 
     {
         "code": "v1aa1", 
-        "name": "fjr"
+        "name": "fj\u00e6r"
     }, 
     {
         "code": "v1aa2", 
@@ -29029,19 +29029,19 @@
     }, 
     {
         "code": "v1aa3", 
-        "name": "husstv"
+        "name": "husst\u00f8v"
     }, 
     {
         "code": "v1aa4", 
-        "name": "muggsopp og gjrsopp"
+        "name": "muggsopp og gj\u00e6rsopp"
     }, 
     {
         "code": "v1aa5", 
-        "name": "alutard bjrk"
+        "name": "alutard bj\u00f8rk"
     }, 
     {
         "code": "v1aa5", 
-        "name": "alutard sq bjrk"
+        "name": "alutard sq bj\u00f8rk"
     }, 
     {
         "code": "v1aa5", 
@@ -29057,7 +29057,7 @@
     }, 
     {
         "code": "v1aa8", 
-        "name": "nringsstoffer"
+        "name": "n\u00e6ringsstoffer"
     }, 
     {
         "code": "v1aa9", 
@@ -29209,7 +29209,7 @@
     }, 
     {
         "code": "v3ab31", 
-        "name": "cyanidbltt"
+        "name": "cyanidbl\u00e5tt"
     }, 
     {
         "code": "v3ab32", 
@@ -29385,7 +29385,7 @@
     }, 
     {
         "code": "v3ak", 
-        "name": "midler til sammenfyning av vev"
+        "name": "midler til sammenf\u00f8yning av vev"
     }, 
     {
         "code": "v3am", 
@@ -29441,7 +29441,7 @@
     }, 
     {
         "code": "v4ca", 
-        "name": "preparater til diabetesunderskelse"
+        "name": "preparater til diabetesunders\u00f8kelse"
     }, 
     {
         "code": "v4ca1", 
@@ -29453,7 +29453,7 @@
     }, 
     {
         "code": "v4cb", 
-        "name": "preparater til underskelse av fettresorpsjon"
+        "name": "preparater til unders\u00f8kelse av fettresorpsjon"
     }, 
     {
         "code": "v4cb1", 
@@ -29461,7 +29461,7 @@
     }, 
     {
         "code": "v4cc", 
-        "name": "preparater til galleunderskelse"
+        "name": "preparater til galleunders\u00f8kelse"
     }, 
     {
         "code": "v4cc1", 
@@ -29481,7 +29481,7 @@
     }, 
     {
         "code": "v4cd", 
-        "name": "preparater til underskelse av hypofysefunksjoner"
+        "name": "preparater til unders\u00f8kelse av hypofysefunksjoner"
     }, 
     {
         "code": "v4cd1", 
@@ -29505,7 +29505,7 @@
     }, 
     {
         "code": "v4ce", 
-        "name": "preparater til leverfunksjonsprver"
+        "name": "preparater til leverfunksjonspr\u00f8ver"
     }, 
     {
         "code": "v4ce1", 
@@ -29517,7 +29517,7 @@
     }, 
     {
         "code": "v4cf", 
-        "name": "preparater til tuberkuloseunderskelse"
+        "name": "preparater til tuberkuloseunders\u00f8kelse"
     }, 
     {
         "code": "v4cf1", 
@@ -29525,7 +29525,7 @@
     }, 
     {
         "code": "v4cg", 
-        "name": "preparater til underskelse av ventrikkelsekresjon"
+        "name": "preparater til unders\u00f8kelse av ventrikkelsekresjon"
     }, 
     {
         "code": "v4cg1", 
@@ -29561,7 +29561,7 @@
     }, 
     {
         "code": "v4ch", 
-        "name": "preparater til nyrefunksjonsprve"
+        "name": "preparater til nyrefunksjonspr\u00f8ve"
     }, 
     {
         "code": "v4ch1", 
@@ -29585,7 +29585,7 @@
     }, 
     {
         "code": "v4cj", 
-        "name": "preparater til pvisning av thyreoidale lidelser"
+        "name": "preparater til p\u00e5visning av thyreoidale lidelser"
     }, 
     {
         "code": "v4cj1", 
@@ -29601,7 +29601,7 @@
     }, 
     {
         "code": "v4ck", 
-        "name": "preparater til pankreasfunksjonsprver"
+        "name": "preparater til pankreasfunksjonspr\u00f8ver"
     }, 
     {
         "code": "v4ck1", 
@@ -29621,7 +29621,7 @@
     }, 
     {
         "code": "v4cm", 
-        "name": "preparater til underskelse av fertilitetsforstyrrelser"
+        "name": "preparater til unders\u00f8kelse av fertilitetsforstyrrelser"
     }, 
     {
         "code": "v4cm1", 
@@ -29669,7 +29669,7 @@
     }, 
     {
         "code": "v6ca", 
-        "name": "fenylalaninfattige ernringspreparater"
+        "name": "fenylalaninfattige ern\u00e6ringspreparater"
     }, 
     {
         "code": "v6c", 
@@ -29737,7 +29737,7 @@
     }, 
     {
         "code": "v7ab", 
-        "name": "opplsnings-og fortynningsvsker, inkl. skyllemidler"
+        "name": "oppl\u00f8snings-og fortynningsv\u00e6sker, inkl. skyllemidler"
     }, 
     {
         "code": "v7ab", 
@@ -29757,7 +29757,7 @@
     }, 
     {
         "code": "v7ad", 
-        "name": "hjelpemidler ved blodprver"
+        "name": "hjelpemidler ved blodpr\u00f8ver"
     }, 
     {
         "code": "v7an", 
@@ -29797,7 +29797,7 @@
     }, 
     {
         "code": "v8aa", 
-        "name": "vannlselige, nefrotrope, hyosmolre rntgenkontrastmidler"
+        "name": "vannl\u00f8selige, nefrotrope, h\u00f8yosmol\u00e6re r\u00f8ntgenkontrastmidler"
     }, 
     {
         "code": "v8aa1", 
@@ -29845,7 +29845,7 @@
     }, 
     {
         "code": "v8ab", 
-        "name": "vannlselige, nefrotrope, lavosmolre rntgenkontrastmidler"
+        "name": "vannl\u00f8selige, nefrotrope, lavosmol\u00e6re r\u00f8ntgenkontrastmidler"
     }, 
     {
         "code": "v8ab1", 
@@ -29933,7 +29933,7 @@
     }, 
     {
         "code": "v8ac", 
-        "name": "vannlselige, hepatotrope rntgenkontrastmidler"
+        "name": "vannl\u00f8selige, hepatotrope r\u00f8ntgenkontrastmidler"
     }, 
     {
         "code": "v8ac1", 
@@ -29977,7 +29977,7 @@
     }, 
     {
         "code": "v8ad", 
-        "name": "ikke-vannlselige rntgenkontrastmidler"
+        "name": "ikke-vannl\u00f8selige r\u00f8ntgenkontrastmidler"
     }, 
     {
         "code": "v8ad1", 
@@ -30001,11 +30001,11 @@
     }, 
     {
         "code": "v8a", 
-        "name": "rntgenkontrastmidler, med jod"
+        "name": "r\u00f8ntgenkontrastmidler, med jod"
     }, 
     {
         "code": "v8ba", 
-        "name": "bariumsulfatholdige rntgenkontrastmidler"
+        "name": "bariumsulfatholdige r\u00f8ntgenkontrastmidler"
     }, 
     {
         "code": "v8ba1", 
@@ -30021,7 +30021,7 @@
     }, 
     {
         "code": "v8b", 
-        "name": "rntgenkontrastmidler, uten jod"
+        "name": "r\u00f8ntgenkontrastmidler, uten jod"
     }, 
     {
         "code": "v8ca", 
@@ -30161,7 +30161,7 @@
     }, 
     {
         "code": "v8da1", 
-        "name": "mikrosfrer av humant albumin"
+        "name": "mikrosf\u00e6rer av humant albumin"
     }, 
     {
         "code": "v8da2", 
@@ -30177,7 +30177,7 @@
     }, 
     {
         "code": "v8da4", 
-        "name": "mikrosfrer av fosfolipider"
+        "name": "mikrosf\u00e6rer av fosfolipider"
     }, 
     {
         "code": "v8da5", 
@@ -30505,7 +30505,7 @@
     }, 
     {
         "code": "v9db3", 
-        "name": "teknesium (99mtc) millimikrosfrer"
+        "name": "teknesium (99mtc) millimikrosf\u00e6rer"
     }, 
     {
         "code": "v9db4", 
@@ -30617,7 +30617,7 @@
     }, 
     {
         "code": "v9eb2", 
-        "name": "teknesium (99mtc) mikrosfrer"
+        "name": "teknesium (99mtc) mikrosf\u00e6rer"
     }, 
     {
         "code": "v9ex", 
@@ -30777,7 +30777,7 @@
     }, 
     {
         "code": "v9gx", 
-        "name": "andre diagnostiske radiofarmaka for hjerte og kretslp"
+        "name": "andre diagnostiske radiofarmaka for hjerte og kretsl\u00f8p"
     }, 
     {
         "code": "v9gx1", 
@@ -30805,7 +30805,7 @@
     }, 
     {
         "code": "v9g", 
-        "name": "hjerte og kretslp"
+        "name": "hjerte og kretsl\u00f8p"
     }, 
     {
         "code": "v9ha", 
@@ -31277,7 +31277,7 @@
     }, 
     {
         "code": "z0et", 
-        "name": "l"
+        "name": "\u00f8l"
     }, 
     {
         "code": "z0fo", 
@@ -31285,7 +31285,7 @@
     }, 
     {
         "code": "z0ga", 
-        "name": "hvitlk"
+        "name": "hvitl\u00f8k"
     }, 
     {
         "code": "z0gb", 
@@ -31337,15 +31337,15 @@
     }, 
     {
         "code": "z0in", 
-        "name": "ingefr"
+        "name": "ingef\u00e6r"
     }, 
     {
         "code": "z0tr", 
-        "name": "tranebr"
+        "name": "traneb\u00e6r"
     }, 
     {
         "code": "z0tr", 
-        "name": "tranebrjuice"
+        "name": "traneb\u00e6rjuice"
     }, 
     {
         "code": "z0ty", 
@@ -31393,11 +31393,11 @@
     }, 
     {
         "code": "z9as", 
-        "name": "acetylsalicylsyre, hydose"
+        "name": "acetylsalicylsyre, h\u00f8ydose"
     }, 
     {
         "code": "z9as", 
-        "name": "acetylsalisylsyre, hydose"
+        "name": "acetylsalisylsyre, h\u00f8ydose"
     }, 
     {
         "code": "z9at", 
@@ -31545,7 +31545,7 @@
     }, 
     {
         "code": "z9hd", 
-        "name": "hydosenevroleptika"
+        "name": "h\u00f8ydosenevroleptika"
     }, 
     {
         "code": "z9ht", 
