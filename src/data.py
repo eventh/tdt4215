@@ -14,6 +14,7 @@ import sys
 import os
 import json
 import time
+from collections import OrderedDict
 from xml.etree import ElementTree
 
 from whoosh.index import create_in, open_dir, exists_in
@@ -44,7 +45,10 @@ class ATC:
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
-        return {'code': self.code, 'name': self.name}
+        obj = OrderedDict()
+        obj['code'] = self.code
+        obj['name'] = self.name
+        return obj
 
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
@@ -85,8 +89,11 @@ class ICD10:
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
-        return {i: getattr(self, i)
-                    for i in self.lists + self.fields if getattr(self, i)}
+        obj = OrderedDict()
+        for var in self.fields + self.lists:
+            if getattr(self, var):
+                obj[var] = getattr(self, var)
+        return obj
 
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
@@ -129,7 +136,9 @@ def parse_xml_file(path):
             if tag in list_mapping:
                 if child.text:
                     value = getattr(obj, list_mapping[tag])
-                    value += child.text.strip() + '\n'
+                    if value:
+                        value += '\n'
+                    value += child.text.strip().replace('<i>', '').replace('</i>', '')
                     setattr(obj, list_mapping[tag], value)
             elif tag in tag_mapping:
                 setattr(obj, tag_mapping[tag], child.text)
@@ -220,10 +229,11 @@ def main(script, path='', command=''):
     if command == 'store':
         now = time.time()
         ix = open_dir(INDEX_DIR, indexname=cls.NAME)
-        writer = ix.writer()
-        for obj in objects:
-            writer.add_document(**obj.to_index())
-        writer.commit()
+        with ix.writer() as writer:
+            #writer = ix.writer()
+            for obj in objects:
+                writer.add_document(**obj.to_index())
+        #writer.commit()
         print("Stored %s %s objects in index in %.2f seconds" % (
                 len(objects), cls.__name__, time.time() - now))
 
