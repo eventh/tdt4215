@@ -1,27 +1,27 @@
-﻿#!/usr/bin/env python
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 A module for converting data to JSON, and for loading it into whoosh index.
 
 Example usage:
 To convert ICD XML file to JSON run the following command:
-    'python data.py ../data/icd10no.xml'
+    'python3 data.py ../data/icd10no.xml'
 
 To insert ATC into whoosh index from JSON run the following command:
-    'python data.py etc/atcname.json store'
+    'python3 data.py etc/atcname.json store'
 """
 import sys
 import os
 import json
 import time
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 
 from whoosh.index import create_in, open_dir, exists_in
 
 from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
 
 
-class ATC(object):
+class ATC:
     """Anatomical Therapeutic Chemical classification system of drugs.
 
     The drugs are divided into fourteen main groups (1st level), with
@@ -40,8 +40,7 @@ class ATC(object):
 
     def __str__(self):
         """Present the object as a string."""
-        output = '%s: %s' % (self.code, self.name)
-        return output.encode('ascii', 'ignore')
+        return '%s: %s' % (self.code, self.name)
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
@@ -57,7 +56,7 @@ class ATC(object):
         return cls(values['code'], values['name'])
 
 
-class ICD10(object):
+class ICD10:
     """Classification of Diseases and Health Problems.
 
     The International Statistical Classification of Diseases and Related
@@ -76,14 +75,13 @@ class ICD10(object):
     def __init__(self):
         """Create a new ICD10 object."""
         for i in self.lists:
-            setattr(self, i, u'')
+            setattr(self, i, '')
         for i in self.fields:
             setattr(self, i, None)
 
     def __str__(self):
         """Present the object as a string."""
-        output = '%s: %s' % (self.short, self.label)
-        return output.encode('ascii', 'ignore')
+        return '%s: %s' % (self.short, self.label)
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
@@ -118,7 +116,7 @@ def parse_xml_file(path):
                    'icpc2_label': 'icpc2_label', 'icpc2_code': 'code'}
 
     # Parse XML file
-    tree = ET.parse(path)
+    tree = ElementTree.parse(path)
     nodes = tree.getroot().findall('{http://www.w3.org/2002/07/owl#}Class')
 
     # Traverse nodes to create and populate ICD10 objects
@@ -131,12 +129,12 @@ def parse_xml_file(path):
             if tag in list_mapping:
                 if child.text:
                     value = getattr(obj, list_mapping[tag])
-                    value += child.text.strip() + u'\n'
+                    value += child.text.strip() + '\n'
                     setattr(obj, list_mapping[tag], value)
             elif tag in tag_mapping:
                 setattr(obj, tag_mapping[tag], child.text)
             elif tag not in ignore_tags:
-                print "Unknown tag", tag, ":", child.text, child.tail
+                print("Unknown tag %s, %s, %s" % (tag, child.text, child.tail))
 
         if obj.short and obj.label:
             objects.append(obj)
@@ -155,9 +153,8 @@ def parse_pl_file(path):
         for line in f:
             if line.startswith('atcname( [') and line.endswith(').\n'):
                 code, rest = line[10:-3].split(']', 1)
-                code = u''.join(code.split(','))
+                code = ''.join(code.split(','))
                 name = rest.split("'")[1]
-                name = unicode(name, errors='ignore')  # TODO
                 objects.append(ATC(code, name))
     return objects
 
@@ -165,11 +162,11 @@ def parse_pl_file(path):
 def main(script, path='', command=''):
     """Convert data files to JSON, or load data into index.
 
-    Usage: python data.py <path> <store|clean>
+    Usage: python3 data.py <path> <store|clean>
     """
     if not path:
-        print "Need to supply a path to a file to parse"
-        print "Usage: python data.py <path> <command>"
+        print("Need to supply a path to a file to parse")
+        print("Usage: python3 data.py <path> <command>")
         sys.exit(2)
 
     # Split path in folder, filename, file extension
@@ -187,8 +184,8 @@ def main(script, path='', command=''):
 
         with open("%s.json" % filename, 'w') as f:
             json.dump([i.to_json() for i in objects], f, indent=4)
-        print "Dumped %s objects to %s.json in %.2f seconds" % (
-                len(objects), filename, time.time() - now)
+        print("Dumped %s objects to %s.json in %.2f seconds" % (
+                len(objects), filename, time.time() - now))
 
     # Load from JSON
     elif ext == '.json':
@@ -201,11 +198,11 @@ def main(script, path='', command=''):
             cls = ICD10
 
         objects = [cls.from_json(i) for i in json_objects]
-        print "Loaded %s objects from %s in %.2f seconds" % (
-                len(objects), path, time.time() - now)
+        print("Loaded %s objects from %s in %.2f seconds" % (
+                len(objects), path, time.time() - now))
 
     else:
-        print "Unknown file, must be JSON, XML or PL filetype: %s" % path
+        print("Unknown file '%s', must be JSON, XML or PL filetype" % path)
         sys.exit(2)
 
     if not command or not objects:
@@ -217,7 +214,7 @@ def main(script, path='', command=''):
         os.mkdir(INDEX_DIR)
     if not exists_in(INDEX_DIR, indexname=cls.NAME):
         ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
-        print "Created %s index" % cls.__name__
+        print("Created %s index" % cls.__name__)
 
     # Store objects in index
     if command == 'store':
@@ -227,17 +224,17 @@ def main(script, path='', command=''):
         for obj in objects:
             writer.add_document(**obj.to_index())
         writer.commit()
-        print "Stored %s %s objects in index in %.2f seconds" % (
-                len(objects), cls.__name__, time.time() - now)
+        print("Stored %s %s objects in index in %.2f seconds" % (
+                len(objects), cls.__name__, time.time() - now))
 
     # Empty index
     elif command == 'clean':
         ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
-        print "Emptied %s index" % cls.__name__
+        print("Emptied %s index" % cls.__name__)
 
     # Unknown command
     elif command:
-        print "Unknown command '%s'" % command
+        print("Unknown command '%s'" % command)
         sys.exit(2)
 
     sys.exit(None)
