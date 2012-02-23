@@ -169,6 +169,7 @@ def main(script, path='', command=''):
     """
     if not path:
         print "Need to supply a path to a file to parse"
+        print "Usage: python data.py <path> <command>"
         sys.exit(2)
 
     # Split path in folder, filename, file extension

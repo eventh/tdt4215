@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Module for searching through different cases etc.
+Module for handling patient cases and performing the project tasks.
 """
 import sys
 import os
@@ -10,7 +10,7 @@ from operator import itemgetter
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
-from schemas import ICD10_SCHEMA, INDEX_DIR
+from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
 
 
 # Folder where tasks are stored as .txt files.
@@ -49,7 +49,7 @@ def icd10_case_search(cases):
                 print results[0:2]
 
 
-def main(script):
+def main(script, case='', task='', output=''):
     cases = read_cases_from_files(TASK_DIR)
     print "Loaded '%s' cases from '%s'" % (len(cases), TASK_DIR)
 
