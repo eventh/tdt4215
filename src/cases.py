@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Module for handling patient cases and performing the project tasks.
@@ -22,10 +22,10 @@ def read_cases_from_files(folder):
     for path in os.listdir(folder):
         full_path = os.path.normpath(os.path.join(folder, path))
         filename, ext = os.path.splitext(path)
-        if not os.path.isdir(full_path) and ext == '.txt':
+        if (not os.path.isdir(full_path) and
+                ext == '.txt' and filename.startswith('case')):
             with open(full_path) as f:
-                lines = [unicode(i, errors='ignore')
-                            for i in f.readlines() if i]
+                lines = [i for i in f.readlines() if i]
             cases[filename.replace('case', '')] = lines
     return cases
 
@@ -36,7 +36,7 @@ def icd10_case_search(cases):
 
     with ix.searcher() as searcher:
 
-        print "Case:Line - Results"
+        print("Case:Line - Results")
         for case, lines in sorted(cases.items(), key=itemgetter(0)):
 
             i = 0
@@ -45,13 +45,13 @@ def icd10_case_search(cases):
                 results = searcher.search(q)
 
                 i += 1
-                print "%s:%i - %i" % (case, i, 0)
-                print results[0:2]
+                print("%s:%i - %i" % (case, i, 0))
+                print(results[0:2])
 
 
 def main(script, case='', task='', output=''):
     cases = read_cases_from_files(TASK_DIR)
-    print "Loaded '%s' cases from '%s'" % (len(cases), TASK_DIR)
+    print("Loaded '%s' cases from '%s'" % (len(cases), TASK_DIR))
 
     icd10_case_search(cases)
 

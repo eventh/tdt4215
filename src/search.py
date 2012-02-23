@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 A module for searching in the whoosh database.
@@ -8,7 +8,7 @@ import sys
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser
 
-from schemas import ICD10_SCHEMA, INDEX_DIR
+from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
 
 
 def search_icd10(query, result_func=None):
@@ -29,25 +29,25 @@ def search_icd10(query, result_func=None):
 
 def print_result(result):
     """Simply print all results from a search."""
-    print result
+    print(result)
     for res in result:
-        print res
+        print (res)
 
 
 def main(script, index='', *query):
     """Perform a search on our whoosh database.
 
-    Usage: python search.py <index> <query>
-    Example: 'python search.py icd10 Kolera'
-    'index' is one of icd10 or ...
+    Usage: python3 search.py <index> <query>
+    Example: 'python3 search.py icd10 Kolera'
+    'index' is one of icd10 or atc
     """
-    flat_query = unicode(''.join(query))  # TODO
+    flat_query = ''.join(query)
 
     if index == 'icd10':
         search_icd10(flat_query)
 
     else:
-        print "Unknown database: %s" % index
+        print("Unknown database: %s" % index)
         sys.exit(2)
 
     sys.exit(None)
