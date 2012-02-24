@@ -1,4 +1,5 @@
-﻿*.aux
+﻿# Ekorn
+*.aux
 *.log
 *.lof
 *.lot

@@ -98,9 +98,9 @@ def output_latex(task, case, results):
         case_nr = case.replace('case', '')
 
         f.write(
-r'''\begin{table}[!htb] \footnotesize \center
+r'''\begin{table}[htbp] \footnotesize \center
 \caption{Task %s, Clinical note %s \label{tab:t%sc%s}}
-\begin{tabularx}{\textwidth}{l l X}
+\begin{tabularx}{\textwidth}{c c X}
     \toprule
     Clinical note & Sentence & ICD-10 \\
     \midrule
