@@ -17,6 +17,9 @@ from whoosh.qparser import QueryParser, OrGroup
 from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
 
 
+OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
+
+
 def read_cases_from_files(folder_or_path):
     """Read lines from case files in 'folder_or_path'."""
     # Find case paths if path is a folder
@@ -79,7 +82,7 @@ def _code_list_to_str(codes):
 
 def output_json(task, case, results):
     """Dump search results to a JSON file."""
-    filename = 'task%s_%s.json' % (task, case)
+    filename = '%s/task%s_%s.json' % (OUTPUT_FOLDER, task, case)
     with open(filename, 'w') as f:
         obj = OrderedDict()
         for line, codes in results:
@@ -89,7 +92,12 @@ def output_json(task, case, results):
 
 
 def output_latex(task, case, results):
-    pass
+    """Dump search results to a LaTeX table."""
+    filename = '%s/task%s_%s.tex' % (OUTPUT_FOLDER, task, case)
+    with open(filename, 'w') as f:
+        for line, codes in results:
+            pass
+    print("Dumped task %s %s results to '%s'" % (task, case, filename))
 
 
 def output_print(task, case, results):
@@ -124,6 +132,8 @@ def main(script, task='', case='', output=''):
     if case in ('json', 'latex'):
         output = case
         case = ''
+    if output in ('json', 'latex') and not os.path.exists(OUTPUT_FOLDER):
+        os.mkdir(OUTPUT_FOLDER)
     if output not in OUTPUTS:
         print("Unknown output '%s', valid are: %s" % (
                 output, ', '.join(OUTPUTS.keys())))
