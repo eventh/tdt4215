@@ -25,8 +25,8 @@ def read_cases_from_files(folder):
         if (not os.path.isdir(full_path) and
                 ext == '.txt' and filename.startswith('case')):
             with open(full_path) as f:
-                lines = [i for i in f.readlines() if i]
-            cases[filename.replace('case', '')] = lines
+                lines = [i.strip() for i in f.readlines()]
+            cases[filename.replace('case', '')] = [i for i in lines if i]
     return cases
 
 
