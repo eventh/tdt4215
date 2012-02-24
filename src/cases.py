@@ -58,11 +58,12 @@ def task_2(lines, output_handler):
     ix = open_dir(INDEX_DIR, indexname='atc')
     qp = QueryParser('name', schema=ix.schema, group=OrGroup)
 
+    results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
             q = qp.parse(line)
-            result = searcher.search(q)
-            print(i, result[0])
+            results.append((i, [r['code'] for r in searcher.search(q)]))
+    output_handler(results)
 
 
 def output_json(task, case, results):
@@ -74,8 +75,17 @@ def output_latex(task, case, results):
 
 
 def output_print(task, case, results):
-    #print("Case:Line - Results")
-    print("%s:%s - %s" % (task, case, results))
+    print("Results from task %s - %s" % (task, case))
+    print("----------------------------")
+    for line, codes in results:
+        if not codes:
+            codes = '.'
+        else:
+            if len(codes) > 6:
+                codes = codes[:6] + ['...']
+            codes = ', '.join(codes)
+        print("%s:%s - %s" % (case, line, codes))
+    print()
 
 
 # Maps valid task names to functions which perform tasks
