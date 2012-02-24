@@ -5,6 +5,7 @@ Module for handling patient cases and performing the project tasks.
 """
 import sys
 import os
+import time
 from operator import itemgetter
 
 from whoosh.index import open_dir
@@ -14,6 +15,7 @@ from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
 
 
 def read_cases_from_files(folder_or_path):
+    """Read lines from case files in 'folder_or_path'."""
     # Find case paths if path is a folder
     paths = []
     if not os.path.isdir(folder_or_path):
@@ -36,32 +38,41 @@ def read_cases_from_files(folder_or_path):
     return cases
 
 
-def task_1a(cases):
-    """Perform task 1 A. Search through ICD10 codes."""
+def task_1a(lines):
+    """Task 1 A. Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname='icd10')
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
     with ix.searcher() as searcher:
+        for line in lines:
+            q = qp.parse(line)
+            return searcher.search(q)
 
-        print("Case:Line - Results")
-        for case, lines in sorted(cases.items(), key=itemgetter(0)):
-
-            i = 0
-            for line in lines:
-                q = qp.parse(line)
-                results = searcher.search(q)
-
-                i += 1
-                print("%s:%i - %i" % (case, i, 0))
-                print(results[0:2])
 
 
 def task_2(cases):
-    """Perform task 2. Search through ATC codes."""
+    """Task 2. Search through ATC codes."""
     pass
 
 
+def output_json(task, case, results):
+    pass
+
+
+def output_latex(task, case, results):
+    pass
+
+
+def output_print(task, case, results):
+    print("Case:Line - Results")
+
+
+# Maps valid task names to functions which perform tasks
 TASKS = {'1a': task_1a, '2': task_2}
+
+
+# Maps valid output arguments to functions which generates output
+OUTPUTS = {'json': output_json, 'latex': output_latex, '': output_print}
 
 
 def main(script, task='', case='', output=''):
@@ -72,7 +83,20 @@ def main(script, task='', case='', output=''):
     'output' is the output to generate, optional.
     Usage: 'python3 cases.py [task] [case] [latex|json]'.
     """
-    # Handle cases
+    # Handle output
+    if task in ('json', 'latex'):
+        output = task
+        task = ''
+    if case in ('json', 'latex'):
+        output = case
+        case = ''
+    if output not in OUTPUTS:
+        print("Unknown output '%s', valid are: %s" % (
+                output, ', '.join(OUTPUTS.keys())))
+        sys.exit(2)
+    output_handler = OUTPUTS[output]
+
+    # Handle and read in cases
     if '.txt' in task:
         output = case
         case = task
@@ -80,9 +104,24 @@ def main(script, task='', case='', output=''):
     if not case:
         case = 'etc/'
     cases = read_cases_from_files(case)
-    print("Loaded '%s' cases from '%s'" % (len(cases), case))
+    print("Loaded %s cases from '%s'" % (len(cases), case))
 
-    #icd10_case_search(cases)
+    # Handle and perform tasks
+    if task in TASKS:
+        tasks = {task: TASKS[task]}
+    elif not task:
+        tasks = TASKS
+    else:
+        print("Unknown task '%s', valid tasks are: %s" % (
+                task, ', '.join(TASKS.keys())))
+        sys.exit(2)
+
+    for task_name, func in tasks.items():
+        for case_name, lines in cases.items():
+            now = time.time()
+            output_handler(task_name, case_name, func(lines))
+            print("Performed '%s' in %.2f seconds" % (
+                    func.__doc__, time.time() - now))
 
     sys.exit(None)
 
