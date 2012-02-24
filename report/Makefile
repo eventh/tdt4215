@@ -19,14 +19,14 @@ report:
 
 tables:
 	@echo "Building LaTeX tables standalone"
-	@mkdir .tmp -p
-	@pdflatex -output-directory .tmp standalone_tables.tex
-	@pdflatex -output-directory .tmp standalone_tables.tex
-	@mv .tmp/standalone_tables.pdf tables.pdf
+	@pdflatex standalone_tables.tex
+	@pdflatex standalone_tables.tex
+	@mv standalone_tables.pdf tables.pdf
 	evince tables.pdf
 
 clean:
 	@echo "Removing LaTeX build files"
-	@rm -fr *.aux *.toc *.log *.lof *.bbl *.blg *.acn
+	@rm -f *.out *.aux *.toc *.log *.lof *.bbl *.blg *.acn
+	@rm -fr results/*.out results/*.aux *.toc *.log *.lof *.bbl *.blg *.acn
 	@rm -fr .tmp/
 
