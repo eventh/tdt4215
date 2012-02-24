@@ -6,8 +6,10 @@ Module for handling patient cases and performing the project tasks.
 import sys
 import os
 import time
+import json
 from operator import itemgetter
 from functools import partial
+from collections import OrderedDict
 
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
@@ -66,8 +68,24 @@ def task_2(lines, output_handler):
     output_handler(results)
 
 
+def _code_list_to_str(codes):
+    """Convert a list of codes to a string of codes."""
+    if not codes:
+        return '.'
+    if len(codes) > 6:
+        codes = codes[:6] + ['...']
+    return ', '.join(codes)
+
+
 def output_json(task, case, results):
-    pass
+    """Dump search results to a JSON file."""
+    filename = 'task%s_%s.json' % (task, case)
+    with open(filename, 'w') as f:
+        obj = OrderedDict()
+        for line, codes in results:
+            obj[line] = _code_list_to_str(codes)
+        json.dump({case: obj}, f, indent=4)
+    print("Dumped task %s %s results to '%s'" % (task, case, filename))
 
 
 def output_latex(task, case, results):
@@ -75,16 +93,11 @@ def output_latex(task, case, results):
 
 
 def output_print(task, case, results):
+    """Print a table of search results."""
     print("Results from task %s - %s" % (task, case))
     print("----------------------------")
     for line, codes in results:
-        if not codes:
-            codes = '.'
-        else:
-            if len(codes) > 6:
-                codes = codes[:6] + ['...']
-            codes = ', '.join(codes)
-        print("%s:%s - %s" % (case, line, codes))
+        print("%s:%s - %s" % (case, line, _code_list_to_str(codes)))
     print()
 
 
