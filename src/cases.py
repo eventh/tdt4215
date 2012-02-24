@@ -40,7 +40,7 @@ def read_cases_from_files(folder_or_path):
 
 
 def task_1a(lines, output_handler):
-    """Task 1 A. Search through ICD10 codes."""
+    """Task 1 A: Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname='icd10')
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
@@ -54,8 +54,15 @@ def task_1a(lines, output_handler):
 
 
 def task_2(lines, output_handler):
-    """Task 2. Search through ATC codes."""
-    pass
+    """Task 2: Search through ATC codes."""
+    ix = open_dir(INDEX_DIR, indexname='atc')
+    qp = QueryParser('name', schema=ix.schema, group=OrGroup)
+
+    with ix.searcher() as searcher:
+        for i, line in enumerate(lines):
+            q = qp.parse(line)
+            result = searcher.search(q)
+            print(i, result[0])
 
 
 def output_json(task, case, results):
