@@ -67,7 +67,7 @@ def task_2(lines, output_handler):
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
             q = qp.parse(line)
-            results.append((i, [r['code'] for r in searcher.search(q)]))
+            results.append((i + 1, [r['code'] for r in searcher.search(q)]))
     output_handler(results)
 
 
@@ -95,8 +95,22 @@ def output_latex(task, case, results):
     """Dump search results to a LaTeX table."""
     filename = '%s/task%s_%s.tex' % (OUTPUT_FOLDER, task, case)
     with open(filename, 'w') as f:
+        case_nr = case.replace('case', '')
+
+        f.write(
+r'''\begin{table}[!htb] \footnotesize \center
+\caption{Task %s, Clinical note %s \label{tab:t%sc%s}}
+\begin{tabularx}{\textwidth}{l l X}
+    \toprule
+    Clinical note & Sentence & ICD-10 \\
+    \midrule
+''' % (task, case_nr, task, case_nr))
+
         for line, codes in results:
-            pass
+            f.write('\t %s & %s & %s \\\\\n' % (
+                    case_nr, line, _code_list_to_str(codes)))
+        f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}')
+
     print("Dumped task %s %s results to '%s'" % (task, case, filename))
 
 
