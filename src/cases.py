@@ -7,6 +7,7 @@ import sys
 import os
 import time
 from operator import itemgetter
+from functools import partial
 
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
@@ -38,7 +39,7 @@ def read_cases_from_files(folder_or_path):
     return cases
 
 
-def task_1a(lines):
+def task_1a(lines, output_handler):
     """Task 1 A. Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname='icd10')
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
@@ -46,11 +47,13 @@ def task_1a(lines):
     with ix.searcher() as searcher:
         for line in lines:
             q = qp.parse(line)
-            return searcher.search(q)
+
+            results = searcher.search(q)
+            output_handler(results)
+            break # TODO
 
 
-
-def task_2(cases):
+def task_2(lines, output_handler):
     """Task 2. Search through ATC codes."""
     pass
 
@@ -64,7 +67,8 @@ def output_latex(task, case, results):
 
 
 def output_print(task, case, results):
-    print("Case:Line - Results")
+    #print("Case:Line - Results")
+    print("%s:%s - %s" % (task, case, results))
 
 
 # Maps valid task names to functions which perform tasks
@@ -106,7 +110,7 @@ def main(script, task='', case='', output=''):
     cases = read_cases_from_files(case)
     print("Loaded %s cases from '%s'" % (len(cases), case))
 
-    # Handle and perform tasks
+    # Handle task argument
     if task in TASKS:
         tasks = {task: TASKS[task]}
     elif not task:
@@ -116,12 +120,15 @@ def main(script, task='', case='', output=''):
                 task, ', '.join(TASKS.keys())))
         sys.exit(2)
 
+    # Perform tasks, one at a time, one case at a time
     for task_name, func in tasks.items():
-        for case_name, lines in cases.items():
-            now = time.time()
-            output_handler(task_name, case_name, func(lines))
-            print("Performed '%s' in %.2f seconds" % (
-                    func.__doc__, time.time() - now))
+        now = time.time()
+        for case_name, lines in sorted(cases.items(), key=itemgetter(0)):
+            output_func = partial(output_handler, task_name, case_name)
+            func(lines, output_func)
+
+        print("Performed '%s' in %.2f seconds" % (
+                func.__doc__, time.time() - now))
 
     sys.exit(None)
 
