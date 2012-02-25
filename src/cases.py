@@ -79,15 +79,18 @@ def _code_list_to_str(codes):
     return ', '.join(codes)
 
 
-def output_json(task, case, results):
+def output_json(task, results):
     """Dump search results to a JSON file."""
-    filename = '%s/task%s_%s.json' % (OUTPUT_FOLDER, task, case)
+    filename = '%s/task%s.json' % (OUTPUT_FOLDER, task)
     with open(filename, 'w') as f:
-        obj = OrderedDict()
-        for line, codes in results:
-            obj[line] = _code_list_to_str(codes)
-        json.dump({case: obj}, f, indent=4)
-    print("Dumped task %s %s results to '%s'" % (task, case, filename))
+        output = OrderedDict()
+        for case, tmp in results.items():
+            obj = OrderedDict()
+            for line, codes in tmp:
+                obj[line] = _code_list_to_str(codes)
+            output[case] = obj
+        json.dump({'task%s' % task: output}, f, indent=4)
+    print("Dumped task %s results to '%s'" % (task, filename))
 
 
 def output_latex(task, results):
