@@ -44,21 +44,20 @@ def read_cases_from_files(folder_or_path):
     return cases
 
 
-def task_1a(lines, output_handler):
+def task_1a(lines):
     """Task 1 A: Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname='icd10')
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
+    results = []
     with ix.searcher() as searcher:
         for line in lines:
             q = qp.parse(line)
-
-            results = searcher.search(q)
-            output_handler(results)
-            break # TODO
+            results.append((i + 1, [r['short'] for r in searcher.search(q)]))
+    return results
 
 
-def task_2(lines, output_handler):
+def task_2(lines):
     """Task 2: Search through ATC codes."""
     ix = open_dir(INDEX_DIR, indexname='atc')
     qp = QueryParser('name', schema=ix.schema, group=OrGroup)
@@ -68,7 +67,7 @@ def task_2(lines, output_handler):
         for i, line in enumerate(lines):
             q = qp.parse(line)
             results.append((i + 1, [r['code'] for r in searcher.search(q)]))
-    output_handler(results)
+    return results
 
 
 def _code_list_to_str(codes):
@@ -91,13 +90,14 @@ def output_json(task, case, results):
     print("Dumped task %s %s results to '%s'" % (task, case, filename))
 
 
-def output_latex(task, case, results):
+def output_latex(task, results):
     """Dump search results to a LaTeX table."""
-    filename = '%s/task%s_%s.tex' % (OUTPUT_FOLDER, task, case)
+    filename = '%s/task%s.tex' % (OUTPUT_FOLDER, task)
     with open(filename, 'w') as f:
-        case_nr = case.replace('case', '')
+        for case, tmp in results.items():
+            case_nr = case.replace('case', '')
 
-        f.write(
+            f.write(
 r'''\begin{table}[htbp] \footnotesize \center
 \caption{Task %s, Clinical note %s \label{tab:t%sc%s}}
 \begin{tabularx}{\textwidth}{c c X}
@@ -106,21 +106,22 @@ r'''\begin{table}[htbp] \footnotesize \center
     \midrule
 ''' % (task, case_nr, task, case_nr))
 
-        for line, codes in results:
-            f.write('\t %s & %s & %s \\\\\n' % (
-                    case_nr, line, _code_list_to_str(codes)))
-        f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}')
+            for line, codes in tmp:
+                f.write('\t %s & %s & %s \\\\\n' % (
+                        case_nr, line, _code_list_to_str(codes)))
+            f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
 
-    print("Dumped task %s %s results to '%s'" % (task, case, filename))
+    print("Dumped task %s results to '%s'" % (task, filename))
 
 
-def output_print(task, case, results):
+def output_print(task, results):
     """Print a table of search results."""
-    print("Results from task %s - %s" % (task, case))
-    print("----------------------------")
-    for line, codes in results:
-        print("%s:%s - %s" % (case, line, _code_list_to_str(codes)))
-    print()
+    for case, tmp in results.items():
+        print("Results from task %s - %s" % (task, case))
+        print("--------------------------------------------")
+        for line, codes in tmp:
+            print("%s:%s - %s" % (case, line, _code_list_to_str(codes)))
+        print()
 
 
 # Maps valid task names to functions which perform tasks
@@ -177,10 +178,10 @@ def main(script, task='', case='', output=''):
     # Perform tasks, one at a time, one case at a time
     for task_name, func in tasks.items():
         now = time.time()
+        results = OrderedDict()
         for case_name, lines in sorted(cases.items(), key=itemgetter(0)):
-            output_func = partial(output_handler, task_name, case_name)
-            func(lines, output_func)
-
+            results[case_name] = func(lines)
+        output_handler(task_name, results)
         print("Performed '%s' in %.2f seconds" % (
                 func.__doc__, time.time() - now))
 
