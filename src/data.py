@@ -73,8 +73,8 @@ class ICD10:
     SCHEMA = ICD10_SCHEMA
     NAME = 'icd10'
 
+    fields = ('code', 'short', 'label', 'type', 'icpc2_code', 'icpc2_label')
     lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
-    fields = ('short', 'code', 'label', 'formatted', 'type', 'icpc2_label')
 
     def __init__(self):
         """Create a new ICD10 object."""
@@ -82,6 +82,10 @@ class ICD10:
             setattr(self, i, '')
         for i in self.fields:
             setattr(self, i, None)
+
+    @property
+    def description(self):
+        return '%s\n%s\n%s' % (self.label, self.terms, self.synonyms)
 
     def __str__(self):
         """Present the object as a string."""
@@ -97,7 +101,9 @@ class ICD10:
 
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
-        return self.to_json()
+        obj = self.to_json()
+        obj['description'] = self.description
+        return obj
 
     @classmethod
     def from_json(cls, values):
@@ -119,8 +125,8 @@ def parse_xml_file(path):
     list_mapping = {'underterm': 'terms', 'synonym': 'synonyms',
                     'inclusion': 'inclusions', 'exclusion': 'exclusions'}
     tag_mapping = {'label': 'label', 'code_compacted': 'short',
-                   'code_formatted': 'formatted', 'umls_semanticType': 'type',
-                   'icpc2_label': 'icpc2_label', 'icpc2_code': 'code'}
+                   'code_formatted': 'code', 'umls_semanticType': 'type',
+                   'icpc2_label': 'icpc2_label', 'icpc2_code': 'icpc2_code'}
 
     # Parse XML file
     tree = ElementTree.parse(path)

@@ -11,7 +11,6 @@ import os
 import time
 import json
 from operator import itemgetter
-from functools import partial
 from collections import OrderedDict
 
 from whoosh.index import open_dir
@@ -50,14 +49,20 @@ def read_cases_from_files(folder_or_path):
 def task_1a(lines):
     """Task 1 A: Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname='icd10')
-    qp = QueryParser('label', schema=ix.schema, group=OrGroup)
+    qp = QueryParser('description', schema=ix.schema, group=OrGroup)
 
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
             q = qp.parse(line)
-            results.append((i + 1, [r['short'] for r in searcher.search(q)]))
+            codes = [r['code'] for r in searcher.search(q) if 'code' in r]
+            results.append((i + 1, codes))
     return results
+
+
+def task_1b(lines):
+    """Task 1 B: Search through Legemiddelhåndboken."""
+    return []
 
 
 def task_2(lines):
@@ -100,23 +105,29 @@ def output_latex(task, results, fields):
     """Dump search results to a LaTeX table."""
     filename = '%s/task%s.tex' % (OUTPUT_FOLDER, task)
     with open(filename, 'w') as f:
-        for case, tmp in results.items():
-            case_nr = case.replace('case', '')
-
-            f.write(
+        f.write(
 r'''\begin{table}[htbp] \footnotesize \center
-\caption{Task %s, %s %s \label{tab:t%sc%s}}
+\caption{Task %s\label{tab:task%s}}
 \begin{tabularx}{\textwidth}{c c X}
     \toprule
     %s & %s & %s \\
     \midrule
-''' % (task, fields[0], case_nr, task,
-        case_nr, fields[0], fields[1], fields[2]))
+''' % (task, task, fields[0], fields[1], fields[2]))
 
+        nr = ''
+        for case, tmp in results.items():
+            case_nr = case.replace('case', '')
+            if nr == 'add':
+                f.write('\t\\addlinespace\n')
+
+            nr = case_nr
             for line, codes in tmp:
-                f.write('\t %s & %s & %s \\\\\n' % (
-                        case_nr, line, _code_list_to_str(codes)))
-            f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
+                f.write('\t%s & %s & %s \\\\\n' % (
+                        nr, line, _code_list_to_str(codes)))
+                nr = ''
+            nr = 'add'  # Hack
+
+        f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
 
     print("Dumped task %s results to '%s'" % (task, filename))
 
@@ -137,7 +148,7 @@ def output_print(task, results, fields):
 
 
 # Maps valid task names to functions which perform tasks
-TASKS = {'1a': task_1a, '2': task_2}
+TASKS = {'1a': task_1a, '1b': task_1b, '2': task_2}
 
 
 # Maps task name to output fields
@@ -195,7 +206,7 @@ def main(script, task='', case='', output=''):
 
     # Perform tasks, one at a time, one case at a time
     start_time = time.time()
-    for task_name, func in tasks.items():
+    for task_name, func in sorted(tasks.items(), key=itemgetter(0)):
         now = time.time()
         results = OrderedDict()
         for case_name, lines in sorted(cases.items(), key=itemgetter(0)):

@@ -10,9 +10,10 @@ INDEX_DIR = 'indexdir'
 
 
 # Schema for storing and indexing ICD10 codes in whoosh database
-ICD10_SCHEMA = Schema(short=ID(stored=True), label=TEXT, formatted=ID,
-                      code=ID, type=TEXT, icpc2_label=TEXT, synonyms=TEXT,
-                      terms=TEXT, inclusions=TEXT, exclusions=TEXT)
+ICD10_SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
+                      label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
+                      icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
+                      inclusions=TEXT, exclusions=TEXT, description=TEXT)
 
 
 # Schema for storing and indexing ATC codes in whoosh database

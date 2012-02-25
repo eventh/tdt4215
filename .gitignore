@@ -21,5 +21,6 @@
 *htmlcov/
 *__pycache__/
 /report/tmp
+/report/.tmp
 /src/indexdir/
 /src/output/
