@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 Module for handling patient cases and performing the project tasks.
+
+Runs all or specified project tasks, with all or specified patient cases.
+Outputs either to stdout, or saves to JSON files or generates LaTeX tables.
 """
 import sys
 import os
@@ -51,7 +54,7 @@ def task_1a(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for line in lines:
+        for i, line in enumerate(lines):
             q = qp.parse(line)
             results.append((i + 1, [r['short'] for r in searcher.search(q)]))
     return results
@@ -79,7 +82,7 @@ def _code_list_to_str(codes):
     return ', '.join(codes)
 
 
-def output_json(task, results):
+def output_json(task, results, fields=None):
     """Dump search results to a JSON file."""
     filename = '%s/task%s.json' % (OUTPUT_FOLDER, task)
     with open(filename, 'w') as f:
@@ -93,7 +96,7 @@ def output_json(task, results):
     print("Dumped task %s results to '%s'" % (task, filename))
 
 
-def output_latex(task, results):
+def output_latex(task, results, fields):
     """Dump search results to a LaTeX table."""
     filename = '%s/task%s.tex' % (OUTPUT_FOLDER, task)
     with open(filename, 'w') as f:
@@ -102,12 +105,13 @@ def output_latex(task, results):
 
             f.write(
 r'''\begin{table}[htbp] \footnotesize \center
-\caption{Task %s, Clinical note %s \label{tab:t%sc%s}}
+\caption{Task %s, %s %s \label{tab:t%sc%s}}
 \begin{tabularx}{\textwidth}{c c X}
     \toprule
-    Clinical note & Sentence & ICD-10 \\
+    %s & %s & %s \\
     \midrule
-''' % (task, case_nr, task, case_nr))
+''' % (task, fields[0], case_nr, task,
+        case_nr, fields[0], fields[1], fields[2]))
 
             for line, codes in tmp:
                 f.write('\t %s & %s & %s \\\\\n' % (
@@ -117,18 +121,29 @@ r'''\begin{table}[htbp] \footnotesize \center
     print("Dumped task %s results to '%s'" % (task, filename))
 
 
-def output_print(task, results):
-    """Print a table of search results."""
+def output_print(task, results, fields):
+    """Print a table of search results.
+
+    'task' is the name of the task we ran.
+    'results' is a dict mapping case with results for the task.
+    'fields' is the fields to represent in the output.
+    """
     for case, tmp in results.items():
-        print("Results from task %s - %s" % (task, case))
+        print("%s | %s | %s" % fields + " (task %s)" % task)
         print("--------------------------------------------")
         for line, codes in tmp:
-            print("%s:%s - %s" % (case, line, _code_list_to_str(codes)))
+            print("%s | %s | %s" % (case, line, _code_list_to_str(codes)))
         print()
 
 
 # Maps valid task names to functions which perform tasks
 TASKS = {'1a': task_1a, '2': task_2}
+
+
+# Maps task name to output fields
+TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
+               '1b': ('Chapter', 'Sentence', 'ICD-10'),
+               '2': ('Clinical note', 'Sentence', 'ATC')}
 
 
 # Maps valid output arguments to functions which generates output
@@ -179,14 +194,19 @@ def main(script, task='', case='', output=''):
         sys.exit(2)
 
     # Perform tasks, one at a time, one case at a time
+    start_time = time.time()
     for task_name, func in tasks.items():
         now = time.time()
         results = OrderedDict()
         for case_name, lines in sorted(cases.items(), key=itemgetter(0)):
             results[case_name] = func(lines)
-        output_handler(task_name, results)
+        output_handler(task_name, results, TASK_FIELDS[task_name])
         print("Performed '%s' in %.2f seconds" % (
                 func.__doc__, time.time() - now))
+
+    if len(tasks) > 1:
+        print("Ran %s tasks in %.2f seconds" % (
+                len(tasks), time.time() - start_time))
 
     sys.exit(None)
 
