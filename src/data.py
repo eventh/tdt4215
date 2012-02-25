@@ -31,13 +31,15 @@ class ATC:
     the chemical substance.
     """
 
-    SCHEMA = ATC_SCHEMA
-    NAME = 'atc'
+    NAME = 'atc'  # Index name
+    SCHEMA = ATC_SCHEMA  # Index schema
+    ALL = {}  # All ATC objects
 
     def __init__(self, code, name):
         """Create a new ATC object."""
         self.code = code
         self.name = name
+        ATC.ALL[code] = self
 
     def __str__(self):
         """Present the object as a string."""
@@ -70,8 +72,9 @@ class ICD10:
     causes of injury or diseases.
     """
 
-    SCHEMA = ICD10_SCHEMA
-    NAME = 'icd10'
+    NAME = 'icd10'  # Index name
+    SCHEMA = ICD10_SCHEMA  # Index schema
+    ALL = {}  # All ICD10 objects
 
     fields = ('code', 'short', 'label', 'type', 'icpc2_code', 'icpc2_label')
     lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
@@ -112,7 +115,20 @@ class ICD10:
         for i in cls.lists + cls.fields:
             if i in values:
                 setattr(obj, i, values[i])
+        ICD10.ALL[values['short']] = obj
         return obj
+
+
+def populate_data_from_json():
+    """Populate ICD10 and ATC objects from JSON files."""
+    files = {'etc/icd10no.json': ICD10, 'etc/atcname.json': ATC}
+    for path in list(files.keys()) + [INDEX_DIR]:
+        if not os.path.exists(path):
+            raise IOError("Missing file or index: %s" % path)
+    for path, cls in files.items():
+        with open(path, 'r') as f:
+            json_objects = json.load(f)
+        objects = [cls.from_json(i) for i in json_objects]
 
 
 def parse_xml_file(path):
