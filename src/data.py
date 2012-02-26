@@ -240,7 +240,7 @@ def main(script, path='', command=''):
         sys.exit(None)
     cls = objects[0].__class__
 
-    # Create index if necesseary
+    # Create index if necessary
     if not os.path.exists(INDEX_DIR):
         os.mkdir(INDEX_DIR)
     if not exists_in(INDEX_DIR, indexname=cls.NAME):
