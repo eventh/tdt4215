@@ -13,10 +13,11 @@ import json
 from operator import itemgetter
 from collections import OrderedDict
 
-from whoosh.index import open_dir, exists_in
+from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
-from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
+from schemas import INDEX_DIR
+from data import ATC, ICD10, empty_indices
 
 
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
@@ -48,7 +49,7 @@ def read_cases_from_files(folder_or_path):
 
 def task_1a(lines):
     """Task 1 A: Search through ICD10 codes."""
-    ix = open_dir(INDEX_DIR, indexname='icd10')
+    ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
     results = []
@@ -67,7 +68,7 @@ def task_1a(lines):
 
 def task_1a_alt(lines):
     """Task 1 A: Search through ICD10 codes."""
-    ix = open_dir(INDEX_DIR, indexname='icd10')
+    ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
     qp = QueryParser('description', schema=ix.schema, group=OrGroup)
     # What about exclusions? NOT IN?
 
@@ -92,7 +93,7 @@ def task_1b(lines):
 
 def task_2(lines):
     """Task 2: Search through ATC codes."""
-    ix = open_dir(INDEX_DIR, indexname='atc')
+    ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
     qp = QueryParser('name', schema=ix.schema, group=OrGroup)
 
     results = []
@@ -188,22 +189,6 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
 OUTPUTS = {'json': output_json, 'latex': output_latex, '': output_print}
 
 
-def _empty_indexes():
-    """Check if indexes exists and contains documents."""
-    if not os.path.isdir(INDEX_DIR):
-        return True
-
-    index_names = (ATC.name, ICD.name)
-    for name in index_names:
-        if not exists_in(INDEX_DIR, indexname=name):
-            return True
-        ix = open_dir(INDEX_DIR, indexname=name)
-        if ix.doc_count() < 1:
-            return True
-
-    return False
-
-
 def main(script, task='', case='', output=''):
     """Perform project tasks on cases.
 
@@ -213,7 +198,7 @@ def main(script, task='', case='', output=''):
     Usage: 'python3 cases.py [task] [case] [latex|json]'.
     """
     # Check if indexes contains documents
-    if _empty_indexes():
+    if empty_indices():
         print("You need to build indexes with data.py first!")
         sys.exit(1)
 
