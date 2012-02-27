@@ -98,11 +98,16 @@ def task_1a_alt(lines):
             q = qp.parse(line)
             objs = searcher.search(q)
 
-            print("line %i: %s" % (i+1, line))
-            for k, hit in enumerate(objs[:5]):
-                print('%i: %s - %s' % (k, hit['code'], hit['label']), hit.score)
+            # Add up to 3 hits if they are higher than 11 and closer than 3
+            codes = []
+            for hit in objs:
+                if ((hit.score < 11 and codes) or
+                        (hit.score + 3 < objs[0].score) or
+                        (len(codes) > 2)):
+                    break
+                codes.append(hit['code'])
 
-            results.append([r['code'] for r in objs])
+            results.append(codes)
     return results
 
 
@@ -121,6 +126,11 @@ def task_2a(lines):
         for line in lines:
             q = qp.parse(line)
             results.append([r['code'] for r in searcher.search(q)])
+            #print("line %i: %s" % (i+1, line))
+            #for k, hit in enumerate(objs[:5]):
+            #    print('%i: %s - %s' % (k, hit['code'], hit['label']), hit.score)
+            #    if k < 1:
+            #        print("Matched:", ', '.join(i[1] for i in hit.matched_terms()))
     return results
 
 
