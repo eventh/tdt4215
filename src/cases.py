@@ -23,6 +23,17 @@ from data import ATC, ICD10, is_empty_indices
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
 
 
+def read_stopwords():
+    """Read in and return stop-words from file."""
+    with open('etc/stoppord.txt', 'r') as f:
+        return set(i.strip() for i in f.readlines())
+
+
+def remove_stopwords(line, stop_words=read_stopwords()):
+    """Remove stop-words from line."""
+    return ' '.join([i for i in line.split(' ') if i not in stop_words])
+
+
 def read_cases_from_files(folder_or_path):
     """Read lines from case files in 'folder_or_path'."""
     # Find case paths if path is a folder
@@ -55,6 +66,11 @@ def task_1a(lines):
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
+            line = remove_stopwords(line)
+            if not line:
+                break
+            print(line)
+
             q = qp.parse(line)
             objs = searcher.search(q)
             if objs:
