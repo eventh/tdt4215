@@ -17,7 +17,7 @@ report:
 	@mv .tmp/index.pdf report.pdf
 	evince report.pdf
 
-tables:
+results:
 	@echo "Building LaTeX tables standalone"
 	@pdflatex standalone_tables.tex
 	@pdflatex standalone_tables.tex

@@ -91,7 +91,7 @@ def task_1b(lines):
     return []
 
 
-def task_2(lines):
+def task_2a(lines):
     """Task 2: Search through ATC codes."""
     ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
     qp = QueryParser('name', schema=ix.schema, group=OrGroup)
@@ -103,6 +103,11 @@ def task_2(lines):
             codes = [r['code'] for r in searcher.search(q)[:1]]
             results.append((i + 1, codes))
     return results
+
+
+def task_2b(lines):
+    """Task 2 B: Search through Legemiddelhåndboken."""
+    return []
 
 
 def _code_list_to_str(codes):
@@ -167,15 +172,17 @@ def output_print(task, results, fields):
     'fields' is the fields to represent in the output.
     """
     for case, tmp in results.items():
+        case_nr = case.replace('case', '')
         print("%s | %s | %s" % fields + " (task %s)" % task)
         print("--------------------------------------------")
         for line, codes in tmp:
-            print("%s | %s | %s" % (case, line, _code_list_to_str(codes)))
+            print("%s | %s | %s" % (case_nr, line, _code_list_to_str(codes)))
         print()
 
 
 # Maps valid task names to functions which perform tasks
-TASKS = {'1a': task_1a, '1ab': task_1a_alt, '1b': task_1b, '2': task_2}
+TASKS = {'1a': task_1a, '1ab': task_1a_alt, '1b': task_1b,
+        '2a': task_2a, '2b': task_2b}
 
 
 # Maps task name to output fields
