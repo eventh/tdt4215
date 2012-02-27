@@ -22,7 +22,14 @@ def preprocess_html_file(in_path, out_path):
             f2.write('\n'.join(i.rstrip() for i in f.readlines()))
 
 
-def main(script):
+def parse_html_file(path):
+    pass
+
+
+def main(script, path='', command=''):
+    if not os.path.isfile(path):
+        print("")
+        sys.exit(2)
     sys.exit(None)
 
 
