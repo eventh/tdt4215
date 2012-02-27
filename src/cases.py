@@ -49,14 +49,39 @@ def read_cases_from_files(folder_or_path):
 def task_1a(lines):
     """Task 1 A: Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname='icd10')
-    qp = QueryParser('description', schema=ix.schema, group=OrGroup)
+    qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
             q = qp.parse(line)
-            codes = [r['code'] for r in searcher.search(q) if 'code' in r]
-            results.append((i + 1, codes))
+            objs = searcher.search(q)
+            if objs:
+                # Unsure if we want only objs with 'code' or?
+                if 'code' in objs[0]:
+                    results.append((i + 1, [objs[0]['code']]))
+                else:
+                    results.append((i + 1, [objs[0]['short']]))
+    return results
+
+
+def task_1a_alt(lines):
+    """Task 1 A: Search through ICD10 codes."""
+    ix = open_dir(INDEX_DIR, indexname='icd10')
+    qp = QueryParser('description', schema=ix.schema, group=OrGroup)
+    # What about exclusions? NOT IN?
+
+    results = []
+    with ix.searcher() as searcher:
+        for i, line in enumerate(lines):
+            q = qp.parse(line)
+            objs = searcher.search(q)
+            if objs:
+                # Unsure if we want only objs with 'code' or?
+                if 'code' in objs[0]:
+                    results.append((i + 1, [objs[0]['code']]))
+                else:
+                    results.append((i + 1, [objs[0]['short']]))
     return results
 
 
@@ -74,7 +99,8 @@ def task_2(lines):
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
             q = qp.parse(line)
-            results.append((i + 1, [r['code'] for r in searcher.search(q)]))
+            codes = [r['code'] for r in searcher.search(q)[:1]]
+            results.append((i + 1, codes))
     return results
 
 
@@ -148,11 +174,12 @@ def output_print(task, results, fields):
 
 
 # Maps valid task names to functions which perform tasks
-TASKS = {'1a': task_1a, '1b': task_1b, '2': task_2}
+TASKS = {'1a': task_1a, '1ab': task_1a_alt, '1b': task_1b, '2': task_2}
 
 
 # Maps task name to output fields
 TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
+               '1ab': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b': ('Chapter', 'Sentence', 'ICD-10'),
                '2': ('Clinical note', 'Sentence', 'ATC')}
 

@@ -88,7 +88,8 @@ class ICD10:
 
     @property
     def description(self):
-        return '%s\n%s\n%s' % (self.label, self.terms, self.synonyms)
+        return '%s\n%s\n%s\n%s' % (self.label, self.terms,
+                                   self.synonyms, self.inclusions)
 
     def __str__(self):
         """Present the object as a string."""
