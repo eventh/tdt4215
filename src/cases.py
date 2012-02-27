@@ -69,7 +69,6 @@ def task_1a(lines):
             line = remove_stopwords(line)
             if not line:
                 break
-            print(line)
 
             q = qp.parse(line)
             objs = searcher.search(q)
@@ -91,6 +90,10 @@ def task_1a_alt(lines):
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
+            line = remove_stopwords(line)
+            if not line:
+                break
+
             q = qp.parse(line)
             objs = searcher.search(q)
             if objs:
@@ -115,6 +118,10 @@ def task_2a(lines):
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
+            line = remove_stopwords(line)
+            if not line:
+                break
+
             q = qp.parse(line)
             codes = [r['code'] for r in searcher.search(q)[:1]]
             results.append((i + 1, codes))
