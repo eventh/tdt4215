@@ -48,6 +48,7 @@ def read_cases_from_files(folder_or_path):
 
 def task_1a(lines):
     """Task 1 A: Search through ICD10 codes."""
+	#what if index_dir folder don't exist?
     ix = open_dir(INDEX_DIR, indexname='icd10')
     qp = QueryParser('description', schema=ix.schema, group=OrGroup)
 
@@ -169,6 +170,9 @@ def main(script, task='', case='', output=''):
     'output' is the output to generate, optional.
     Usage: 'python3 cases.py [task] [case] [latex|json]'.
     """
+	#should we make parse_args to achieve usage message if the arguments given are not sufficient?
+	#im having problems if I only give: cases.py 1a
+		
     # Handle output
     if task in ('json', 'latex'):
         output = task
