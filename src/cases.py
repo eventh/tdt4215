@@ -102,7 +102,7 @@ def task_1a_alt(lines):
 
 
 def task_1b(lines):
-    """Task 1 B: Search through Legemiddelhåndboken."""
+    """Task 1 B: Search through Legemiddelhandboken."""
     return []
 
 
@@ -121,7 +121,7 @@ def task_2a(lines):
 
 
 def task_2b(lines):
-    """Task 2 B: Search through Legemiddelhåndboken."""
+    """Task 2 B: Search through Legemiddelhandboken."""
     return []
 
 
