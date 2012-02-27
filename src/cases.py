@@ -29,11 +29,12 @@ def read_stopwords():
         return set(i.strip() for i in f.readlines())
 
 
-def remove_stopwords(lines, stop_words=read_stopwords()):
+def remove_stopwords(lines, words=read_stopwords()):
     """Remove stop-words from lines."""
     output = []
     for line in lines:
-        line = ' '.join(i for i in line.strip().split(' ') if i not in stop_words)
+        line = ' '.join(i for i in line.strip().split(' ')
+                                    if i.lower() not in words)
         if line:
             output.append(line)
     return output
@@ -72,16 +73,10 @@ def task_1a(lines):
         for i, line in enumerate(lines):
             q = qp.parse(line)
             objs = searcher.search(q)
-            if objs:
-                print("test", line)
-                for k, tmp in enumerate(objs[:5]):
-                    print('%i: %s - %s' % (k, tmp['short'], tmp['label']))
-            #    # Unsure if we want only objs with 'code' or?
-            #    if 'code' in objs[0]:
-            #        results.append((i + 1, [objs[0]['code']]))
-            #    else:
-            #        results.append((i + 1, [objs[0]['short']]))
-            results.append((i + 1, [r['short'] for r in objs]))
+            print("line %i: %s" % (i+1, line))
+            for k, tmp in enumerate(objs[:5]):
+                print('%i: %s - %s' % (k, tmp['short'], tmp['label']))
+            results.append([r['code'] for r in objs])
     return results
 
 
@@ -93,15 +88,9 @@ def task_1a_alt(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for i, line in enumerate(lines):
+        for line in lines:
             q = qp.parse(line)
-            objs = searcher.search(q)
-            if objs:
-                # Unsure if we want only objs with 'code' or?
-                if 'code' in objs[0]:
-                    results.append((i + 1, [objs[0]['code']]))
-                else:
-                    results.append((i + 1, [objs[0]['short']]))
+            results.append([r['code'] for r in searcher.search(q)])
     return results
 
 
@@ -117,10 +106,9 @@ def task_2a(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for i, line in enumerate(lines):
+        for line in lines:
             q = qp.parse(line)
-            codes = [r['code'] for r in searcher.search(q)[:1]]
-            results.append((i + 1, codes))
+            results.append([r['code'] for r in searcher.search(q)])
     return results
 
 
@@ -134,7 +122,7 @@ def _code_list_to_str(codes):
     if not codes:
         return '.'
     if len(codes) > 6:
-        codes = codes[:6] + ['...']
+        codes = codes[:5] + ['...']
     return ', '.join(codes)
 
 
@@ -143,10 +131,10 @@ def output_json(task, results, fields=None):
     filename = '%s/task%s.json' % (OUTPUT_FOLDER, task)
     with open(filename, 'w') as f:
         output = OrderedDict()
-        for case, tmp in results.items():
+        for case, lines in results.items():
             obj = OrderedDict()
-            for line, codes in tmp:
-                obj[line] = _code_list_to_str(codes)
+            for i, codes in enumerate(lines):
+                obj[i] = _code_list_to_str(codes)
             output[case] = obj
         json.dump({'task%s' % task: output}, f, indent=4)
     print("Dumped task %s results to '%s'" % (task, filename))
@@ -166,15 +154,15 @@ r'''\begin{table}[htbp] \footnotesize \center
 ''' % (task, task, fields[0], fields[1], fields[2]))
 
         nr = ''
-        for case, tmp in results.items():
+        for case, lines in results.items():
             case_nr = case.replace('case', '')
             if nr == 'add':
                 f.write('\t\\addlinespace\n')
 
             nr = case_nr
-            for line, codes in tmp:
+            for i, codes in enumerate(lines):
                 f.write('\t%s & %s & %s \\\\\n' % (
-                        nr, line, _code_list_to_str(codes)))
+                        nr, i + 1, _code_list_to_str(codes)))
                 nr = ''
             nr = 'add'  # Hack
 
@@ -190,12 +178,12 @@ def output_print(task, results, fields):
     'results' is a dict mapping case with results for the task.
     'fields' is the fields to represent in the output.
     """
-    for case, tmp in results.items():
+    for case, lines in results.items():
         case_nr = case.replace('case', '')
         print("%s | %s | %s" % fields + " (task %s)" % task)
         print("--------------------------------------------")
-        for line, codes in tmp:
-            print("%s | %s | %s" % (case_nr, line, _code_list_to_str(codes)))
+        for i, codes in enumerate(lines):
+            print("%s | %s | %s" % (case_nr, i + 1, _code_list_to_str(codes)))
         print()
 
 

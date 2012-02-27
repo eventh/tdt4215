@@ -214,3 +214,5 @@ verte
 vore
 vors
 vort
+pga
+ca
