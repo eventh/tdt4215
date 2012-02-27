@@ -135,7 +135,7 @@ class ICD10:
         return obj
 
 
-def is_empty_indices():
+def is_indices_empty():
     """Check if indexes exists and contains documents."""
     if not os.path.isdir(INDEX_DIR):
         return True
