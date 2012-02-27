@@ -29,9 +29,14 @@ def read_stopwords():
         return set(i.strip() for i in f.readlines())
 
 
-def remove_stopwords(line, stop_words=read_stopwords()):
-    """Remove stop-words from line."""
-    return ' '.join([i for i in line.split(' ') if i not in stop_words])
+def remove_stopwords(lines, stop_words=read_stopwords()):
+    """Remove stop-words from lines."""
+    output = []
+    for line in lines:
+        line = ' '.join(i for i in line.strip().split(' ') if i not in stop_words)
+        if line:
+            output.append(line)
+    return output
 
 
 def read_cases_from_files(folder_or_path):
@@ -52,8 +57,7 @@ def read_cases_from_files(folder_or_path):
         filename, ext = os.path.splitext(os.path.split(path)[1])
         if ext == '.txt' and filename.startswith('case'):
             with open(path) as f:
-                lines = read_stopwords([i.strip() for i in f.readlines()])
-                cases[filename] = [i for i in lines if i]
+                cases[filename] = remove_stopwords(f.readlines())
 
     return cases
 
@@ -200,7 +204,8 @@ TASKS = {'1a': task_1a, '1ab': task_1a_alt, '1b': task_1b,
 TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1ab': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b': ('Chapter', 'Sentence', 'ICD-10'),
-               '2': ('Clinical note', 'Sentence', 'ATC')}
+               '2a': ('Clinical note', 'Sentence', 'ATC'),
+               '2b': ('Clinical note', 'Sentence', 'ATC')}
 
 
 # Maps valid output arguments to functions which generates output
