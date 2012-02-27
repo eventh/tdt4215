@@ -135,7 +135,7 @@ def output_latex(task, results, fields):
         f.write(
 r'''\begin{table}[htbp] \footnotesize \center
 \caption{Task %s\label{tab:task%s}}
-\begin{tabularx}{\textwidth}{c c X}
+\begin{tabular}{c c l}
     \toprule
     %s & %s & %s \\
     \midrule
@@ -154,7 +154,7 @@ r'''\begin{table}[htbp] \footnotesize \center
                 nr = ''
             nr = 'add'  # Hack
 
-        f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
+        f.write('\t\\bottomrule\n\\end{tabular}\n\\end{table}\n\n\n')
 
     print("Dumped task %s results to '%s'" % (task, filename))
 
