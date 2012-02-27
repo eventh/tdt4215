@@ -17,7 +17,7 @@ from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
 from schemas import INDEX_DIR
-from data import ATC, ICD10, empty_indices
+from data import ATC, ICD10, is_empty_indices
 
 
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
@@ -198,7 +198,7 @@ def main(script, task='', case='', output=''):
     Usage: 'python3 cases.py [task] [case] [latex|json]'.
     """
     # Check if indexes contains documents
-    if empty_indices():
+    if is_empty_indices():
         print("You need to build indexes with data.py first!")
         sys.exit(1)
 
