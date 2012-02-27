@@ -48,7 +48,6 @@ def read_cases_from_files(folder_or_path):
 
 def task_1a(lines):
     """Task 1 A: Search through ICD10 codes."""
-	#what if index_dir folder don't exist?
     ix = open_dir(INDEX_DIR, indexname='icd10')
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
@@ -189,6 +188,12 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
 OUTPUTS = {'json': output_json, 'latex': output_latex, '': output_print}
 
 
+def _empty_indexes():
+    """Check if indexes exists and contains documents."""
+    if not os.path.isdir(INDEX_DIR):
+        return True
+
+
 def main(script, task='', case='', output=''):
     """Perform project tasks on cases.
 
@@ -197,9 +202,11 @@ def main(script, task='', case='', output=''):
     'output' is the output to generate, optional.
     Usage: 'python3 cases.py [task] [case] [latex|json]'.
     """
-	#should we make parse_args to achieve usage message if the arguments given are not sufficient?
-	#im having problems if I only give: cases.py 1a
-		
+    if _empty_indexes():
+        print("You need to build indexes with data.py first!")
+        sys.exit(1)
+
+
     # Handle output
     if task in ('json', 'latex'):
         output = task
