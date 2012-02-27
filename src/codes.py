@@ -221,7 +221,7 @@ def parse_pl_file(path):
         for line in f:
             if line.startswith('atcname( [') and line.endswith(').\n'):
                 code, rest = line[10:-3].split(']', 1)
-                code = ''.join(code.split(','))
+                code = ''.join(code.split(',')).upper()
                 name = rest.split("'")[1]
                 objects.append(ATC(code, name))
     return objects
