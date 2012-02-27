@@ -69,13 +69,20 @@ def task_1a(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for i, line in enumerate(lines):
+        for line in lines:
             q = qp.parse(line)
             objs = searcher.search(q)
-            print("line %i: %s" % (i+1, line))
-            for k, tmp in enumerate(objs[:5]):
-                print('%i: %s - %s' % (k, tmp['short'], tmp['label']))
-            results.append([r['code'] for r in objs])
+
+            # Add up to 3 hits if they are higher than 9 and closer than 2
+            codes = []
+            for hit in objs:
+                if ((hit.score < 9 and codes) or
+                        (hit.score + 2 < objs[0].score) or
+                        (len(codes) > 2)):
+                    break
+                codes.append(hit['code'])
+
+            results.append(codes)
     return results
 
 
@@ -87,9 +94,15 @@ def task_1a_alt(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for line in lines:
+        for i, line in enumerate(lines):
             q = qp.parse(line)
-            results.append([r['code'] for r in searcher.search(q)])
+            objs = searcher.search(q)
+
+            print("line %i: %s" % (i+1, line))
+            for k, hit in enumerate(objs[:5]):
+                print('%i: %s - %s' % (k, hit['code'], hit['label']), hit.score)
+
+            results.append([r['code'] for r in objs])
     return results
 
 
