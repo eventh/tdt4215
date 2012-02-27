@@ -245,12 +245,12 @@ OUTPUTS = {'json': output_json, 'latex': output_latex,
 
 
 def main(script, task='', case='', output=''):
-    """Perform project tasks on cases.
+    """Perform project tasks.
 
     'task' is the project task to run, optional.
     'case' is a path to the case to run, optional.
     'output' is the output to generate, optional.
-    Usage: 'python3 cases.py [task] [case] [latex|json]'.
+    Usage: 'python3 tasks.py [task] [case] [latex|json]'.
     """
     # Check if indexes contains documents
     if is_indices_empty():
