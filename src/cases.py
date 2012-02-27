@@ -73,11 +73,11 @@ def task_1a(lines):
             q = qp.parse(line)
             objs = searcher.search(q)
 
-            # Add up to 3 hits if they are higher than 9 and closer than 2
+            # Add up to 3 hits if they are higher than 9 and closer than 1.5
             codes = []
             for hit in objs:
                 if ((hit.score < 9 and codes) or
-                        (hit.score + 2 < objs[0].score) or
+                        (hit.score + 1.5 < objs[0].score) or
                         (len(codes) > 2)):
                     break
                 codes.append(hit['code'])
@@ -94,7 +94,7 @@ def task_1a_alt(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for i, line in enumerate(lines):
+        for line in lines:
             q = qp.parse(line)
             objs = searcher.search(q)
 
@@ -123,19 +123,31 @@ def task_2a(lines):
 
     results = []
     with ix.searcher() as searcher:
-        for line in lines:
+        for i, line in enumerate(lines):
             q = qp.parse(line)
-            results.append([r['code'] for r in searcher.search(q)])
-            #print("line %i: %s" % (i+1, line))
-            #for k, hit in enumerate(objs[:5]):
-            #    print('%i: %s - %s' % (k, hit['code'], hit['label']), hit.score)
-            #    if k < 1:
-            #        print("Matched:", ', '.join(i[1] for i in hit.matched_terms()))
+            objs = searcher.search(q)
+
+            # Add up to 3 hits if they are higher than 7 and closer than 2
+            codes = []
+            for hit in objs:
+                if ((hit.score < 7 and codes) or
+                        (hit.score + 2 < objs[0].score) or
+                        (len(codes) > 2)):
+                    break
+                codes.append(hit['code'])
+
+            results.append(codes)
     return results
 
 
 def task_2b(lines):
     """Task 2 B: Search through Legemiddelhandboken."""
+    #objs = searcher.search(q, terms=True)
+    #print("line %i: %s" % (i+1, line))
+    #for k, hit in enumerate(objs[:5]):
+    #    print('%i: %s - %s' % (k, hit['code'], hit['name']), hit.score)
+    #    if k < 1:
+    #        print("Matched:", ', '.join(i[1] for i in hit.matched_terms()))
     return []
 
 

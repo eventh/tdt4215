@@ -8,7 +8,7 @@ import sys
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
-from codes import ATC, ICD10, is_empty_indices, INDEX_DIR
+from codes import ATC, ICD10, INDEX_DIR
 
 
 def search_icd10(field, query):
