@@ -73,11 +73,15 @@ def task_1a(lines):
             q = qp.parse(line)
             objs = searcher.search(q)
             if objs:
-                # Unsure if we want only objs with 'code' or?
-                if 'code' in objs[0]:
-                    results.append((i + 1, [objs[0]['code']]))
-                else:
-                    results.append((i + 1, [objs[0]['short']]))
+                print("test", line)
+                for k, tmp in enumerate(objs[:5]):
+                    print('%i: %s - %s' % (k, tmp['short'], tmp['label']))
+            #    # Unsure if we want only objs with 'code' or?
+            #    if 'code' in objs[0]:
+            #        results.append((i + 1, [objs[0]['code']]))
+            #    else:
+            #        results.append((i + 1, [objs[0]['short']]))
+            results.append((i + 1, [r['short'] for r in objs]))
     return results
 
 

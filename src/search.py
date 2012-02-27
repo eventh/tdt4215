@@ -6,32 +6,39 @@ A module for searching in the whoosh database.
 import sys
 
 from whoosh.index import open_dir
-from whoosh.qparser import QueryParser
+from whoosh.qparser import QueryParser, OrGroup
 
-from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
+from schemas import INDEX_DIR
+from data import ATC, ICD10, is_empty_indices
 
 
-def search_icd10(query, result_func=None):
+def search_icd10(query):
     """Search the ICD10 index with 'query'."""
-    ix = open_dir(INDEX_DIR, indexname='icd10')
+    ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
+    qp = QueryParser('label', schema=ix.schema, group=OrGroup)
+
     with ix.searcher() as searcher:
-
-        # Search
-        qp = QueryParser('label', schema=ix.schema)
         q = qp.parse(query)
-        result = searcher.search(q)
+        objs = searcher.search(q)
+        return ['%s: %s' % (i['short'], i['label']) for i in objs[:5]]
 
-        # Handle result
-        if result_func is None:
-            result_func = print_result
-        return result_func(result)
+
+def search_atc(query):
+    """Search the ATC index with 'query'."""
+    ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
+    qp = QueryParser('name', schema=ix.schema, group=OrGroup)
+
+    with ix.searcher() as searcher:
+        q = qp.parse(query)
+        objs = searcher.search(q)
+        return ['%s: %s' % (i['code'], i['name']) for i in objs[:5]]
 
 
 def print_result(result):
     """Simply print all results from a search."""
-    print(result)
-    for res in result:
-        print (res)
+    print("Showing top %i results:" % len(result))
+    for i, res in enumerate(result):
+        print(i, res)
 
 
 def main(script, index='', *query):
@@ -44,7 +51,10 @@ def main(script, index='', *query):
     flat_query = ''.join(query)
 
     if index == 'icd10':
-        search_icd10(flat_query)
+        print_result(search_icd10(flat_query))
+
+    elif index == 'atc':
+        print_result(search_atc(flat_query))
 
     else:
         print("Unknown database: %s" % index)
