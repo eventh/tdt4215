@@ -199,6 +199,11 @@ def output_print(task, results, fields):
         print()
 
 
+def output_none(*args, **vargs):
+    """Print nothing! WTF"""
+    pass
+
+
 # Maps valid task names to functions which perform tasks
 TASKS = {'1a': task_1a, '1ab': task_1a_alt, '1b': task_1b,
         '2a': task_2a, '2b': task_2b}
@@ -213,7 +218,8 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
 
 
 # Maps valid output arguments to functions which generates output
-OUTPUTS = {'json': output_json, 'latex': output_latex, '': output_print}
+OUTPUTS = {'json': output_json, 'latex': output_latex,
+           '': output_print, 'none': output_none}
 
 
 def main(script, task='', case='', output=''):
@@ -230,10 +236,10 @@ def main(script, task='', case='', output=''):
         sys.exit(1)
 
     # Handle output
-    if task in ('json', 'latex'):
+    if task in ('json', 'latex', 'none'):
         output = task
         task = ''
-    if case in ('json', 'latex'):
+    if case in ('json', 'latex', 'none'):
         output = case
         case = ''
     if output in ('json', 'latex') and not os.path.exists(OUTPUT_FOLDER):

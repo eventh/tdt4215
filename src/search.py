@@ -12,10 +12,10 @@ from schemas import INDEX_DIR
 from data import ATC, ICD10, is_empty_indices
 
 
-def search_icd10(query):
+def search_icd10(field, query):
     """Search the ICD10 index with 'query'."""
     ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
-    qp = QueryParser('label', schema=ix.schema, group=OrGroup)
+    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
 
     with ix.searcher() as searcher:
         q = qp.parse(query)
@@ -23,10 +23,10 @@ def search_icd10(query):
         return ['%s: %s' % (i['short'], i['label']) for i in objs[:5]]
 
 
-def search_atc(query):
+def search_atc(field, query):
     """Search the ATC index with 'query'."""
     ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
-    qp = QueryParser('name', schema=ix.schema, group=OrGroup)
+    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
 
     with ix.searcher() as searcher:
         q = qp.parse(query)
@@ -41,20 +41,20 @@ def print_result(result):
         print(i, res)
 
 
-def main(script, index='', *query):
+def main(script, index='', field='', *query):
     """Perform a search on our whoosh database.
 
-    Usage: python3 search.py <index> <query>
-    Example: 'python3 search.py icd10 Kolera'
+    Usage: python3 search.py <index> <field> <query>
+    Example: 'python3 search.py icd10 label Kolera'
     'index' is one of icd10 or atc
     """
     flat_query = ''.join(query)
 
     if index == 'icd10':
-        print_result(search_icd10(flat_query))
+        print_result(search_icd10(field, flat_query))
 
     elif index == 'atc':
-        print_result(search_atc(flat_query))
+        print_result(search_atc(field, flat_query))
 
     else:
         print("Unknown database: %s" % index)

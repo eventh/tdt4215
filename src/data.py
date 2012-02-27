@@ -76,20 +76,23 @@ class ICD10:
     SCHEMA = ICD10_SCHEMA  # Index schema
     ALL = {}  # All ICD10 objects
 
-    fields = ('code', 'short', 'label', 'type', 'icpc2_code', 'icpc2_label')
-    lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
+    _fields = ('code', 'short', 'label', 'type',
+               'icpc2_code', 'icpc2_label', 'parent')
+    _lists = ('inclusions', 'exclusions', 'terms', 'synonyms')
 
     def __init__(self):
         """Create a new ICD10 object."""
-        for i in self.lists:
+        for i in self._lists:
             setattr(self, i, '')
-        for i in self.fields:
+        for i in self._fields:
             setattr(self, i, None)
 
     @property
     def description(self):
-        return '%s\n%s\n%s\n%s' % (self.label, self.terms,
-                                   self.synonyms, self.inclusions)
+        label = self.label
+        if self.icpc2_label:
+            label += self.icpc2_label
+        return '\n'.join((label, self.terms, self.synonyms, self.inclusions))
 
     def __str__(self):
         """Present the object as a string."""
@@ -98,7 +101,7 @@ class ICD10:
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
         obj = OrderedDict()
-        for var in self.fields + self.lists:
+        for var in self._fields + self._lists:
             if getattr(self, var):
                 obj[var] = getattr(self, var)
         return obj
@@ -107,13 +110,15 @@ class ICD10:
         """Create a dictionary with values to store in whoosh index."""
         obj = self.to_json()
         obj['description'] = self.description
+        if 'parent' in obj:
+            del obj['parent']
         return obj
 
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
         obj = cls()
-        for i in cls.lists + cls.fields:
+        for i in cls._lists + cls._fields:
             if i in values:
                 setattr(obj, i, values[i])
         ICD10.ALL[values['short']] = obj
@@ -154,7 +159,7 @@ def parse_xml_file(path):
     Returns a list of ICD10 objects which are populated from the file.
     """
     # Tags found in XML file
-    ignore_tags = ('subClassOf', 'umls_tui', 'umls_conceptId', 'umls_atomId')
+    ignore_tags = ('umls_tui', 'umls_conceptId', 'umls_atomId')
     list_mapping = {'underterm': 'terms', 'synonym': 'synonyms',
                     'inclusion': 'inclusions', 'exclusion': 'exclusions'}
     tag_mapping = {'label': 'label', 'code_compacted': 'short',
@@ -181,10 +186,15 @@ def parse_xml_file(path):
                     setattr(obj, list_mapping[tag], value)
             elif tag in tag_mapping:
                 setattr(obj, tag_mapping[tag], child.text)
+            elif tag == 'subClassOf':
+                value, = list(child.attrib.values())
+                obj.parent = value.split('#')[1][:-1]
             elif tag not in ignore_tags:
                 print("Unknown tag %s, %s, %s" % (tag, child.text, child.tail))
 
         if obj.short and obj.label:
+            if not obj.code:
+                obj.code = obj.short  # Hack to simplify handling results
             objects.append(obj)
         else:
             del obj
