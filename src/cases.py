@@ -52,7 +52,7 @@ def read_cases_from_files(folder_or_path):
         filename, ext = os.path.splitext(os.path.split(path)[1])
         if ext == '.txt' and filename.startswith('case'):
             with open(path) as f:
-                lines = [i.strip() for i in f.readlines()]
+                lines = read_stopwords([i.strip() for i in f.readlines()])
                 cases[filename] = [i for i in lines if i]
 
     return cases
@@ -66,10 +66,6 @@ def task_1a(lines):
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
-            line = remove_stopwords(line)
-            if not line:
-                break
-
             q = qp.parse(line)
             objs = searcher.search(q)
             if objs:
@@ -90,10 +86,6 @@ def task_1a_alt(lines):
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
-            line = remove_stopwords(line)
-            if not line:
-                break
-
             q = qp.parse(line)
             objs = searcher.search(q)
             if objs:
@@ -118,10 +110,6 @@ def task_2a(lines):
     results = []
     with ix.searcher() as searcher:
         for i, line in enumerate(lines):
-            line = remove_stopwords(line)
-            if not line:
-                break
-
             q = qp.parse(line)
             codes = [r['code'] for r in searcher.search(q)[:1]]
             results.append((i + 1, codes))
