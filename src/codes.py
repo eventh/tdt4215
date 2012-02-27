@@ -5,21 +5,24 @@ A module for converting data to JSON, and for loading it into whoosh index.
 
 Example usage:
 To convert ICD XML file to JSON run the following command:
-    'python3 data.py ../data/icd10no.xml'
+    'python3 codes.py ../data/icd10no.xml'
 
 To insert ATC into whoosh index from JSON run the following command:
-    'python3 data.py etc/atcname.json store'
+    'python3 codes.py etc/atcname.json store'
 """
 import sys
 import os
-import json
 import time
+import json
 from collections import OrderedDict
 from xml.etree import ElementTree
 
+from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.index import create_in, open_dir, exists_in
 
-from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
+
+# Settings
+INDEX_DIR = 'indexdir'
 
 
 class ATC:
@@ -31,8 +34,10 @@ class ATC:
     the chemical substance.
     """
 
+    # Schema for storing and indexing ATC codes in whoosh database
+    SCHEMA = Schema(code=ID(stored=True), name=TEXT(stored=True))
+
     NAME = 'atc'  # Index name
-    SCHEMA = ATC_SCHEMA  # Index schema
     ALL = {}  # All ATC objects
 
     def __init__(self, code, name):
@@ -72,8 +77,13 @@ class ICD10:
     causes of injury or diseases.
     """
 
+    # Schema for storing and indexing ICD10 codes in whoosh database
+    ICD10_SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
+                          label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
+                          icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
+                          inclusions=TEXT, exclusions=TEXT, description=TEXT)
+
     NAME = 'icd10'  # Index name
-    SCHEMA = ICD10_SCHEMA  # Index schema
     ALL = {}  # All ICD10 objects
 
     _fields = ('code', 'short', 'label', 'type',
@@ -220,11 +230,11 @@ def parse_pl_file(path):
 def main(script, path='', command=''):
     """Convert data files to JSON, or load data into index.
 
-    Usage: python3 data.py <path> <store|clean>
+    Usage: python3 codes.py <path> <store|clean>
     """
     if not path:
         print("Need to supply a path to a file to parse")
-        print("Usage: python3 data.py <path> <command>")
+        print("Usage: python3 codes.py <path> <command>")
         sys.exit(2)
 
     # Split path in folder, filename, file extension

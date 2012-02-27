@@ -16,8 +16,7 @@ from collections import OrderedDict
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
-from schemas import INDEX_DIR
-from data import ATC, ICD10, is_empty_indices
+from codes import ATC, ICD10, is_empty_indices, INDEX_DIR
 
 
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
@@ -220,7 +219,7 @@ def main(script, task='', case='', output=''):
     """
     # Check if indexes contains documents
     if is_empty_indices():
-        print("You need to build indexes with data.py first!")
+        print("You need to build indexes with codes.py first!")
         sys.exit(1)
 
     # Handle output
