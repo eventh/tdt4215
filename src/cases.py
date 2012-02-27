@@ -13,7 +13,7 @@ import json
 from operator import itemgetter
 from collections import OrderedDict
 
-from whoosh.index import open_dir
+from whoosh.index import open_dir, exists_in
 from whoosh.qparser import QueryParser, OrGroup
 
 from schemas import ATC_SCHEMA, ICD10_SCHEMA, INDEX_DIR
@@ -193,6 +193,16 @@ def _empty_indexes():
     if not os.path.isdir(INDEX_DIR):
         return True
 
+    index_names = (ATC.name, ICD.name)
+    for name in index_names:
+        if not exists_in(INDEX_DIR, indexname=name):
+            return True
+        ix = open_dir(INDEX_DIR, indexname=name)
+        if ix.doc_count() < 1:
+            return True
+
+    return False
+
 
 def main(script, task='', case='', output=''):
     """Perform project tasks on cases.
@@ -202,10 +212,10 @@ def main(script, task='', case='', output=''):
     'output' is the output to generate, optional.
     Usage: 'python3 cases.py [task] [case] [latex|json]'.
     """
+    # Check if indexes contains documents
     if _empty_indexes():
         print("You need to build indexes with data.py first!")
         sys.exit(1)
-
 
     # Handle output
     if task in ('json', 'latex'):
