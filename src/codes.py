@@ -78,10 +78,10 @@ class ICD10:
     """
 
     # Schema for storing and indexing ICD10 codes in whoosh database
-    ICD10_SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
-                          label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
-                          icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
-                          inclusions=TEXT, exclusions=TEXT, description=TEXT)
+    SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
+                    label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
+                    icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
+                    inclusions=TEXT, exclusions=TEXT, description=TEXT)
 
     NAME = 'icd10'  # Index name
     ALL = {}  # All ICD10 objects
@@ -149,6 +149,15 @@ def is_indices_empty():
             return True
 
     return False
+
+
+def create_index(cls):
+    """Create index if necessary."""
+    if not os.path.exists(INDEX_DIR):
+        os.mkdir(INDEX_DIR)
+    if not exists_in(INDEX_DIR, indexname=cls.NAME):
+        ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
+        print("Created %s index '%s'" % (cls.__name__, cls.NAME))
 
 
 def populate_data_from_json():
@@ -277,32 +286,25 @@ def main(script, path='', command=''):
         sys.exit(None)
     cls = objects[0].__class__
 
-    # Create index if necessary
-    if not os.path.exists(INDEX_DIR):
-        os.mkdir(INDEX_DIR)
-    if not exists_in(INDEX_DIR, indexname=cls.NAME):
-        ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
-        print("Created %s index" % cls.__name__)
-
     # Store objects in index
     if command == 'store':
+        create_index(cls)
         now = time.time()
         ix = open_dir(INDEX_DIR, indexname=cls.NAME)
         with ix.writer() as writer:
-            #writer = ix.writer()
             for obj in objects:
                 writer.add_document(**obj.to_index())
-        #writer.commit()
         print("Stored %s %s objects in index in %.2f seconds" % (
                 len(objects), cls.__name__, time.time() - now))
 
     # Empty index
     elif command in ('clean', 'clear'):
+        create_index(cls)
         ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
         print("Emptied %s index" % cls.__name__)
 
     # Unknown command
-    elif command:
+    else:
         print("Unknown command '%s'" % command)
         sys.exit(2)
 

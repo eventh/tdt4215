@@ -11,13 +11,22 @@ import json
 from collections import OrderedDict
 from html.parser import HTMLParser
 
+from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+from whoosh.index import open_dir, create_in
+
+from codes import INDEX_DIR, create_index
+
 
 class Chapter:
     """A (sub)chapter in norsk legemiddelhandbok."""
 
+    # Schema for storing and indexing chapters in whoosh database
+    SCHEMA = Schema(code=ID(stored=True), title=TEXT(stored=True), text=TEXT)
+
+    NAME = 'terapi'
     ALL = []
 
-    def __init__(self, type):
+    def __init__(self, type=None):
         """Create a new 'type' representing a part of NLH."""
         Chapter.ALL.append(self)
         self.type = type
@@ -48,8 +57,11 @@ class Chapter:
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
-        #return cls(values['code'], values['name'])
-        pass
+        obj = cls()
+        obj.code = values['code']
+        obj.title = values['title']
+        obj.text = '\n'.join(values['text'])
+        return obj
 
 
 class Link:
@@ -193,28 +205,33 @@ def preprocess_html_file(in_path, out_path):
 
 def parse_html_file(path):
     """Parse Norwegian Legemiddelhandboka HTML page 'path'."""
-    now = time.time()
     parser = NLHParser(strict=True)
     with open(path, 'r') as f:
         parser.feed(f.read())
         parser.close()
-    print("Parsed '%s' in %.2f seconds" % (path, time.time() - now))
 
 
 def dump_chapters_to_json(filename):
     """Dump all parsed Chapter objects to JSON."""
     now = time.time()
+    objects = [i.to_json() for i in Chapter.ALL if i.text]
     with open("%s.json" % filename, 'w') as f:
-        json.dump([i.to_json() for i in Chapter.ALL if i.text], f, indent=4)
+        json.dump(objects, f, indent=4)
     print("Dumped %s objects to %s.json in %.2f seconds" % (
-        len(Chapter.ALL), filename, time.time() - now))
+        len(objects), filename, time.time() - now))
 
 
 def load_objects_from_json(path):
-    pass
+    """Load chapter objects from JSON file 'path'."""
+    now = time.time()
+    with open(path, 'r') as f:
+        json_objects = json.load(f)
+    objects = [Chapter.from_json(i) for i in json_objects]
+    print("Loaded %s objects from %s in %.2f seconds" % (
+        len(objects), path, time.time() - now))
 
 
-def main(script, folder_or_path='', command='parse'):
+def main(script, folder_or_path='', command=''):
     """Handle chapters from norsk legemiddelhandbok.
 
     'folder_or_path' is either a folder or a html or json file.
@@ -241,27 +258,41 @@ def main(script, folder_or_path='', command='parse'):
                 paths.append(full_path)
 
     # Parse HTML files to find objects
+    now = time.time()
     if command == 'parse':
         for path in paths:
             folder, filename = os.path.split(path)
             if os.path.splitext(filename)[1] == '.html':
                 parse_html_file(path)
+        print("Parsed '%s', %i chapters in %.2f seconds" % (
+                folder_or_path, len(Chapter.ALL), time.time() - now))
         dump_chapters_to_json('terapi')
 
     # Preprocess HTML files to make them easier to parse
     elif command.startswith('pre'):
-        now = time.time()
         for path in paths:
             if os.path.splitext(path)[1] == '.htm':
                 preprocess_html_file(path, path + 'l')
         print("Preprocessed %i .htm files in %.2f seconds" % (
                 len(paths), time.time() - now))
 
+    # Store objects in index
     elif command == 'store':
-        pass
+        create_index(Chapter)
+        now = time.time()
+        ix = open_dir(INDEX_DIR, indexname=Chapter.NAME)
+        objects = [i for i in Chapter.ALL if i.text]
+        with ix.writer() as writer:
+            for obj in objects:
+                    writer.add_document(**obj.to_index())
+        print("Stored %s terapi chapter objects in index in %.2f seconds" % (
+                len(objects), time.time() - now))
 
+    # Empty index
     elif command in ('clean', 'clear'):
-        pass
+        create_index(Chapter)
+        ix = create_in(INDEX_DIR, schema=Chapter.SCHEMA, indexname=Chapter.NAME)
+        print("Emptied %s index" % Chapter.__name__)
 
     else:
         print("Unknown command: %s" % command)

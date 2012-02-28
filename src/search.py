@@ -9,6 +9,7 @@ from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
 from codes import ATC, ICD10, INDEX_DIR
+from nlh import Chapter
 
 
 def search_icd10(field, query):
@@ -33,6 +34,17 @@ def search_atc(field, query):
         return ['%s: %s' % (i['code'], i['name']) for i in objs[:5]]
 
 
+def search_terapi(field, query):
+    """Search the terapi chapter index with 'query'."""
+    ix = open_dir(INDEX_DIR, indexname=Chapter.NAME)
+    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
+
+    with ix.searcher() as searcher:
+        q = qp.parse(query)
+        objs = searcher.search(q)
+        return ['%s: %s' % (i['code'], i['title']) for i in objs[:5]]
+
+
 def print_result(result):
     """Simply print all results from a search."""
     print("Showing top %i results:" % len(result))
@@ -45,15 +57,22 @@ def main(script, index='', field='', *query):
 
     Usage: python3 search.py <index> <field> <query>
     Example: 'python3 search.py icd10 label Kolera'
-    'index' is one of icd10 or atc
+    'index' is one of icd, atc or terapi
     """
+    if not query:
+        print("Usage: python3 search.py <index> <field> <query>")
+        sys.exit(2)
+
     flat_query = ''.join(query)
 
-    if index == 'icd10':
+    if index == 'icd':
         print_result(search_icd10(field, flat_query))
 
     elif index == 'atc':
         print_result(search_atc(field, flat_query))
+
+    elif index == 'terapi':
+        print_result(search_terapi(field, flat_query))
 
     else:
         print("Unknown database: %s" % index)
