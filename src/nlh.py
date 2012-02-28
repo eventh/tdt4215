@@ -5,7 +5,10 @@ Module for parsing html documents from 'norsk legemiddelhåndbok'.
 """
 import os
 import sys
+import time
 import string
+import json
+from collections import OrderedDict
 from html.parser import HTMLParser
 
 
@@ -17,18 +20,47 @@ class Chapter:
         Chapter.ALL.append(self)
         self.type = type
 
-        self.title = None
         self.code = None
+        self.title = None
+        self.revidert = None
         self.text = ''
         self.links = []
 
-        self.revidert = None
+    def __str__(self):
+        """Represent the object as a string."""
+        return '%s: %s' % (self.code, self.title)
+
+    def to_json(self):
+        """Create a dictionary with object values for JSON dump."""
+        obj = OrderedDict()
+        obj['code'] = self.code
+        obj['title'] = self.title
+        obj['text'] = [i for i in self.text.split('\n') if i]
+        obj['links'] = [i.text for i in self.links]
+        return obj
+
+    def to_index(self):
+        """Create a dictionary with values to store in whoosh index."""
+        return self.to_json()
+
+    @classmethod
+    def from_json(cls, values):
+        """Create an object from json value dictionary."""
+        #return cls(values['code'], values['name'])
+        pass
+
+
+class Link:
+    def __init__(self, href):
+        self.href = href
+        self.text = ''
 
     def __str__(self):
-        return '%s: %s' % (self.code, self.title)
+        return 'Link %s (%s)' % (self.text, self.href)
 
 
 class NLHParser(HTMLParser):
+    """Parser for  Norwegian Legemiddelhandboka HTML pages."""
 
     _tags = ('strong', 'div', 'p', 'h2', 'h3', 'h4', 'h5', 'a')
 
@@ -62,16 +94,21 @@ class NLHParser(HTMLParser):
         if tag == 'div' and class_ == 'seksjon3':
             self.chapters.append(Chapter('subchapter'))
             action = 'end_chapter'
-        elif tag == 'div' and class_ == 'revidert' and self.chapters:
-            action = 'store_revidert'
-        elif tag == 'div' and class_ == 'def' and self.chapters:
-            self.actions[-1][1].append('\n')
-        elif tag == 'div' and class_ == 'tone' and self.chapters:
-            self.actions[-1][1].append('\n')
-        elif tag == 'p' and class_ == 'defa' and self.chapters:
-            self.actions[-1][1].append(': ')
-        elif tag == 'h3' and self.chapters:
-            action = 'store_title'
+        elif self.chapters:
+            if tag == 'div' and class_ == 'revidert':
+                action = 'store_revidert'
+            elif tag == 'div' and class_ == 'def':
+                self.actions[-1][1].append('\n')
+            elif tag == 'div' and class_ == 'tone':
+                self.actions[-1][1].append('\n')
+            elif tag == 'p' and class_ == 'defa':
+                self.actions[-1][1].append(': ')
+            elif tag == 'h3':
+                action = 'store_title'
+            elif tag == 'a':
+                link = Link(self._get_attr(attrs, 'href'))
+                self.chapters[-1].links.append(link)
+                action = 'store_link'
 
         self.actions.append([action, []])
 
@@ -82,10 +119,6 @@ class NLHParser(HTMLParser):
 
     def handle_endtag(self, tag):
         """Handle the end of an HTML tag."""
-        def _add(data):
-            if data and self.actions:
-                self.actions[-1][1].append(data)
-
         if not self.actions:
             return
 
@@ -98,10 +131,11 @@ class NLHParser(HTMLParser):
             obj.code, obj.title = self._split_title(data)
         elif action == 'store_revidert':
             obj.revidert = data
+        elif action == 'store_link':
+            obj.links[-1].text = data
+            self.actions[-1][1].append(data)
         elif action == 'end_chapter':
             obj.text += data
-            print('Finished', obj)
-            print(obj.text)
             self.chapters.pop()
         else:
             if data and self.actions:
@@ -138,10 +172,22 @@ def preprocess_html_file(in_path, out_path):
 
 
 def parse_html_file(path):
+    """Parse Norwegian Legemiddelhandboka HTML page 'path'."""
+    now = time.time()
     parser = NLHParser(strict=True)
     with open(path, 'r') as f:
         parser.feed(f.read())
         parser.close()
+    print("Parsed '%s' in %.2f seconds" % (path, time.time() - now))
+
+
+def dump_chapters_to_json(filename):
+    """Dump all parsed Chapter objects to JSON."""
+    now = time.time()
+    with open("%s.json" % filename, 'w') as f:
+        json.dump([i.to_json() for i in Chapter.ALL], f, indent=4)
+    print("Dumped %s objects to %s.json in %.2f seconds" % (
+        len(Chapter.ALL), filename, time.time() - now))
 
 
 def main(script, path='', command='parse'):
@@ -149,8 +195,12 @@ def main(script, path='', command='parse'):
         print("")
         sys.exit(2)
 
+    folder, filename = os.path.split(path)
+    filename, ext = os.path.splitext(filename)
+
     if command == 'parse':
         parse_html_file(path)
+        dump_chapters_to_json(filename)
     elif command.startswith('pre'):
         preprocess_html_file(path, path + 'l')
 
