@@ -247,6 +247,9 @@ def main(script, folder_or_path='', command=''):
     if folder_or_path[-5:] == '.json':
         load_objects_from_json(folder_or_path)
 
+    #lines = sum(i.text.count('\n') + 1 for i in Chapter.ALL if i.text)
+    #print(lines)
+
     # Accept path to either a folder or a file
     paths = []
     if not os.path.isdir(folder_or_path):
@@ -294,7 +297,7 @@ def main(script, folder_or_path='', command=''):
         ix = create_in(INDEX_DIR, schema=Chapter.SCHEMA, indexname=Chapter.NAME)
         print("Emptied %s index" % Chapter.__name__)
 
-    else:
+    elif command:
         print("Unknown command: %s" % command)
         sys.exit(2)
 
