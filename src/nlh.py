@@ -22,6 +22,8 @@ class Chapter:
         self.text = ''
         self.links = []
 
+        self.revidert = None
+
     def __str__(self):
         return '%s: %s' % (self.code, self.title)
 
@@ -55,19 +57,21 @@ class NLHParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         """Handle the start of a HTML tag."""
         class_ = self._get_attr(attrs, 'class')
-        action = 'discard'
+        action = 'pop'
 
-        # Start a new chapter
         if tag == 'div' and class_ == 'seksjon3':
             self.chapters.append(Chapter('subchapter'))
             action = 'end_chapter'
-
-        # Record the title and code
+        elif tag == 'div' and class_ == 'revidert' and self.chapters:
+            action = 'store_revidert'
+        elif tag == 'div' and class_ == 'def' and self.chapters:
+            self.actions[-1][1].append('\n')
+        elif tag == 'div' and class_ == 'tone' and self.chapters:
+            self.actions[-1][1].append('\n')
+        elif tag == 'p' and class_ == 'defa' and self.chapters:
+            self.actions[-1][1].append(': ')
         elif tag == 'h3' and self.chapters:
             action = 'store_title'
-
-        elif tag in self._tags and self.chapters:
-            action = 'store_text'
 
         self.actions.append([action, []])
 
@@ -78,26 +82,30 @@ class NLHParser(HTMLParser):
 
     def handle_endtag(self, tag):
         """Handle the end of an HTML tag."""
-        if not self.actions or not self.chapters:
+        def _add(data):
+            if data and self.actions:
+                self.actions[-1][1].append(data)
+
+        if not self.actions:
             return
 
-        obj = self.chapters[-1]
         action, data = self.actions.pop()
         data = ' '.join(i for i in ''.join(data).split(' ') if i)
 
-        # Add newline to text if end tag is 'block' type
-        if tag in ('p', 'div', 'h5', 'h4'):
-            if obj.text and obj.text[-1] != '\n':
-                obj.text += '\n'
+        obj = self.chapters[-1] if self.chapters else None
 
         if action == 'store_title':
             obj.code, obj.title = self._split_title(data)
-        elif action == 'store_text':
-            obj.text += data
+        elif action == 'store_revidert':
+            obj.revidert = data
         elif action == 'end_chapter':
+            obj.text += data
             print('Finished', obj)
             print(obj.text)
             self.chapters.pop()
+        else:
+            if data and self.actions:
+                self.actions[-1][1].append(data)
 
     def handle_charref(self, name):
         """Handle weird html characters."""
