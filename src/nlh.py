@@ -20,29 +20,31 @@ class Chapter:
         self.title = None
         self.code = None
         self.text = ''
+        self.links = []
 
     def __str__(self):
         return '%s: %s' % (self.code, self.title)
 
 
-class MyHTMLParser(HTMLParser):
+class NLHParser(HTMLParser):
 
     _tags = ('strong', 'div', 'p', 'h2', 'h3', 'h4', 'h5', 'a')
 
     def __init__(self, *args, **vargs):
         super().__init__(*args, **vargs)
 
-        self.action_stack = []
-        self.data_stack = []
-        self.current = None
+        self.actions = [] # Stack for actions to perform
+        self.chapters = [] # Stack for chapters
 
     def _get_attr(self, attrs, key):
+        """Get an attribute value from set of 'attrs'."""
         for tmp, value in attrs:
             if key == tmp:
                 return value
         return None
 
     def _split_title(self, title):
+        """Split a chapter into code and title."""
         i = 1
         while i < len(title):
             if title[i] not in string.digits and title[i] != '.':
@@ -51,61 +53,60 @@ class MyHTMLParser(HTMLParser):
         return title[:i], title[i:]
 
     def handle_starttag(self, tag, attrs):
+        """Handle the start of a HTML tag."""
         class_ = self._get_attr(attrs, 'class')
-        action = None
+        action = 'discard'
 
-        # Start a new subchapter
+        # Start a new chapter
         if tag == 'div' and class_ == 'seksjon3':
-            if self.current:
-                print("WTF", self.current)
-            obj = Chapter('subchapter')
+            self.chapters.append(Chapter('subchapter'))
             action = 'end_chapter'
-            self.current = obj
 
         # Record the title and code
-        elif tag == 'h3' and self.current:
+        elif tag == 'h3' and self.chapters:
             action = 'store_title'
 
-        if tag in self._tags and self.current:
-            if not action:
-                action = 'store_text'
-            self.action_stack.append(action)
-            #print("Pushed tag:", tag, action)
-        else:
-            self.action_stack.append('pop')
-        self.data_stack.append([])
+        elif tag in self._tags and self.chapters:
+            action = 'store_text'
+
+        self.actions.append([action, []])
 
     def handle_data(self, data):
-        if self.data_stack:
-            self.data_stack[-1].append(data.strip())
+        """Handle text."""
+        if self.actions:
+            self.actions[-1][1].append(data.strip())
 
     def handle_endtag(self, tag):
-        action = self.action_stack.pop()
-        data = ''.join(i for i in self.data_stack.pop() if i)
-        data = ' '.join(i for i in data.split(' ') if i)
-        if not self.current:
+        """Handle the end of an HTML tag."""
+        if not self.actions or not self.chapters:
             return
 
+        obj = self.chapters[-1]
+        action, data = self.actions.pop()
+        data = ' '.join(i for i in ''.join(data).split(' ') if i)
+
+        # Add newline to text if end tag is 'block' type
         if tag in ('p', 'div', 'h5', 'h4'):
-            if self.current.text and self.current.text[-1] != '\n':
-                self.current.text += '\n'
+            if obj.text and obj.text[-1] != '\n':
+                obj.text += '\n'
 
         if action == 'store_title':
-            self.current.code, self.current.title = self._split_title(data)
+            obj.code, obj.title = self._split_title(data)
         elif action == 'store_text':
-            self.current.text += data
+            obj.text += data
         elif action == 'end_chapter':
-            print('ended', self.current)
-            print(self.current.text)
-            self.current = None
+            print('Finished', obj)
+            print(obj.text)
+            self.chapters.pop()
 
     def handle_charref(self, name):
+        """Handle weird html characters."""
         if name.startswith('x'):
             c = chr(int(name[1:], 16))
         else:
             c = chr(int(name))
-        if self.data_stack:
-            self.data_stack[-1] += c
+        if self.actions:
+            self.actions[-1][1].append(c)
 
 
 def preprocess_html_file(in_path, out_path):
@@ -121,12 +122,15 @@ def preprocess_html_file(in_path, out_path):
             # Remove most of <head>
             lines = lines[:3] + lines[4:5] + lines[28:]
 
+            # Remove footer
+            lines = lines[:-10] + lines[-4:]
+
             # Save lines to output file
             f2.write('\n'.join(lines))
 
 
 def parse_html_file(path):
-    parser = MyHTMLParser(strict=True)
+    parser = NLHParser(strict=True)
     with open(path, 'r') as f:
         parser.feed(f.read())
         parser.close()
