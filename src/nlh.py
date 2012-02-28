@@ -67,8 +67,8 @@ class NLHParser(HTMLParser):
     def __init__(self, *args, **vargs):
         super().__init__(*args, **vargs)
 
-        self.actions = [] # Stack for actions to perform
-        self.chapters = [] # Stack for chapters
+        self.actions = []  # Stack for actions to perform
+        self.chapters = []  # Stack for chapters
 
     def _get_attr(self, attrs, key):
         """Get an attribute value from set of 'attrs'."""
@@ -79,7 +79,7 @@ class NLHParser(HTMLParser):
 
     def _split_title(self, title):
         """Split a chapter into code and title."""
-        i = 1
+        i = 2  # Code can start with *T
         while i < len(title):
             if title[i] not in string.digits and title[i] != '.':
                 break
