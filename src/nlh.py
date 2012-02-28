@@ -5,6 +5,7 @@ Module for parsing html documents from 'norsk legemiddelhåndbok'.
 """
 import os
 import sys
+import string
 from html.parser import HTMLParser
 
 
@@ -21,7 +22,7 @@ class Chapter:
         self.text = ''
 
     def __str__(self):
-        return '%s - %s' % (self.code, self.title)
+        return '%s: %s' % (self.code, self.title)
 
 
 class MyHTMLParser(HTMLParser):
@@ -41,12 +42,22 @@ class MyHTMLParser(HTMLParser):
                 return value
         return None
 
+    def _split_title(self, title):
+        i = 1
+        while i < len(title):
+            if title[i] not in string.digits and title[i] != '.':
+                break
+            i += 1
+        return title[:i], title[i:]
+
     def handle_starttag(self, tag, attrs):
         class_ = self._get_attr(attrs, 'class')
         action = None
 
         # Start a new subchapter
         if tag == 'div' and class_ == 'seksjon3':
+            if self.current:
+                print("WTF", self.current)
             obj = Chapter('subchapter')
             action = 'end_chapter'
             self.current = obj
@@ -80,7 +91,7 @@ class MyHTMLParser(HTMLParser):
                 self.current.text += '\n'
 
         if action == 'store_title':
-            self.current.code, self.current.title = data, data #TODO
+            self.current.code, self.current.title = self._split_title(data)
         elif action == 'store_text':
             self.current.text += data
         elif action == 'end_chapter':
@@ -104,12 +115,14 @@ def preprocess_html_file(in_path, out_path):
     """
     with open(in_path, 'r', encoding='iso-8859-1') as f1:
         with open(out_path, 'w') as f2:
-
             # Remove uneceseary carrier returns
-            lines = (i.rstrip() for i in f.readlines())
+            lines = [i.rstrip() for i in f1.readlines()]
+
+            # Remove most of <head>
+            lines = lines[:3] + lines[4:5] + lines[28:]
 
             # Save lines to output file
-            f2.write('\n'.join(i.rstrip() for i in f.readlines()))
+            f2.write('\n'.join(lines))
 
 
 def parse_html_file(path):
@@ -119,12 +132,15 @@ def parse_html_file(path):
         parser.close()
 
 
-def main(script, path='', command=''):
+def main(script, path='', command='parse'):
     if not os.path.isfile(path):
         print("")
         sys.exit(2)
 
-    parse_html_file(path)
+    if command == 'parse':
+        parse_html_file(path)
+    elif command.startswith('pre'):
+        preprocess_html_file(path, path + 'l')
 
     sys.exit(None)
 
