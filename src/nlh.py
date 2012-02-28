@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Module for parsing html documents from 'norsk legemiddelhåndbok'.
+Module for parsing html documents from 'norsk legemiddelhandbok'.
 """
 import os
 import sys
@@ -13,10 +13,12 @@ from html.parser import HTMLParser
 
 
 class Chapter:
+    """A (sub)chapter in norsk legemiddelhandbok."""
 
     ALL = []
 
     def __init__(self, type):
+        """Create a new 'type' representing a part of NLH."""
         Chapter.ALL.append(self)
         self.type = type
 
@@ -51,6 +53,8 @@ class Chapter:
 
 
 class Link:
+    """Represent a html <a> tag, a link."""
+
     def __init__(self, href):
         self.href = href
         self.text = ''
@@ -62,7 +66,12 @@ class Link:
 class NLHParser(HTMLParser):
     """Parser for  Norwegian Legemiddelhandboka HTML pages."""
 
-    _tags = ('strong', 'div', 'p', 'h2', 'h3', 'h4', 'h5', 'a')
+    # TODO: Missing support for chapters, only T18 and T21 has text
+    _chapter_mapping = {
+            'seksjon2': 'subchapter',
+            'seksjon3': 'subsubchapter',
+            'seksjon4': 'subsubsubchapter'
+    }
 
     def __init__(self, *args, **vargs):
         super().__init__(*args, **vargs)
@@ -86,16 +95,27 @@ class NLHParser(HTMLParser):
             i += 1
         return title[:i], title[i:]
 
+    def _force_end_chapter(self):
+        """Force end of a chapter when a new chapter starts."""
+        #print("Fixing broken html for %s" % self.chapters[-1])
+        while self.actions:
+            if self.actions[-1][0] == 'end_chapter':
+                self.handle_endtag()
+                break
+            self.handle_endtag()
+
     def handle_starttag(self, tag, attrs):
         """Handle the start of a HTML tag."""
         class_ = self._get_attr(attrs, 'class')
         action = 'pop'
 
-        if tag == 'div' and class_ == 'seksjon2':
-            self.chapters.append(Chapter('chapter'))
-            action = 'end_chapter'
-        elif tag == 'div' and class_ == 'seksjon3':
-            self.chapters.append(Chapter('subsubchapter'))
+        # Hack, broken html forces us to force ending chapters
+        if (tag == 'div' and class_ in ('seksjon2', 'seksjon3')
+                and self.chapters):
+            self._force_end_chapter()
+
+        if tag == 'div' and class_ in self._chapter_mapping:
+            self.chapters.append(Chapter(self._chapter_mapping[class_]))
             action = 'end_chapter'
         elif self.chapters:
             if tag == 'div' and class_ == 'revidert':
@@ -105,8 +125,8 @@ class NLHParser(HTMLParser):
             elif tag == 'div' and class_ == 'tone':
                 self.actions[-1][1].append('\n')
             elif tag == 'p' and class_ == 'defa':
-                self.actions[-1][1].append(': ')
-            elif tag in ('h3', 'h2'):
+                self.actions[-1][1].append(' ') # TODO Improve?
+            elif tag in ('h3', 'h2', 'h4'):
                 action = 'store_title'
             elif tag == 'a':
                 link = Link(self._get_attr(attrs, 'href'))
@@ -120,7 +140,7 @@ class NLHParser(HTMLParser):
         if self.actions:
             self.actions[-1][1].append(data.strip())
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag=''):
         """Handle the end of an HTML tag."""
         if not self.actions:
             return
@@ -140,7 +160,6 @@ class NLHParser(HTMLParser):
         elif action == 'end_chapter':
             obj.text += data
             self.chapters.pop()
-            print(obj, obj.text)
         else:
             if data and self.actions:
                 self.actions[-1][1].append(data)
@@ -165,11 +184,8 @@ def preprocess_html_file(in_path, out_path):
             # Remove uneceseary carrier returns
             lines = [i.rstrip() for i in f1.readlines()]
 
-            # Remove most of <head>
-            lines = lines[:3] + lines[4:5] + lines[28:]
-
-            # Remove footer
-            lines = lines[:-10] + lines[-4:]
+            # Remove most of <head> and <footer>
+            lines = lines[:3] + lines[4:5] + lines[28:-10] + lines[-4:]
 
             # Save lines to output file
             f2.write('\n'.join(lines))
@@ -189,16 +205,30 @@ def dump_chapters_to_json(filename):
     """Dump all parsed Chapter objects to JSON."""
     now = time.time()
     with open("%s.json" % filename, 'w') as f:
-        json.dump([i.to_json() for i in Chapter.ALL], f, indent=4)
+        json.dump([i.to_json() for i in Chapter.ALL if i.text], f, indent=4)
     print("Dumped %s objects to %s.json in %.2f seconds" % (
         len(Chapter.ALL), filename, time.time() - now))
 
 
+def load_objects_from_json(path):
+    pass
+
+
 def main(script, folder_or_path='', command='parse'):
+    """Handle chapters from norsk legemiddelhandbok.
+
+    'folder_or_path' is either a folder or a html or json file.
+    'command' is optionally one of parse, preprocess, store, clean.
+    Usage: python3 nlh.py <path_or_folder> [parse|preprocess|store|clean]
+    """
     if not os.path.exists(folder_or_path):
         print("Error: must be given a valid path '%s'" % folder_or_path)
-        print("Usage: python3 nlh.py <path> <parse|preprocess>")
+        print("Usage: python3 nlh.py <path> [parse|preprocess|store|clean]")
         sys.exit(2)
+
+    # Parse JSON file with Chapter objects
+    if folder_or_path[-5:] == '.json':
+        load_objects_from_json(folder_or_path)
 
     # Accept path to either a folder or a file
     paths = []
@@ -214,8 +244,9 @@ def main(script, folder_or_path='', command='parse'):
     if command == 'parse':
         for path in paths:
             folder, filename = os.path.split(path)
-            parse_html_file(path)
-            dump_chapters_to_json(os.path.splitext(filename)[0])
+            if os.path.splitext(filename)[1] == '.html':
+                parse_html_file(path)
+        dump_chapters_to_json('terapi')
 
     # Preprocess HTML files to make them easier to parse
     elif command.startswith('pre'):
@@ -226,8 +257,14 @@ def main(script, folder_or_path='', command='parse'):
         print("Preprocessed %i .htm files in %.2f seconds" % (
                 len(paths), time.time() - now))
 
+    elif command == 'store':
+        pass
+
+    elif command in ('clean', 'clear'):
+        pass
+
     else:
-        print("Unknown command '%s', must be either parse or pre" % command)
+        print("Unknown command: %s" % command)
         sys.exit(2)
 
     sys.exit(None)
