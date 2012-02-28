@@ -41,7 +41,7 @@ class Chapter:
 
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
-        return self.to_json()
+        return {'code': self.code, 'title': self.title, 'text': self.text}
 
     @classmethod
     def from_json(cls, values):
@@ -91,8 +91,11 @@ class NLHParser(HTMLParser):
         class_ = self._get_attr(attrs, 'class')
         action = 'pop'
 
-        if tag == 'div' and class_ == 'seksjon3':
-            self.chapters.append(Chapter('subchapter'))
+        if tag == 'div' and class_ == 'seksjon2':
+            self.chapters.append(Chapter('chapter'))
+            action = 'end_chapter'
+        elif tag == 'div' and class_ == 'seksjon3':
+            self.chapters.append(Chapter('subsubchapter'))
             action = 'end_chapter'
         elif self.chapters:
             if tag == 'div' and class_ == 'revidert':
@@ -103,7 +106,7 @@ class NLHParser(HTMLParser):
                 self.actions[-1][1].append('\n')
             elif tag == 'p' and class_ == 'defa':
                 self.actions[-1][1].append(': ')
-            elif tag == 'h3':
+            elif tag in ('h3', 'h2'):
                 action = 'store_title'
             elif tag == 'a':
                 link = Link(self._get_attr(attrs, 'href'))
@@ -137,6 +140,7 @@ class NLHParser(HTMLParser):
         elif action == 'end_chapter':
             obj.text += data
             self.chapters.pop()
+            print(obj, obj.text)
         else:
             if data and self.actions:
                 self.actions[-1][1].append(data)
@@ -190,19 +194,41 @@ def dump_chapters_to_json(filename):
         len(Chapter.ALL), filename, time.time() - now))
 
 
-def main(script, path='', command='parse'):
-    if not os.path.isfile(path):
-        print("")
+def main(script, folder_or_path='', command='parse'):
+    if not os.path.exists(folder_or_path):
+        print("Error: must be given a valid path '%s'" % folder_or_path)
+        print("Usage: python3 nlh.py <path> <parse|preprocess>")
         sys.exit(2)
 
-    folder, filename = os.path.split(path)
-    filename, ext = os.path.splitext(filename)
+    # Accept path to either a folder or a file
+    paths = []
+    if not os.path.isdir(folder_or_path):
+        paths.append(folder_or_path)
+    else:
+        for path in os.listdir(folder_or_path):
+            full_path = os.path.normpath(os.path.join(folder_or_path, path))
+            if not os.path.isdir(full_path):
+                paths.append(full_path)
 
+    # Parse HTML files to find objects
     if command == 'parse':
-        parse_html_file(path)
-        dump_chapters_to_json(filename)
+        for path in paths:
+            folder, filename = os.path.split(path)
+            parse_html_file(path)
+            dump_chapters_to_json(os.path.splitext(filename)[0])
+
+    # Preprocess HTML files to make them easier to parse
     elif command.startswith('pre'):
-        preprocess_html_file(path, path + 'l')
+        now = time.time()
+        for path in paths:
+            if os.path.splitext(path)[1] == '.htm':
+                preprocess_html_file(path, path + 'l')
+        print("Preprocessed %i .htm files in %.2f seconds" % (
+                len(paths), time.time() - now))
+
+    else:
+        print("Unknown command '%s', must be either parse or pre" % command)
+        sys.exit(2)
 
     sys.exit(None)
 
