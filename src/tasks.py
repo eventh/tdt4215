@@ -232,8 +232,8 @@ CHAPTER_TASKS = {'1b': task_1, '1b2': task_1_alt, '2b': task_2}
 TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1a2': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b': ('Chapter', 'Sentence', 'ICD-10'),
+               '1b2': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
-               '2a2': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC')}
 
 
