@@ -28,7 +28,7 @@ OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
 def read_stopwords():
     """Read in and return stop-words from file."""
     with open('etc/stoppord.txt', 'r') as f:
-        return set(i.strip() for i in f.readlines())
+        return set(i.strip() for i in f.readlines() if i.strip())
 
 
 def remove_stopwords(lines, words=read_stopwords()):
@@ -244,10 +244,10 @@ def _perform_task(task_name, func, inputs, output, progress=False):
 
     i = 0
     for name, lines in sorted(inputs.items(), key=itemgetter(0)):
-        results[name] = func(lines)
         if progress:
             i += 1
-            print(i)
+            print("[%i] %s" % (i, name))
+        results[name] = func(lines)
 
     output(task_name, results, TASK_FIELDS[task_name])
     print("Performed '%s' in %.2f seconds" % (func.__doc__, time.time() - now))

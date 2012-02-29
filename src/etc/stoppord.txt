@@ -97,7 +97,6 @@ mens
 mer
 mest
 min
-min
 mitt
 mot
 mye
@@ -122,7 +121,6 @@ riktig
 samme
 seg
 selv
-si
 siden
 sin
 sine
@@ -155,7 +153,6 @@ være
 vært
 vår
 å
-
 blei
 båe
 dei
@@ -220,6 +217,5 @@ syk
 går
 lege
 én
-før
 hos
 bruk

@@ -11,10 +11,10 @@ Usage: 'python3 nlh.py <path> [preprocess|parse|store|clean]'
 
 Examples:
 To preprocess all the terapi-files run the command:
-    'python3 nlh.py ../data/nlh/T/ preprocess'
+    'python3 nlh.py ../data/nlh/ preprocess'
 
 To parse all terapi-chapters and store them as JSON:
-    'python3 nlh.py ../data/nlh/T/ parse'
+    'python3 nlh.py ../data/nlh/ parse'
 
 To store and index all chapters in whoosh database:
     'python3 nlh.py etc/terapi.json store'
@@ -24,7 +24,7 @@ import sys
 import time
 import string
 import json
-from collections import OrderedDict, Counter
+from collections import OrderedDict
 from html.parser import HTMLParser
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
@@ -247,27 +247,6 @@ def load_objects_from_json(path):
             len(objects), path, time.time() - now))
 
 
-def calculate_statistics():
-    """Print out some misc chapter statistics."""
-    c_all = Counter([i.code.count('.') for i in Chapter.ALL])
-    c_text = Counter([i.code.count('.') for i in Chapter.ALL if i.text])
-    titles = ('Chapters', 'Sub', 'Sub*2', 'Sub*3', 'Sub*4')
-    for i, title in enumerate(titles):
-        space = ' ' * (8 - len(title))
-        print("%s%s: %i (%i with text)" % (title, space, c_all[i], c_text[i]))
-    print("Total   : %i (%i with text)" % (
-            len(Chapter.ALL), sum(c_text.values())))
-
-    sentences = lines = 0
-    for obj in Chapter.ALL:
-        if obj.text:
-            lines += len([i for i in obj.text.split('\n') if i.strip()])
-            sentences += len([i for i in obj.text.split('.') if i.strip()])
-    print("Total amount of lines '\\n': %i" % lines)
-    print("Total amount of sentences '.': %i" % sentences)
-    print()
-
-
 def main(script, folder_or_path='', command=''):
     """Handle chapters from norsk legemiddelhandbok.
 
@@ -283,7 +262,6 @@ def main(script, folder_or_path='', command=''):
     # Parse JSON file with Chapter objects
     if folder_or_path[-5:] == '.json':
         load_objects_from_json(folder_or_path)
-        calculate_statistics()
 
     # Accept path to either a folder or a file
     paths = []
@@ -306,7 +284,6 @@ def main(script, folder_or_path='', command=''):
         print("Parsed '%s', %i chapters in %.2f seconds" % (
                 folder_or_path, len(Chapter.ALL), time.time() - now))
         dump_chapters_to_json('terapi')
-        calculate_statistics()
 
     # Preprocess HTML files to make them easier to parse
     elif command.startswith('pre'):
