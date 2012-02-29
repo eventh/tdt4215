@@ -18,22 +18,19 @@ from codes import INDEX_DIR, create_index
 
 
 class Chapter:
-    """A (sub)chapter in norsk legemiddelhandbok."""
+    """A (sub)*chapter in norsk legemiddelhandbok."""
 
     # Schema for storing and indexing chapters in whoosh database
     SCHEMA = Schema(code=ID(stored=True), title=TEXT(stored=True), text=TEXT)
 
-    NAME = 'terapi'
-    ALL = []
+    NAME = 'terapi'  # Index name
+    ALL = []  # All Chapter objects
 
-    def __init__(self, type=None):
-        """Create a new 'type' representing a part of NLH."""
+    def __init__(self):
+        """Create a new chapter representing a part of NLH."""
         Chapter.ALL.append(self)
-        self.type = type
-
         self.code = None
         self.title = None
-        self.revidert = None
         self.text = ''
         self.links = []
 
@@ -47,7 +44,7 @@ class Chapter:
         obj['code'] = self.code
         obj['title'] = self.title
         obj['text'] = [i for i in self.text.split('\n') if i]
-        obj['links'] = [i.text for i in self.links]
+        obj['links'] = self.links
         return obj
 
     def to_index(self):
@@ -61,29 +58,16 @@ class Chapter:
         obj.code = values['code']
         obj.title = values['title']
         obj.text = '\n'.join(values['text'])
+        obj.links = values['links']
         return obj
-
-
-class Link:
-    """Represent a html <a> tag, a link."""
-
-    def __init__(self, href):
-        self.href = href
-        self.text = ''
-
-    def __str__(self):
-        return 'Link %s (%s)' % (self.text, self.href)
 
 
 class NLHParser(HTMLParser):
     """Parser for  Norwegian Legemiddelhandboka HTML pages."""
 
-    # TODO: Missing support for chapters, only T18 and T21 has text
-    _chapter_mapping = {
-            'seksjon2': 'subchapter',
-            'seksjon3': 'subsubchapter',
-            'seksjon4': 'subsubsubchapter'
-    }
+    _section_classes = ('seksjon2', 'seksjon3', 'seksjon4', 'seksjon8')
+    _ignore_tags = ('br', 'input', 'img', 'tr', 'hr')
+    _title_tags = ('h1', 'h2', 'h3', 'h4', 'h5')
 
     def __init__(self, *args, **vargs):
         super().__init__(*args, **vargs)
@@ -109,7 +93,6 @@ class NLHParser(HTMLParser):
 
     def _force_end_chapter(self):
         """Force end of a chapter when a new chapter starts."""
-        #print("Fixing broken html for %s" % self.chapters[-1])
         while self.actions:
             if self.actions[-1][0] == 'end_chapter':
                 self.handle_endtag()
@@ -118,32 +101,31 @@ class NLHParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         """Handle the start of a HTML tag."""
-        class_ = self._get_attr(attrs, 'class')
+        if tag in self._ignore_tags:
+            return  # Has optional end-tag
+
         action = 'pop'
+        class_ = self._get_attr(attrs, 'class')
 
-        # Hack, broken html forces us to force ending chapters
-        if (tag == 'div' and class_ in ('seksjon2', 'seksjon3')
-                and self.chapters):
-            self._force_end_chapter()
-
-        if tag == 'div' and class_ in self._chapter_mapping:
-            self.chapters.append(Chapter(self._chapter_mapping[class_]))
+        # Start a new chapter
+        if ((tag == 'section' and self._get_attr(attrs, 'id') == 'page')
+                or (tag == 'div' and class_ in self._section_classes)):
+            self.chapters.append(Chapter())
             action = 'end_chapter'
+
         elif self.chapters:
-            if tag == 'div' and class_ == 'revidert':
-                action = 'store_revidert'
-            elif tag == 'div' and class_ == 'def':
-                self.actions[-1][1].append('\n')
-            elif tag == 'div' and class_ == 'tone':
-                self.actions[-1][1].append('\n')
-            elif tag == 'p' and class_ == 'defa':
-                self.actions[-1][1].append(' ') # TODO Improve?
-            elif tag in ('h3', 'h2', 'h4'):
+            if tag in self._title_tags and self.chapters[-1].code is None:
                 action = 'store_title'
+            elif tag == 'div' and class_ in ('def', 'tone'):
+                self.actions[-1][1].append('\n')
+                if class_ == 'tone':
+                    action = 'discard'
+            elif tag == 'div' and class_ in ('revidert', 'forfatter'):
+                action = 'discard'
             elif tag == 'a':
-                link = Link(self._get_attr(attrs, 'href'))
-                self.chapters[-1].links.append(link)
                 action = 'store_link'
+            elif tag == 'h5':
+                action = 'add_colon'
 
         self.actions.append([action, []])
 
@@ -154,7 +136,13 @@ class NLHParser(HTMLParser):
 
     def handle_endtag(self, tag=''):
         """Handle the end of an HTML tag."""
-        if not self.actions:
+        if tag in self._ignore_tags or not self.actions:
+            return
+
+        # Broken HTML means that chapters might not be ended
+        if tag == 'html':
+            while self.chapters:
+                self._force_end_chapter()
             return
 
         action, data = self.actions.pop()
@@ -162,13 +150,15 @@ class NLHParser(HTMLParser):
 
         obj = self.chapters[-1] if self.chapters else None
 
-        if action == 'store_title':
+        if action == 'add_colon':
+            data += ': '
+        if action == 'discard':
+            pass
+        elif action == 'store_title':
             obj.code, obj.title = self._split_title(data)
-        elif action == 'store_revidert':
-            obj.revidert = data
         elif action == 'store_link':
-            obj.links[-1].text = data
-            self.actions[-1][1].append(data)
+            obj.links.append(data)
+            self.actions[-1][1].append(' %s ' % data)
         elif action == 'end_chapter':
             obj.text += data
             self.chapters.pop()
