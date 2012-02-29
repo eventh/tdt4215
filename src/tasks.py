@@ -5,6 +5,8 @@ Module for handling patient cases and performing the project tasks.
 
 Runs all or specified project tasks, with all or specified patient cases.
 Outputs either to stdout, or saves to JSON files or generates LaTeX tables.
+
+Usage: python3 <task> [<case|chapter>] [latex|json]
 """
 import sys
 import os
@@ -42,6 +44,10 @@ def remove_stopwords(lines, words=read_stopwords()):
 
 def read_cases_from_files(folder_or_path):
     """Read lines from case files in 'folder_or_path'."""
+    if not os.path.exists(folder_or_path):
+        print("Invalid case path: %s" % folder_or_path)
+        sys.exit(2)
+
     # Find case paths if path is a folder
     paths = []
     if not os.path.isdir(folder_or_path):
@@ -60,6 +66,7 @@ def read_cases_from_files(folder_or_path):
             with open(path) as f:
                 cases[filename] = remove_stopwords(f.readlines())
 
+    print("Loaded %s cases from '%s'" % (len(cases), folder_or_path))
     return cases
 
 
@@ -117,7 +124,7 @@ def task_1b(lines):
     return []
 
 
-def task_2a(lines):
+def task_2(lines):
     """Task 2: Search through ATC codes."""
     ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
     qp = QueryParser('name', schema=ix.schema, group=OrGroup)
@@ -139,17 +146,6 @@ def task_2a(lines):
 
             results.append(codes)
     return results
-
-
-def task_2b(lines):
-    """Task 2 B: Search through Legemiddelhandboken."""
-    #objs = searcher.search(q, terms=True)
-    #print("line %i: %s" % (i+1, line))
-    #for k, hit in enumerate(objs[:5]):
-    #    print('%i: %s - %s' % (k, hit['code'], hit['name']), hit.score)
-    #    if k < 1:
-    #        print("Matched:", ', '.join(i[1] for i in hit.matched_terms()))
-    return []
 
 
 def _code_list_to_str(codes):
@@ -227,9 +223,14 @@ def output_none(*args, **vargs):
     pass
 
 
+# Maps valid output arguments to functions which generates output
+OUTPUTS = {'json': output_json, 'latex': output_latex,
+           '': output_print, 'none': output_none}
+
+
 # Maps valid task names to functions which perform tasks
-TASKS = {'1a': task_1a, '1ab': task_1a_alt, '1b': task_1b,
-        '2a': task_2a, '2b': task_2b}
+CASE_TASKS = {'1a': task_1a, '1ab': task_1a_alt, '2a': task_2}
+CHAPTER_TASKS = {'1b': task_1b, '2b': task_2}
 
 
 # Maps task name to output fields
@@ -237,77 +238,73 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1ab': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
-               '2b': ('Clinical note', 'Sentence', 'ATC')}
+               '2b': ('Chapter', 'Sentence', 'ATC')}
 
 
-# Maps valid output arguments to functions which generates output
-OUTPUTS = {'json': output_json, 'latex': output_latex,
-           '': output_print, 'none': output_none}
+def _perform_task(task, tasks, inputs, output):
+    """Perform a specific task."""
+    i = 0
+    for task_name, func in sorted(tasks.items(), key=itemgetter(0)):
+        if not task or task == task_name:
+            now = time.time()
+            results = OrderedDict()
+            for name, lines in sorted(inputs.items(), key=itemgetter(0)):
+                print(i)
+                results[name] = func(lines)
+                i += 1
+            output(task_name, results, TASK_FIELDS[task_name])
+            print("Performed '%s' in %.2f seconds" % (
+                    func.__doc__, time.time() - now))
 
 
 def main(script, task='', case='', output=''):
     """Perform project tasks.
 
-    'task' is the project task to run, optional.
+    'task' is the project task to run.
     'case' is a path to the case to run, optional.
     'output' is the output to generate, optional.
-    Usage: 'python3 tasks.py [task] [case] [latex|json]'.
+    Usage: python3 <task> [<case|chapter>] [latex|json]
     """
-    # Check if indexes contains documents
+    if not task:
+        print("Usage: python3 <task> [<case|chapter>] [latex|json]")
+        sys.exit(2)
+    start_time = time.time()
+
     if is_indices_empty():
         print("You need to build indexes with codes.py first!")
         sys.exit(1)
 
-    # Handle output
-    if task in ('json', 'latex', 'none'):
-        output = task
-        task = ''
-    if case in ('json', 'latex', 'none'):
+    if case and case in OUTPUTS:
         output = case
         case = ''
     if output in ('json', 'latex') and not os.path.exists(OUTPUT_FOLDER):
         os.mkdir(OUTPUT_FOLDER)
     if output not in OUTPUTS:
-        print("Unknown output '%s', valid are: %s" % (
-                output, ', '.join(OUTPUTS.keys())))
+        print("Unknown output %s, valid:" % output, ', '.join(OUTPUTS.keys()))
         sys.exit(2)
-    output_handler = OUTPUTS[output]
 
-    # Handle and read in cases
-    if '.txt' in task:
-        output = case
-        case = task
-        task = ''
-    if not case:
-        case = 'etc/'
-    cases = read_cases_from_files(case)
-    print("Loaded %s cases from '%s'" % (len(cases), case))
+    # Perform a task which uses patient cases as input
+    if task in CASE_TASKS:
+        if not case:
+            case = 'etc/'
+        cases = read_cases_from_files(case)
+        _perform_task(task, CASE_TASKS, cases, OUTPUTS[output])
 
-    # Handle task argument
-    if task in TASKS:
-        tasks = {task: TASKS[task]}
-    elif not task:
-        tasks = TASKS
+    # Perform a task which uses chapters as input
+    elif task in CHAPTER_TASKS:
+        chapters = {i.code: remove_stopwords(i.text.split('\n')) for i in
+                        populate_chapters() if (not case or case == i.code)}
+        if not chapters:
+            print("Unknown chapter code: %s" % case)
+            sys.exit(2)
+        _perform_task(task, CHAPTER_TASKS, chapters, OUTPUTS[output])
+
     else:
-        print("Unknown task '%s', valid tasks are: %s" % (
-                task, ', '.join(TASKS.keys())))
+        print("Unknown task '%s', valid tasks are: %s" % (task,
+            ', '.join(list(CASE_TASKS.keys()) + list(CHAPTER_TASKS.keys()))))
         sys.exit(2)
 
-    # Perform tasks, one at a time, one case at a time
-    start_time = time.time()
-    for task_name, func in sorted(tasks.items(), key=itemgetter(0)):
-        now = time.time()
-        results = OrderedDict()
-        for case_name, lines in sorted(cases.items(), key=itemgetter(0)):
-            results[case_name] = func(lines)
-        output_handler(task_name, results, TASK_FIELDS[task_name])
-        print("Performed '%s' in %.2f seconds" % (
-                func.__doc__, time.time() - now))
-
-    if len(tasks) > 1:
-        print("Ran %s tasks in %.2f seconds" % (
-                len(tasks), time.time() - start_time))
-
+    print("Ran task '%s' in %.2f seconds" % (task, time.time() - start_time))
     sys.exit(None)
 
 
