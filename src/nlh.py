@@ -178,6 +178,8 @@ class NLHParser(HTMLParser):
         elif action == 'end_chapter':
             obj.text += data
             self.chapters.pop()
+            if obj.code is None:
+                Chapter.ALL.remove(obj) # Broken html, T17.2 & T19.7
         else:
             if data and self.actions:
                 self.actions[-1][1].append(data)
@@ -237,14 +239,23 @@ def load_objects_from_json(path):
 
 
 def calculate_statistics():
-    count = Counter([i.code.count('.') for i in Chapter.ALL if i.code])
-    print(count, sum(count.values()))
-    lines = [i.text.count('\n') + 1 for i in Chapter.ALL if i.text]
-    sentences = [i.text.count('.') for i in Chapter.ALL if i.text]
-    print("Total chapter objects: %i" % len(Chapter.ALL))
-    print("Total chapters containing text: %i" % len(lines))
-    print("Total amount of lines '\\n': %i" % sum(lines))
-    print("Total amount of sentences '.': %i" % sum(sentences))
+    """Print out some misc chapter statistics."""
+    c_all = Counter([i.code.count('.') for i in Chapter.ALL])
+    c_text = Counter([i.code.count('.') for i in Chapter.ALL if i.text])
+    titles = ('Chapters', 'Sub', 'Sub*2', 'Sub*3', 'Sub*4')
+    for i, title in enumerate(titles):
+        space = ' ' * (8 - len(title))
+        print("%s%s: %i (%i with text)" % (title, space, c_all[i], c_text[i]))
+    print("Total   : %i (%i with text)" % (
+            len(Chapter.ALL), sum(c_text.values())))
+
+    sentences = lines = 0
+    for obj in Chapter.ALL:
+        if obj.text:
+            lines += len([i for i in obj.text.split('\n') if i.strip()])
+            sentences += len([i for i in obj.text.split('.') if i.strip()])
+    print("Total amount of lines '\\n': %i" % lines)
+    print("Total amount of sentences '.': %i" % sentences)
     print()
 
 
