@@ -1,14 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Module for parsing html documents from 'norsk legemiddelhandbok'.
+Module for parsing HTML documents from 'norsk legemiddelhandbok'.
+
+HTML documents can either be preprocessed or parsed to extract chapters
+and subchapters in the terapi part of legemiddelhandboka.
+Chapters are saved to JSON file, and can be indexed by whoosh.
+
+Usage: 'python3 nlh.py <path> [preprocess|parse|store|clean]'
+
+Examples:
+To preprocess all the terapi-files run the command:
+    'python3 nlh.py ../data/nlh/T/ preprocess'
+
+To parse all terapi-chapters and store them as JSON:
+    'python3 nlh.py ../data/nlh/T/ parse'
+
+To store and index all chapters in whoosh database:
+    'python3 nlh.py etc/terapi.json store'
 """
 import os
 import sys
 import time
 import string
 import json
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 from html.parser import HTMLParser
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
@@ -204,11 +220,10 @@ def parse_html_file(path):
 def dump_chapters_to_json(filename):
     """Dump all parsed Chapter objects to JSON."""
     now = time.time()
-    objects = [i.to_json() for i in Chapter.ALL if i.text]
     with open("%s.json" % filename, 'w') as f:
-        json.dump(objects, f, indent=4)
+        json.dump([i.to_json() for i in Chapter.ALL], f, indent=4)
     print("Dumped %s objects to %s.json in %.2f seconds" % (
-        len(objects), filename, time.time() - now))
+            len(Chapter.ALL), filename, time.time() - now))
 
 
 def load_objects_from_json(path):
@@ -218,7 +233,19 @@ def load_objects_from_json(path):
         json_objects = json.load(f)
     objects = [Chapter.from_json(i) for i in json_objects]
     print("Loaded %s objects from %s in %.2f seconds" % (
-        len(objects), path, time.time() - now))
+            len(objects), path, time.time() - now))
+
+
+def calculate_statistics():
+    count = Counter([i.code.count('.') for i in Chapter.ALL if i.code])
+    print(count, sum(count.values()))
+    lines = [i.text.count('\n') + 1 for i in Chapter.ALL if i.text]
+    sentences = [i.text.count('.') for i in Chapter.ALL if i.text]
+    print("Total chapter objects: %i" % len(Chapter.ALL))
+    print("Total chapters containing text: %i" % len(lines))
+    print("Total amount of lines '\\n': %i" % sum(lines))
+    print("Total amount of sentences '.': %i" % sum(sentences))
+    print()
 
 
 def main(script, folder_or_path='', command=''):
@@ -236,9 +263,7 @@ def main(script, folder_or_path='', command=''):
     # Parse JSON file with Chapter objects
     if folder_or_path[-5:] == '.json':
         load_objects_from_json(folder_or_path)
-
-    #lines = sum(i.text.count('\n') + 1 for i in Chapter.ALL if i.text)
-    #print(lines)
+        calculate_statistics()
 
     # Accept path to either a folder or a file
     paths = []
@@ -249,6 +274,7 @@ def main(script, folder_or_path='', command=''):
             full_path = os.path.normpath(os.path.join(folder_or_path, path))
             if not os.path.isdir(full_path):
                 paths.append(full_path)
+        paths.sort()
 
     # Parse HTML files to find objects
     now = time.time()
@@ -260,6 +286,7 @@ def main(script, folder_or_path='', command=''):
         print("Parsed '%s', %i chapters in %.2f seconds" % (
                 folder_or_path, len(Chapter.ALL), time.time() - now))
         dump_chapters_to_json('terapi')
+        calculate_statistics()
 
     # Preprocess HTML files to make them easier to parse
     elif command.startswith('pre'):
