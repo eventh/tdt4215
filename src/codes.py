@@ -160,7 +160,7 @@ def create_index(cls):
         print("Created %s index '%s'" % (cls.__name__, cls.NAME))
 
 
-def populate_data_from_json():
+def populate_codes():
     """Populate ICD10 and ATC objects from JSON files."""
     files = {'etc/icd10no.json': ICD10, 'etc/atcname.json': ATC}
     for path in list(files.keys()) + [INDEX_DIR]:

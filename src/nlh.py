@@ -78,6 +78,15 @@ class Chapter:
         return obj
 
 
+def populate_chapters():
+    """Populate Chapter objects from JSON file."""
+    path = 'etc/terapi.json'
+    if not os.path.isfile(path):
+        raise IOError("Missing terapi file: '%s'" % path)
+    with open(path, 'r') as f:
+        return [Chapter.from_json(i) for i in json.load(f)]
+
+
 class NLHParser(HTMLParser):
     """Parser for  Norwegian Legemiddelhandboka HTML pages."""
 

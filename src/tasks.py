@@ -16,7 +16,8 @@ from collections import OrderedDict
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
-from codes import ATC, ICD10, INDEX_DIR, is_indices_empty
+from codes import ATC, ICD10, INDEX_DIR, is_indices_empty, populate_codes
+from nlh import Chapter, populate_chapters
 
 
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
