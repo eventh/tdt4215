@@ -70,8 +70,8 @@ def read_cases_from_files(folder_or_path):
     return cases
 
 
-def task_1a(lines):
-    """Task 1 A: Search through ICD10 codes."""
+def task_1(lines):
+    """Task 1: Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
@@ -94,8 +94,8 @@ def task_1a(lines):
     return results
 
 
-def task_1a_alt(lines):
-    """Task 1 A: Search through ICD10 codes."""
+def task_1_alt(lines):
+    """Task 1 alternative: Search through ICD10 codes."""
     ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
     qp = QueryParser('description', schema=ix.schema, group=OrGroup)
     # What about exclusions? NOT IN?
@@ -117,11 +117,6 @@ def task_1a_alt(lines):
 
             results.append(codes)
     return results
-
-
-def task_1b(lines):
-    """Task 1 B: Search through Legemiddelhandboken."""
-    return []
 
 
 def task_2(lines):
@@ -229,32 +224,33 @@ OUTPUTS = {'json': output_json, 'latex': output_latex,
 
 
 # Maps valid task names to functions which perform tasks
-CASE_TASKS = {'1a': task_1a, '1ab': task_1a_alt, '2a': task_2}
-CHAPTER_TASKS = {'1b': task_1b, '2b': task_2}
+CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2}
+CHAPTER_TASKS = {'1b': task_1, '1b2': task_1_alt, '2b': task_2}
 
 
 # Maps task name to output fields
 TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
-               '1ab': ('Clinical note', 'Sentence', 'ICD-10'),
+               '1a2': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
+               '2a2': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC')}
 
 
-def _perform_task(task, tasks, inputs, output):
+def _perform_task(task_name, func, inputs, output, progress=False):
     """Perform a specific task."""
+    now = time.time()
+    results = OrderedDict()
+
     i = 0
-    for task_name, func in sorted(tasks.items(), key=itemgetter(0)):
-        if not task or task == task_name:
-            now = time.time()
-            results = OrderedDict()
-            for name, lines in sorted(inputs.items(), key=itemgetter(0)):
-                print(i)
-                results[name] = func(lines)
-                i += 1
-            output(task_name, results, TASK_FIELDS[task_name])
-            print("Performed '%s' in %.2f seconds" % (
-                    func.__doc__, time.time() - now))
+    for name, lines in sorted(inputs.items(), key=itemgetter(0)):
+        results[name] = func(lines)
+        if progress:
+            i += 1
+            print(i)
+
+    output(task_name, results, TASK_FIELDS[task_name])
+    print("Performed '%s' in %.2f seconds" % (func.__doc__, time.time() - now))
 
 
 def main(script, task='', case='', output=''):
@@ -268,7 +264,6 @@ def main(script, task='', case='', output=''):
     if not task:
         print("Usage: python3 <task> [<case|chapter>] [latex|json]")
         sys.exit(2)
-    start_time = time.time()
 
     if is_indices_empty():
         print("You need to build indexes with codes.py first!")
@@ -288,7 +283,7 @@ def main(script, task='', case='', output=''):
         if not case:
             case = 'etc/'
         cases = read_cases_from_files(case)
-        _perform_task(task, CASE_TASKS, cases, OUTPUTS[output])
+        _perform_task(task, CASE_TASKS[task], cases, OUTPUTS[output])
 
     # Perform a task which uses chapters as input
     elif task in CHAPTER_TASKS:
@@ -297,14 +292,14 @@ def main(script, task='', case='', output=''):
         if not chapters:
             print("Unknown chapter code: %s" % case)
             sys.exit(2)
-        _perform_task(task, CHAPTER_TASKS, chapters, OUTPUTS[output])
+        _perform_task(task, CHAPTER_TASKS[task], chapters,
+                      OUTPUTS[output], progress=True)
 
     else:
         print("Unknown task '%s', valid tasks are: %s" % (task,
             ', '.join(list(CASE_TASKS.keys()) + list(CHAPTER_TASKS.keys()))))
         sys.exit(2)
 
-    print("Ran task '%s' in %.2f seconds" % (task, time.time() - start_time))
     sys.exit(None)
 
 
