@@ -81,8 +81,7 @@ This chapter contains patient cases used as input in this project.
 Norwegian stop words have been removed from these patient cases.
 ''')
 
-        for name, lines in sorted(cases.items(), key=itemgetter(0)):
-            case_nr = name.replace('case', '')
+        for case_nr, lines in sorted(cases.items(), key=itemgetter(0)):
             f.write(
 r'''\begin{table}[htbp] \footnotesize \center
 \caption{Patient case %s\label{tab:pcase%s}}

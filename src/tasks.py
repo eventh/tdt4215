@@ -66,7 +66,8 @@ def read_cases_from_files(folder_or_path):
         filename, ext = os.path.splitext(os.path.split(path)[1])
         if ext == '.txt' and filename.startswith('case'):
             with open(path) as f:
-                cases[filename] = remove_stopwords(f.readlines())
+                case_nr = filename.replace('case', '')
+                cases[case_nr] = remove_stopwords(f.readlines())
 
     print("Loaded %s cases from '%s'" % (len(cases), folder_or_path))
     return cases
@@ -182,8 +183,7 @@ r'''\begin{table}[htbp] \footnotesize \center
 ''' % (task, task, fields[0], fields[1], fields[2]))
 
         nr = ''
-        for case, lines in results.items():
-            case_nr = case.replace('case', '')
+        for case_nr, lines in results.items():
             if nr == 'add':
                 f.write('\t\\addlinespace\n')
 
@@ -207,11 +207,10 @@ def output_print(task, results, fields):
     'fields' is the fields to represent in the output.
     """
     for case, lines in results.items():
-        case_nr = case.replace('case', '')
         print("%s | %s | %s" % fields + " (task %s)" % task)
         print("--------------------------------------------")
         for i, codes in enumerate(lines):
-            print("%s | %s | %s" % (case_nr, i + 1, _code_list_to_str(codes)))
+            print("%s | %s | %s" % (case, i + 1, _code_list_to_str(codes)))
         print()
 
 
