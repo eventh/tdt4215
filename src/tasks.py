@@ -38,6 +38,8 @@ def remove_stopwords(lines, words=read_stopwords()):
         line = ' '.join(i for i in line.strip().split(' ')
                                     if i.lower() not in words)
         if line:
+            if line[-1] == '.':
+                line = line[:-1]  # Remove period from queries
             output.append(line)
     return output
 

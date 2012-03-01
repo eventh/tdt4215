@@ -48,7 +48,11 @@ def generate_stopwords_table():
         f.write(
 r'''
 \chapter{Stop words}
-\autoref{tab:stopwords} contains a list of Norwegian stop words used on search queries such as patient cases and therapy chapters.
+\autoref{tab:stopwords} contains a list of Norwegian stop words used on search
+queries such as patient cases and therapy chapters.
+An initial list were %% TODO: add a reference to
+Additional words with low relevenance, but which are frequently used in
+patient cases, have been added.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Norwegian stop words\label{tab:stopwords}}
@@ -66,15 +70,33 @@ r'''
     print()
 
 
-def generate_cases_listing():
-    """Generate a LaTeX file with all patient cases."""
+def generate_cases_table():
+    """Generate LaTeX tables for patient cases."""
     cases = read_cases_from_files('etc/')
     filename = '%s/cases.tex' % OUTPUT_FOLDER
     with open(filename, 'w') as f:
-        f.write('\\chapter{Patient cases}\n\n')
+        f.write(
+r'''\chapter{Patient cases}
+This chapter contains patient cases used as input in this project.
+Norwegian stop words have been removed from these patient cases.
+''')
+
         for name, lines in sorted(cases.items(), key=itemgetter(0)):
-            f.write('Case %s\n' % name.replace('case', ''))
-            f.write('\n'.join(i.replace('%', '\%') for i in lines) + '\n\n')
+            case_nr = name.replace('case', '')
+            f.write(
+r'''\begin{table}[htbp] \footnotesize \center
+\caption{Patient case %s\label{tab:pcase%s}}
+\begin{tabularx}{\textwidth}{c X}
+    \toprule
+    \# & Lines (stop words removed) \\
+    \midrule
+''' % (case_nr, case_nr))
+
+            for i, line in enumerate(lines):
+                f.write('\t%i & %s \\\\\n' % (i + 1, line.replace('%', '\%')))
+
+            f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
+
     print("Dumped %i patient cases to '%s'" % (len(cases), filename))
     print()
 
@@ -85,7 +107,7 @@ def main(script):
 
     calculate_chapter_statistics()
     generate_stopwords_table()
-    generate_cases_listing()
+    generate_cases_table()
 
 
 if __name__ == '__main__':
