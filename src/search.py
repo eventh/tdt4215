@@ -12,37 +12,23 @@ from codes import ATC, ICD10, INDEX_DIR
 from nlh import Chapter
 
 
-def search_icd10(field, query):
-    """Search the ICD10 index with 'query'."""
-    ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
+def search(cls, field, query):
+    """Perform a search on cls.NAME index on 'field' with 'query'."""
+    ix = open_dir(INDEX_DIR, indexname=cls.NAME)
     qp = QueryParser(field, schema=ix.schema, group=OrGroup)
 
     with ix.searcher() as searcher:
         q = qp.parse(query)
         objs = searcher.search(q)
-        return ['%s: %s' % (i['short'], i['label']) for i in objs[:5]]
+        return [dict(i.items()) for i in searcher.search(q)]
 
 
-def search_atc(field, query):
-    """Search the ATC index with 'query'."""
-    ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
-    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
-
-    with ix.searcher() as searcher:
-        q = qp.parse(query)
-        objs = searcher.search(q)
-        return ['%s: %s' % (i['code'], i['name']) for i in objs[:5]]
-
-
-def search_terapi(field, query):
-    """Search the terapi chapter index with 'query'."""
-    ix = open_dir(INDEX_DIR, indexname=Chapter.NAME)
-    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
-
-    with ix.searcher() as searcher:
-        q = qp.parse(query)
-        objs = searcher.search(q)
-        return ['%s: %s' % (i['code'], i['title']) for i in objs[:5]]
+def extract(fields, results, limit=10):
+    """Extract specific values from each result."""
+    out = []
+    for obj in results[:limit]:
+        out.append(', '.join('%s: %s' % (key, obj[key]) for key in fields))
+    return out
 
 
 def print_result(result):
@@ -63,21 +49,19 @@ def main(script, index='', field='', *query):
         print("Usage: python3 search.py <index> <field> <query>")
         sys.exit(2)
 
-    flat_query = ''.join(query)
+    query = ''.join(query)  # Flatten query
 
     if index == 'icd':
-        print_result(search_icd10(field, flat_query))
-
+        res = extract(('short', 'label'), search(ICD10, field, query))
     elif index == 'atc':
-        print_result(search_atc(field, flat_query))
-
+        res = extract(('code', 'name'), search(ATC, field, query))
     elif index == 'terapi':
-        print_result(search_terapi(field, flat_query))
-
+        res = extract(('code', 'title'), search(Chapter, field, query))
     else:
         print("Unknown database: %s" % index)
         sys.exit(2)
 
+    print_result(res)
     sys.exit(None)
 
 
