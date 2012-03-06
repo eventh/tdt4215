@@ -1,5 +1,6 @@
 import sys
 import time
+import math
 from operator import itemgetter
 from pprint import pprint
 
@@ -8,12 +9,7 @@ from whoosh.index import open_dir, create_in
 
 import tasks
 from nlh import populate_chapters
-<<<<<<< HEAD
-from codes import create_index
-import math
-=======
 from codes import create_index, INDEX_DIR
->>>>>>> 06c918bd765ab57387d260903d0e933e68c30594
 
 
 class Task3:
@@ -72,19 +68,12 @@ def calculate_vectordistance():
         AB_dotproduct += (vector_1[i] * vector_2[i])
         A_magnitude += vector_1[i]**2
         B_magnitude += vector_2[i]**2
-        
+
     AB_magnitude = math.sqrt(A_magnitude)*math.sqrt(B_magnitude)
     return AB_dotproduct / AB_magnitude
 
-    
-    
 
 def main(script, command=''):
-<<<<<<< HEAD
-    print(calculate_vectordistance())
-    if command == 'store':
-        chapters = populate_chapters()
-=======
     cases = tasks.read_cases_from_files('etc/')
     chapters = populate_chapters()
 
@@ -116,10 +105,10 @@ def main(script, command=''):
         create_index(Task3)
         ix = create_in(INDEX_DIR, schema=Task3.SCHEMA, indexname=Task3.NAME)
         print("Emptied %s index" % Task3.__name__)
->>>>>>> 06c918bd765ab57387d260903d0e933e68c30594
 
     else:
         checkSimilarities(cases, chapters)
+        print(calculate_vectordistance())
 
 
 if __name__ == '__main__':
