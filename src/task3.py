@@ -1,11 +1,13 @@
 import sys
+import time
 from operator import itemgetter
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+from whoosh.index import open_dir
 
 import tasks
 from nlh import populate_chapters
-from codes import create_index
+from codes import create_index, INDEX_DIR
 
 
 class Task3:
@@ -15,9 +17,12 @@ class Task3:
 
     NAME = 'task3'
 
+    ALL = {}
+
     _fields = ('code', 'text', 'title', 'type')
 
     def __init__(self, code, text, title=None, type=None):
+        Task3.ALL[code] = self
         self.code = code
         self.text = text
         self.title = title
@@ -28,15 +33,13 @@ class Task3:
                     if getattr(self, i) is not None}
 
 
-def checkSimilarities():
-    cases = tasks.read_cases_from_files('etc/')
+def checkSimilarities(cases, chapters):
     print('Case # | Relevant chapter | Hits')
 
     for name, lines in sorted(cases.items(), key=itemgetter(0)):
         case = '\n'.join(lines)
         words_case = case.split()
 
-        chapters = populate_chapters()
 
         chapter_highest = ''
         highest_sum = 0
@@ -56,12 +59,32 @@ def checkSimilarities():
 
 
 def main(script, command=''):
-    if command == 'store':
-        chapters = populate_chapters()
+    cases = tasks.read_cases_from_files('etc/')
+    chapters = populate_chapters()
 
-        pass
+    for name, lines in cases.items():
+        Task3(name, '\n'.join(lines), type='case')
+    for chapter in chapters:
+        Task3(chapter.code, chapter.text, chapter.title, type='chapter')
+
+    if command == 'store':
+        create_index(Task3)
+        now = time.time()
+        ix = open_dir(INDEX_DIR, indexname=Task3.NAME)
+        with ix.writer() as writer:
+            for obj in Task3.ALL.values():
+                writer.add_document(**obj.to_index())
+        print("Stored %s %s objects in index in %.2f seconds" % (
+                len(Task3.ALL), Task3.__name__, time.time() - now))
+
+
+    elif command in ('clean', 'clear'):
+        create_index(Task3)
+        ix = create_in(INDEX_DIR, schema=Task3.SCHEMA, indexname=Task3.NAME)
+        print("Emptied %s index" % Task3.__name__)
+
     else:
-        checkSimilarities()
+        checkSimilarities(cases, chapters)
 
 
 if __name__ == '__main__':

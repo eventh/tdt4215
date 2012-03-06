@@ -10,6 +10,7 @@ from whoosh.qparser import QueryParser, OrGroup
 
 from codes import ATC, ICD10, INDEX_DIR
 from nlh import Chapter
+from task3 import Task3
 
 
 def search(cls, field, query):
@@ -57,6 +58,8 @@ def main(script, index='', field='', *query):
         res = extract(('code', 'name'), search(ATC, field, query))
     elif index == 'terapi':
         res = extract(('code', 'title'), search(Chapter, field, query))
+    elif index == 'task3':
+        res = extract(('code', 'title'), search(Task3, field, query))
     else:
         print("Unknown database: %s" % index)
         sys.exit(2)
