@@ -11,9 +11,10 @@ Usage: python3 <task> [<case|chapter>] [latex|json]
 import sys
 import os
 import time
+import re
 import json
 from operator import itemgetter
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
@@ -144,6 +145,20 @@ def task_2(lines):
 
             results.append(codes)
     return results
+
+
+def task_3():
+    cases = read_cases_from_files('etc/')
+    populate_chapters()
+
+    text = []
+    for name, lines in cases.items():
+        text.extend(lines)
+    words = re.findall('\w+', '\n'.join(text).lower())
+    count = Counter(words)
+    print(len(count))
+    print(count.most_common())
+
 
 
 def _code_list_to_str(codes):
@@ -280,7 +295,9 @@ def main(script, task='', case='', output=''):
         sys.exit(2)
 
     # Perform a task which uses patient cases as input
-    if task in CASE_TASKS:
+    if task == '3':
+        task_3()
+    elif task in CASE_TASKS:
         if not case:
             case = 'etc/'
         cases = read_cases_from_files(case)
