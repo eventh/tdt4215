@@ -1,8 +1,31 @@
 import sys
 from operator import itemgetter
 
+from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+
 import tasks
-import nlh
+from nlh import populate_chapters
+from codes import create_index
+
+
+class Task3:
+
+    SCHEMA = Schema(code=ID(stored=True),
+                title=ID(stored=True), type=ID(stored=True), text=TEXT)
+
+    NAME = 'task3'
+
+    _fields = ('code', 'text', 'title', 'type')
+
+    def __init__(self, code, text, title=None, type=None):
+        self.code = code
+        self.text = text
+        self.title = title
+        self.type = type
+
+    def to_index(self):
+        return {i: getattr(self, i) for i in self._fields
+                    if getattr(self, i) is not None}
 
 
 def checkSimilarities():
@@ -13,7 +36,7 @@ def checkSimilarities():
         case = '\n'.join(lines)
         words_case = case.split()
 
-        chapters = nlh.populate_chapters()
+        chapters = populate_chapters()
 
         chapter_highest = ''
         highest_sum = 0
@@ -32,8 +55,13 @@ def checkSimilarities():
                 chapter_highest.code, chapter_highest.title, highest_sum))
 
 
-def main(script):
-    checkSimilarities()
+def main(script, command=''):
+    if command == 'store':
+        chapters = populate_chapters()
+
+        pass
+    else:
+        checkSimilarities()
 
 
 if __name__ == '__main__':
