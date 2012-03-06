@@ -6,6 +6,7 @@ from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 import tasks
 from nlh import populate_chapters
 from codes import create_index
+import math
 
 
 class Task3:
@@ -54,8 +55,25 @@ def checkSimilarities():
         print("%s | %s - %s | %f" % (name,
                 chapter_highest.code, chapter_highest.title, highest_sum))
 
+def calculate_vectordistance():
+    vector_1 = [0.5, 0, 0]
+    vector_2 = [1, 0.5, 1]
+    AB_dotproduct = 0
+    A_magnitude = 0
+    B_magnitude = 0
+    for i in range(len(vector_1)):
+        AB_dotproduct += (vector_1[i] * vector_2[i])
+        A_magnitude += vector_1[i]**2
+        B_magnitude += vector_2[i]**2
+        
+    AB_magnitude = math.sqrt(A_magnitude)*math.sqrt(B_magnitude)
+    return AB_dotproduct / AB_magnitude
+
+    
+    
 
 def main(script, command=''):
+    print(calculate_vectordistance())
     if command == 'store':
         chapters = populate_chapters()
 
