@@ -1,9 +1,10 @@
 import sys
 import time
 from operator import itemgetter
+from pprint import pprint
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
-from whoosh.index import open_dir
+from whoosh.index import open_dir, create_in
 
 import tasks
 from nlh import populate_chapters
@@ -29,8 +30,7 @@ class Task3:
         self.type = type
 
     def to_index(self):
-        return {i: getattr(self, i) for i in self._fields
-                    if getattr(self, i) is not None}
+        return {i: getattr(self, i) for i in self._fields if getattr(self, i)}
 
 
 def checkSimilarities(cases, chapters):
@@ -67,7 +67,15 @@ def main(script, command=''):
     for chapter in chapters:
         Task3(chapter.code, chapter.text, chapter.title, type='chapter')
 
-    if command == 'store':
+    if command == 'search':
+        create_index(Task3)
+        ix = open_dir(INDEX_DIR, indexname=Task3.NAME)
+        reader = ix.reader()
+        pprint(reader.most_distinctive_terms('text'))
+        #qp = QueryParser('text', schema=ix.schema, group=OrGroup)
+
+
+    elif command == 'store':
         create_index(Task3)
         now = time.time()
         ix = open_dir(INDEX_DIR, indexname=Task3.NAME)
