@@ -14,7 +14,7 @@ from codes import create_index, INDEX_DIR
 
 class Task3:
 
-    SCHEMA = Schema(code=ID(stored=True),
+    SCHEMA = Schema(code=ID(stored=True, unique=True),
                 title=ID(stored=True), type=ID(stored=True), text=TEXT)
 
     NAME = 'task3'
@@ -86,9 +86,10 @@ def main(script, command=''):
         create_index(Task3)
         ix = open_dir(INDEX_DIR, indexname=Task3.NAME)
         reader = ix.reader()
-        pprint(reader.most_distinctive_terms('text'))
+        ##print(len([i for i in reader.lexicon('text')]))
+        pprint([i for i in reader.most_frequent_terms('text', 100)])
+        #pprint([i for i in reader.most_distinctive_terms('text', 100)])
         #qp = QueryParser('text', schema=ix.schema, group=OrGroup)
-
 
     elif command == 'store':
         create_index(Task3)
@@ -99,7 +100,6 @@ def main(script, command=''):
                 writer.add_document(**obj.to_index())
         print("Stored %s %s objects in index in %.2f seconds" % (
                 len(Task3.ALL), Task3.__name__, time.time() - now))
-
 
     elif command in ('clean', 'clear'):
         create_index(Task3)
