@@ -8,18 +8,17 @@ Outputs either to stdout, or saves to JSON files or generates LaTeX tables.
 
 Usage: python3 <task> [<case|chapter>] [latex|json]
 """
-import sys
 import os
+import sys
 import time
-import re
 import json
 from operator import itemgetter
 from collections import OrderedDict, Counter
 
 from whoosh.qparser import QueryParser, OrGroup
 
-from codes import ATC, ICD10, INDEX_DIR, is_indices_empty, populate_codes
-from nlh import Chapter, populate_chapters
+from data import ATC, ICD, Therapy, PatientCase, populate_all
+from index import create_or_open_index, get_empty_indices
 
 
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
@@ -27,7 +26,7 @@ OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
 
 def task_1(lines):
     """Task 1: Search through ICD10 codes."""
-    ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
+    ix = create_or_open_index(ICD)
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
     results = []
@@ -51,9 +50,8 @@ def task_1(lines):
 
 def task_1_alt(lines):
     """Task 1 alternative: Search through ICD10 codes."""
-    ix = open_dir(INDEX_DIR, indexname=ICD10.NAME)
+    ix = create_or_open_index(ICD)
     qp = QueryParser('description', schema=ix.schema, group=OrGroup)
-    # What about exclusions? NOT IN?
 
     results = []
     with ix.searcher() as searcher:
@@ -76,8 +74,8 @@ def task_1_alt(lines):
 
 def task_2(lines):
     """Task 2: Search through ATC codes."""
-    ix = open_dir(INDEX_DIR, indexname=ATC.NAME)
-    qp = QueryParser('name', schema=ix.schema, group=OrGroup)
+    ix = create_or_open_index(ATC)
+    qp = QueryParser('title', schema=ix.schema, group=OrGroup)
 
     results = []
     with ix.searcher() as searcher:
@@ -196,11 +194,11 @@ def _perform_task(task_name, func, inputs, output, progress=False):
     results = OrderedDict()
 
     i = 0
-    for name, lines in sorted(inputs.items(), key=itemgetter(0)):
+    for name, obj in sorted(inputs.items(), key=itemgetter(0)):
         if progress:
             i += 1
             print("[%i] %s" % (i, name))
-        results[name] = func(lines)
+        results[name] = func(obj.text.split('\n'))
 
     output(task_name, results, TASK_FIELDS[task_name])
     print("Performed '%s' in %.2f seconds" % (func.__doc__, time.time() - now))
@@ -218,8 +216,8 @@ def main(script, task='', case='', output=''):
         print("Usage: python3 <task> [<case|chapter>] [latex|json]")
         sys.exit(2)
 
-    if is_indices_empty():
-        print("You need to build indexes with codes.py first!")
+    if get_empty_indices():
+        print("Empty indices, run 'python3 index.py build' first!")
         sys.exit(1)
 
     if case and case in OUTPUTS:
@@ -231,22 +229,23 @@ def main(script, task='', case='', output=''):
         print("Unknown output %s, valid:" % output, ', '.join(OUTPUTS.keys()))
         sys.exit(2)
 
+    populate_all()
+
     # Perform a task which uses patient cases as input
-    if task == '3':
-        task_3()
-    elif task in CASE_TASKS:
-        if not case:
-            case = 'etc/'
-        cases = read_cases_from_files(case)
-        print("Loaded %s cases from '%s'" % (len(cases), case))
+    if task in CASE_TASKS:
+        cases = {name: obj for name, obj in PatientCase.ALL.items()
+                    if (not case or name == case)}
+        if not cases:
+            print("Unknown patient case: %s" % case)
+            sys.exit(2)
         _perform_task(task, CASE_TASKS[task], cases, OUTPUTS[output])
 
     # Perform a task which uses chapters as input
     elif task in CHAPTER_TASKS:
-        chapters = {i.code: remove_stopwords(i.text.split('\n')) for i in
-                        populate_chapters() if (not case or case == i.code)}
+        chapters = {code: obj for code, obj in Therapy.ALL.items()
+                        if (not case or case == obj.code)}
         if not chapters:
-            print("Unknown chapter code: %s" % case)
+            print("Unknown therapy code: %s" % case)
             sys.exit(2)
         _perform_task(task, CHAPTER_TASKS[task], chapters,
                       OUTPUTS[output], progress=True)
