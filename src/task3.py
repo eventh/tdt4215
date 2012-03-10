@@ -1,20 +1,32 @@
 import sys
 import time
-import math
+from math import sqrt, log
 from operator import itemgetter
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.index import open_dir, create_in
+from whoosh.formats import Frequency
 
 from nlh import populate_chapters
 from codes import create_index, INDEX_DIR
 from tasks import read_cases_from_files, ANALYZER
 
 
+# Inverse Document and Term Frequency Weight functions
+def _idf(N, n):
+    return log(N / n)  # Inverse frequency
+def _idf_smooth(N, n):
+    return log(1 + (N / n))  # Inverse frequency smooth
+def _idf_prob(N, n):
+    return log((N - n) / n)  # Probabilistic inverse frequency
+def _tf_log_norm(frequency):
+    return 1 + log(frequency)  # Log normalization
+
+
 class Task3:
 
     SCHEMA = Schema(code=ID(stored=True, unique=True),
-                    text=TEXT(vector=True, analyzer=ANALYZER))
+                    text=TEXT(vector=Frequency(), analyzer=ANALYZER))
     NAME = 'task3'
     ALL = {}
 
@@ -37,14 +49,16 @@ class Task3:
     def create_vectors(cls):
         now = time.time()
         ix = open_dir(INDEX_DIR, indexname=cls.NAME)
-        reader = ix.reader()
         with ix.searcher() as searcher:
-            idf = lambda t: searcher.idf('text', t)
+            def idf(term):
+                N = searcher.doc_count()
+                n = searcher.doc_frequency('text', term)
+                return _idf(N, n)
 
             for doc_num in searcher.document_numbers():
-                code = searcher.stored_fields(doc_num)['code']
-                cls.ALL[code].vector = {t: s * idf(t) for t, s in
-                        searcher.key_terms([doc_num], 'text', 1000)}
+                obj = cls.ALL[searcher.stored_fields(doc_num)['code']]
+                obj.vector = {t: _tf_log_norm(w) * idf(t) for t, w in
+                              searcher.vector_as('weight', doc_num, 'text')}
 
         print("Created vectors in %.2f seconds" % (time.time() - now))
 
@@ -113,7 +127,7 @@ def calculate_vectordistance(vectors):
         A_magnitude += vectors[i][0] ** 2
         B_magnitude += vectors[i][1] ** 2
 
-    AB_magnitude = math.sqrt(A_magnitude) * math.sqrt(B_magnitude)
+    AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
     return AB_dotproduct / AB_magnitude
 
 
@@ -133,6 +147,8 @@ def match_cases_to_chapters():
 
             if vectors:
                 results.append((chapter, calculate_vectordistance(vectors)))
+                print(vectors, calculate_vectordistance(vectors))
+                break
 
         results.sort(key=itemgetter(1), reverse=True)
 
