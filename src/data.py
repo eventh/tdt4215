@@ -159,9 +159,6 @@ class Medicin(BaseData):
         self.text = text
         self.vector = None
 
-    def to_index(self):
-        return {'code': self.code, 'text': self.text}
-
     @classmethod
     def create_vectors(cls):
         now = time.time()
@@ -189,6 +186,9 @@ class PatientCase(Medicin):
         """Create a new PatientCase object."""
         PatientCase.ALL[code] = self
         super().__init__(code, text)
+
+    def to_index(self):
+        return {'code': self.code, 'text': self.text}
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
@@ -264,7 +264,11 @@ def main(script=None):
             sys.exit(1)
 
     # Load objects from JSON files
+    now = time.time()
     populate_all()
+    print("Populated ATC %i, ICD %i, Cases %i, Therapy %i in %.2f seconds" % (
+            len(ATC.ALL), len(ICD.ALL), len(PatientCase.ALL),
+            len(Therapy.ALL), time.time() - now))
 
     # Check if indices exists and contains documents
     import index

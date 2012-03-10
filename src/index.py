@@ -32,6 +32,7 @@ ICD_SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
 
 # Schema for storing and indexing Therapy chapters and PatientCase's
 MEDIC_SCHEMA = Schema(code=ID(stored=True, unique=True),
+                      title=TEXT(stored=True),
                       text=TEXT(vector=True, analyzer=ANALYZER))
 
 
@@ -116,7 +117,9 @@ def main(script, command='', index=''):
             create_in(INDEX_DIR, SCHEMA_MAP[cls._NAME], cls._NAME)
             print("Emptied %s index" % cls.__name__)
 
+    # Search in index
     elif command == 'search':
+        cls = classes[-1]
         pass
 
     # Unknown command
