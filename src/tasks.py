@@ -12,6 +12,7 @@ import os
 import sys
 import time
 import json
+from math import sqrt
 from operator import itemgetter
 from collections import OrderedDict, Counter
 
@@ -94,6 +95,73 @@ def task_2(lines):
 
             results.append(codes)
     return results
+
+
+def task_3():
+    """Task 3: Match patient cases to therapy chapters."""
+    now = time.time()
+    therapy = list(Therapy.ALL.values())
+    for code, case in sorted(PatientCase.ALL.items(), key=itemgetter(0)):
+
+        results = []
+        for chapter in therapy:
+
+            vector = []
+            for term, value in case.vector.items():
+                if term in chapter.vector:
+                    vector.append((value, chapter.vector[term], term))
+
+            if vector:
+                print(vector, calculate_vectordistance(vector))
+                results.append((chapter, calculate_vectordistance(vector)))
+
+        results.sort(key=itemgetter(1), reverse=True)
+
+        # Print results
+        print("Case %s" % code)
+        print(', '.join(i.code for i, v in results[:30]))
+        #for chapter, value in results[:20]:
+        #    print(str(chapter), value)
+        break
+
+    print("Matched cases with chapters in %.2f seconds" % (time.time() - now))
+
+
+def calculate_vectordistance(vector):
+    AB_dotproduct = 0
+    A_magnitude = 0
+    B_magnitude = 0
+    for a, b, term in vector:
+        AB_dotproduct += a * b
+        A_magnitude += a ** 2
+        B_magnitude += b ** 2
+
+    AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
+    return AB_dotproduct / AB_magnitude
+
+
+def check_similarities(cases, chapters):
+    print('Case # | Relevant chapter | Hits')
+
+    for name, lines in sorted(cases.items(), key=itemgetter(0)):
+        case = '\n'.join(lines)
+        words_case = case.split()
+
+        chapter_highest = ''
+        highest_sum = 0
+        for chapter in chapters:
+            sum_ = 0
+            words = chapter.text.split()
+            for word in words_case:
+                if word in words:
+                    sum_ += 1
+            sum_ = sum_ / len(words) if words else sum_
+            if sum_ > highest_sum:
+                highest_sum = sum_
+                chapter_highest = chapter
+
+        print("%s | %s - %s | %f" % (name,
+                chapter_highest.code, chapter_highest.title, highest_sum))
 
 
 def _code_list_to_str(codes):
@@ -231,8 +299,11 @@ def main(script, task='', case='', output=''):
 
     populate_all()
 
+    if task == '3':
+        task_3()
+
     # Perform a task which uses patient cases as input
-    if task in CASE_TASKS:
+    elif task in CASE_TASKS:
         cases = {name: obj for name, obj in PatientCase.ALL.items()
                     if (not case or name == case)}
         if not cases:
