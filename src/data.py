@@ -280,7 +280,6 @@ def main(script=None):
         sys.exit(1)
 
     print("All A-OK")
-    sys.exit(None)
 
 
 if __name__ == '__main__':

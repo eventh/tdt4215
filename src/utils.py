@@ -9,24 +9,24 @@ import sys
 from collections import Counter
 from operator import itemgetter
 
-from nlh import populate_chapters, Chapter
-from codes import populate_codes, ATC, ICD10
-from tasks import _read_stopwords, OUTPUT_FOLDER, read_cases_from_files
+import data
+from data import ATC, ICD, Therapy, PatientCase, get_stopwords
+from tasks import OUTPUT_FOLDER
 
 
 def calculate_chapter_statistics():
     """Print out therapy chapter statistics."""
-    c_all = Counter([i.code.count('.') for i in Chapter.ALL])
-    c_text = Counter([i.code.count('.') for i in Chapter.ALL if i.text])
+    c_all = Counter([i.code.count('.') for i in Therapy.ALL.values()])
+    c_text = Counter([i.code.count('.') for i in Therapy.ALL.values() if i.text])
     titles = ('Chapters', 'Sub', 'Sub*2', 'Sub*3', 'Sub*4')
     for i, title in enumerate(titles):
         space = ' ' * (8 - len(title))
         print("%s%s: %i (%i with text)" % (title, space, c_all[i], c_text[i]))
     print("Total   : %i (%i with text)" % (
-            len(Chapter.ALL), sum(c_text.values())))
+            len(Therapy.ALL), sum(c_text.values())))
 
     sentences = lines = 0
-    for obj in Chapter.ALL:
+    for obj in Therapy.ALL.values():
         if obj.text:
             lines += len([i for i in obj.text.split('\n') if i.strip()])
             sentences += len([i for i in obj.text.split('.') if i.strip()])
@@ -38,7 +38,7 @@ def calculate_chapter_statistics():
 def generate_stopwords_table():
     """Generate a LaTeX table with all stopwords."""
     columns = 6
-    words = sorted(_read_stopwords())
+    words = sorted(get_stopwords())
     count = len(words)
     step = (count // columns) + 1
     words.extend([''] * columns)
@@ -72,7 +72,7 @@ patient cases, have been added.
 
 def generate_cases_table():
     """Generate LaTeX tables for patient cases."""
-    cases = read_cases_from_files('etc/')
+    cases = PatientCase.ALL
     filename = '%s/cases.tex' % OUTPUT_FOLDER
     with open(filename, 'w') as f:
         f.write(
@@ -81,7 +81,7 @@ This chapter contains patient cases used as input in this project.
 Norwegian stop words have been removed from these patient cases.
 ''')
 
-        for case_nr, lines in sorted(cases.items(), key=itemgetter(0)):
+        for case_nr, obj in sorted(cases.items()):
             f.write(
 r'''\begin{table}[htbp] \footnotesize \center
 \caption{Patient case %s\label{tab:pcase%s}}
@@ -91,7 +91,7 @@ r'''\begin{table}[htbp] \footnotesize \center
     \midrule
 ''' % (case_nr, case_nr))
 
-            for i, line in enumerate(lines):
+            for i, line in enumerate(obj.text.split('\n')):
                 f.write('\t%i & %s \\\\\n' % (i + 1, line.replace('%', '\%')))
 
             f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
@@ -101,8 +101,7 @@ r'''\begin{table}[htbp] \footnotesize \center
 
 
 def main(script):
-    populate_codes()
-    populate_chapters()
+    data.main()  # Populate all objects
 
     calculate_chapter_statistics()
     generate_stopwords_table()
