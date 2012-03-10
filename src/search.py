@@ -5,17 +5,15 @@ A module for searching in the whoosh database.
 """
 import sys
 
-from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
 
-from codes import ATC, ICD10, INDEX_DIR
-from nlh import Chapter
-from task3 import Task3
+from data import ATC, ICD, Therapy, PatientCase
+from index import create_or_open_index
 
 
 def search(cls, field, query):
-    """Perform a search on cls.NAME index on 'field' with 'query'."""
-    ix = open_dir(INDEX_DIR, indexname=cls.NAME)
+    """Perform a search on cls._NAME index on 'field' with 'query'."""
+    ix = create_or_open_index(cls)
     qp = QueryParser(field, schema=ix.schema, group=OrGroup)
 
     with ix.searcher() as searcher:
@@ -43,8 +41,8 @@ def main(script, index='', field='', *query):
     """Perform a search on our whoosh database.
 
     Usage: python3 search.py <index> <field> <query>
-    Example: 'python3 search.py icd10 label Kolera'
-    'index' is one of icd, atc or terapi
+    Example: 'python3 search.py icd label Kolera'
+    'index' is one of icd, atc, case or therapy
     """
     if not query:
         print("Usage: python3 search.py <index> <field> <query>")
@@ -53,13 +51,13 @@ def main(script, index='', field='', *query):
     query = ''.join(query)  # Flatten query
 
     if index == 'icd':
-        res = extract(('short', 'label'), search(ICD10, field, query))
+        res = extract(('short', 'label'), search(ICD, field, query))
     elif index == 'atc':
-        res = extract(('code', 'name'), search(ATC, field, query))
-    elif index == 'terapi':
-        res = extract(('code', 'title'), search(Chapter, field, query))
-    elif index == 'task3':
-        res = extract(('code', 'title'), search(Task3, field, query))
+        res = extract(('code', 'title'), search(ATC, field, query))
+    elif index == 'therapy':
+        res = extract(('code', 'title'), search(Therapy, field, query))
+    elif index == 'case':
+        res = extract(('code', 'text'), search(PatientCase, field, query))
     else:
         print("Unknown database: %s" % index)
         sys.exit(2)

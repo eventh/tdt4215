@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Module for storing or clearing data in whoosh indices.
+
+Usage: python3 index.py <build|store|clear> [index]
+Run 'python3 index.py build' to build all empty indices at once.
 """
 import os
 import sys
@@ -13,9 +17,11 @@ from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from data import ATC, ICD, Medicin, Therapy, populate_all, get_stopwords
 
 
+# Folder to store whoosh index in
 INDEX_DIR = 'whooshindex'
 
 
+# Analyzer which removes stopwords
 ANALYZER = StandardAnalyzer(stoplist=get_stopwords())
 
 
@@ -72,6 +78,7 @@ def create_or_open_index(cls):
 
 
 def store_objects_in_index(cls):
+    """Store all cls objects in its index."""
     try:
         objects = cls.ALL.values()
     except AttributeError:
@@ -88,9 +95,9 @@ def store_objects_in_index(cls):
 
 
 def main(script, command='', index=''):
-    """Store data in whoosh index, or clean indices or search.
+    """Store or clear data in whoosh indices.
 
-    Usage: python3 index.py <build|store|clear|search> [index]
+    Usage: python3 index.py <build|store|clear> [index]
     """
     # Store all objects in index
     if command == 'build':
@@ -104,7 +111,7 @@ def main(script, command='', index=''):
     if index:
         classes = [i for i in classes if i._NAME == index]
 
-    # Store objects in index
+    # Store objects in index, will create duplicates if run several times
     if command == 'store':
         populate_all()
         for cls in classes:
@@ -117,15 +124,10 @@ def main(script, command='', index=''):
             create_in(INDEX_DIR, SCHEMA_MAP[cls._NAME], cls._NAME)
             print("Emptied %s index" % cls.__name__)
 
-    # Search in index
-    elif command == 'search':
-        cls = classes[-1]
-        pass
-
     # Unknown command
     else:
         print("Unknown command '%s'" % command)
-        print("Usage: python3 index.py <build|store|clear|search> [index]")
+        print("Usage: python3 index.py <build|store|clear> [index]")
         sys.exit(2)
 
     sys.exit(None)
