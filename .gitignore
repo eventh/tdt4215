@@ -22,6 +22,6 @@
 *__pycache__/
 /report/tmp
 /report/.tmp
-/src/indexdir/
+/src/whooshindex/
 /src/output/
 /data/nlh/T/*.html

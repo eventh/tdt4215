@@ -16,64 +16,13 @@ import json
 from operator import itemgetter
 from collections import OrderedDict, Counter
 
-from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
-from whoosh.analysis import StandardAnalyzer
 
 from codes import ATC, ICD10, INDEX_DIR, is_indices_empty, populate_codes
 from nlh import Chapter, populate_chapters
 
 
-def _read_stopwords():
-    """Read in and return stop-words from file."""
-    with open('etc/stoppord.txt', 'r') as f:
-        return set(i.strip() for i in f.readlines() if i.strip())
-
-
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
-
-ANALYZER = StandardAnalyzer(stoplist=_read_stopwords())
-
-
-def remove_stopwords(lines, words=_read_stopwords()):
-    """Remove stop-words from lines."""
-    output = []
-    for line in lines:
-        line = ' '.join(i for i in line.strip().split(' ')
-                                    if i.lower() not in words)
-        if line:
-            if line[-1] == '.':
-                line = line[:-1]  # Remove period from queries
-            output.append(line)
-    return output
-
-
-def read_cases_from_files(folder_or_path):
-    """Read lines from case files in 'folder_or_path'."""
-    if not os.path.exists(folder_or_path):
-        print("Invalid case path: %s" % folder_or_path)
-        sys.exit(2)
-
-    # Find case paths if path is a folder
-    paths = []
-    if not os.path.isdir(folder_or_path):
-        paths.append(folder_or_path)
-    else:
-        for path in os.listdir(folder_or_path):
-            full_path = os.path.normpath(os.path.join(folder_or_path, path))
-            if not os.path.isdir(full_path):
-                paths.append(full_path)
-
-    # Read in lines from case files
-    cases = {}
-    for path in paths:
-        filename, ext = os.path.splitext(os.path.split(path)[1])
-        if ext == '.txt' and filename.startswith('case'):
-            with open(path) as f:
-                case_nr = filename.replace('case', '')
-                cases[case_nr] = remove_stopwords(f.readlines())
-
-    return cases
 
 
 def task_1(lines):

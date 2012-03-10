@@ -8,34 +8,29 @@ import time
 import json
 from collections import OrderedDict
 
-from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
-
-from tasks import ANALYZER
-
-
-def _read_stopwords():
-    """Read in and return stop-words from file."""
-    with open('etc/stoppord.txt', 'r') as f:
-        return set(i.strip() for i in f.readlines() if i.strip())
-
 
 class BaseData:
 
-    def __init__(self, code):
+    def __init__(self, code, title=''):
         self.code = code
+        self.title = title
 
     def __str__(self):
-        return self.code
+        """Represent the object as a string."""
+        if self.title:
+            return '%s: %s' % (self.code, self.title)
+        else:
+            return self.code
 
     def to_json(self):
-        pass
+        raise NotImplementedError("%s must implement this!" % self)
 
     def to_index(self):
-        pass
+        raise NotImplementedError("%s must implement this!" % self)
 
     @classmethod
     def from_json(cls, values):
-        pass
+        raise NotImplementedError("%s must implement this!" % cls.__name__)
 
     @classmethod
     def populate(cls):
@@ -57,34 +52,26 @@ class ATC(BaseData):
     _NAME = 'atc'  # Index name
     _JSON = 'etc/atcname.json'  # JSON file
 
-    # Schema for storing and indexing ATC codes in whoosh database
-    SCHEMA = Schema(code=ID(stored=True), name=TEXT(stored=True))
-
-    def __init__(self, code, name):
+    def __init__(self, code, title):
         """Create a new ATC object."""
-        self.code = code
-        self.name = name
         ATC.ALL.append(self)
-
-    def __str__(self):
-        """Present the object as a string."""
-        return '%s: %s' % (self.code, self.name)
-
-    def to_json(self):
-        """Create a dictionary with object values for JSON dump."""
-        obj = OrderedDict()
-        obj['code'] = self.code
-        obj['name'] = self.name
-        return obj
+        super().__init__(code, title)
 
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
         return self.to_json()
 
+    def to_json(self):
+        """Create a dictionary with object values for JSON dump."""
+        obj = OrderedDict()
+        obj['code'] = self.code
+        obj['title'] = self.title
+        return obj
+
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
-        return cls(values['code'], values['name'])
+        return cls(values['code'], values['title'])
 
 
 class ICD(BaseData):
@@ -100,12 +87,6 @@ class ICD(BaseData):
     ALL = {}  # All ICD10 objects
     _NAME = 'icd'  # Index name
     _JSON = 'etc/icd10no.json'  # JSON file
-
-    # Schema for storing and indexing ICD10 codes in whoosh database
-    SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
-                    label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
-                    icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
-                    inclusions=TEXT, exclusions=TEXT, description=TEXT)
 
     _fields = ('code', 'short', 'label', 'type',
                'icpc2_code', 'icpc2_label', 'parent')
@@ -129,20 +110,20 @@ class ICD(BaseData):
         """Present the object as a string."""
         return '%s: %s' % (self.short, self.label)
 
-    def to_json(self):
-        """Create a dictionary with object values for JSON dump."""
-        obj = OrderedDict()
-        for var in self._fields + self._lists:
-            if getattr(self, var):
-                obj[var] = getattr(self, var)
-        return obj
-
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
         obj = self.to_json()
         obj['description'] = self.description
         if 'parent' in obj:
             del obj['parent']
+        return obj
+
+    def to_json(self):
+        """Create a dictionary with object values for JSON dump."""
+        obj = OrderedDict()
+        for var in self._fields + self._lists:
+            if getattr(self, var):
+                obj[var] = getattr(self, var)
         return obj
 
     @classmethod
@@ -170,9 +151,7 @@ def _tf_log_norm(frequency):
 class Medicin(BaseData):
 
     ALL = {}
-    _NAME = 'med'
-    SCHEMA = Schema(code=ID(stored=True, unique=True),
-                    text=TEXT(vector=True, analyzer=ANALYZER))
+    _NAME = 'medicin'
 
     def __init__(self, code, text):
         Medicin.ALL[code] = self
@@ -182,9 +161,6 @@ class Medicin(BaseData):
 
     def to_index(self):
         return {'code': self.code, 'text': self.text}
-
-    def to_json(self):
-        return {'code': self.code, 'text': self.text, 'vector': self.vector}
 
     @classmethod
     def create_vectors(cls):
@@ -203,54 +179,50 @@ class Medicin(BaseData):
 
         print("Created vectors in %.2f seconds" % (time.time() - now))
 
-    @classmethod
-    def populate(cls, cases, chapters):
-        for name, lines in cases.items():
-            PatientCase(name, '\n'.join(lines))
-        for chapter in chapters:
-            if chapter.text:
-                Therapy(chapter)
-
 
 class PatientCase(Medicin):
 
-    ALL = {}
-    _NAME = 'case'
+    ALL = {}  # All PatientCase objects
     _JSON = 'etc/cases.json'  # JSON file
 
     def __init__(self, code, text):
+        """Create a new PatientCase object."""
         PatientCase.ALL[code] = self
         super().__init__(code, text)
 
     def to_json(self):
+        """Create a dictionary with object values for JSON dump."""
         obj = OrderedDict()
         obj['code'] = self.code
         obj['lines'] = self.text.split('\n')
         return obj
 
+    @classmethod
+    def from_json(cls, values):
+        """Create an object from json value dictionary."""
+        return cls(values['code'], '\n'.join(values['lines']))
+
 
 class Therapy(Medicin):
     """A (sub)*chapter in norsk legemiddelhandbok."""
 
-    ALL = {}  # All Chapter objects
-    _NAME = 'terapi'  # Index name
+    ALL = {}  # All Therapy objects
+    _NAME = 'therapy'  # Index name
     _JSON = 'etc/therapy.json'  # JSON file
 
-    # Schema for storing and indexing chapters in whoosh database
-    SCHEMA = Schema(code=ID(stored=True), title=TEXT(stored=True), text=TEXT)
-
     def __init__(self, code=None, title=None, text=''):
-        """Create a new chapter representing a part of NLH."""
+        """Create a new therapy chapter representing a part of NLH."""
         if code is not None:
+            super().__init__(code, text)
             Therapy.ALL[code] = self
         self.code = code
         self.title = title
         self.text = text
         self.links = []
 
-    def __str__(self):
-        """Represent the object as a string."""
-        return '%s: %s' % (self.code, self.title)
+    def to_index(self):
+        """Create a dictionary with values to store in whoosh index."""
+        return {'code': self.code, 'title': self.title, 'text': self.text}
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
@@ -261,77 +233,48 @@ class Therapy(Medicin):
         obj['links'] = self.links
         return obj
 
-    def to_index(self):
-        """Create a dictionary with values to store in whoosh index."""
-        return {'code': self.code, 'title': self.title, 'text': self.text}
-
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
-        obj = cls()
-        obj.code = values['code']
-        obj.title = values['title']
-        obj.text = '\n'.join(values['text'])
+        obj = cls(values['code'], values['title'], '\n'.join(values['text']))
         obj.links = values['links']
         return obj
 
 
-def main(script, path='', command=''):
-    """Convert data files to JSON, or load data into index.
+def get_stopwords():
+    """Read in and return stop-words from file."""
+    with open('etc/stoppord.txt', 'r') as f:
+        return set(i.strip() for i in f.readlines() if i.strip())
 
-    Usage: python3 codes.py <path> <store|clean>
-    """
-    if not path:
-        print("Need to supply a path to a file to parse")
-        print("Usage: python3 codes.py <path> <command>")
-        sys.exit(2)
 
-    # Split path in folder, filename, file extension
-    folder, filename = os.path.split(path)
-    filename, ext = os.path.splitext(filename)
+def populate_all():
+    for cls in (ATC, ICD, PatientCase, Therapy):
+        cls.populate()
+        if not cls.ALL:
+            print("Failed to populate %s from %s" % (cls.__name__, cls._JSON))
+            sys.exit(1)
 
-    now = time.time()
 
-    # Load from JSON
-    if ext == '.json':
-        with open(path, 'r') as f:
-            json_objects = json.load(f)
+def main(script=None):
+    """Test if objects can be populated and indices contains data."""
+    # Check if json files exists
+    for cls in (ATC, ICD, PatientCase, Therapy):
+        if not os.path.isfile(cls._JSON):
+            print("Missing json file %s, use 'parse.py' to fix" % cls._JSON)
+            sys.exit(1)
 
-        if filename.startswith('atcname'):
-            cls = ATC  # Hack
-        else:
-            cls = ICD
+    # Load objects from JSON files
+    populate_all()
 
-        objects = [cls.from_json(i) for i in json_objects]
-        print("Loaded %s objects from %s in %.2f seconds" % (
-                len(objects), path, time.time() - now))
+    # Check if indices exists and contains documents
+    import index
+    empty = index.get_empty_indices()
+    if empty:
+        print("Empty indices '%s', run 'python3 index.py build' to fix" %
+                ', '.join(i.__name__ for i in empty))
+        sys.exit(1)
 
-    if not command or not objects:
-        sys.exit(None)
-    cls = objects[0].__class__
-
-    # Store objects in index
-    if command == 'store':
-        create_index(cls)
-        now = time.time()
-        ix = open_dir(INDEX_DIR, indexname=cls.NAME)
-        with ix.writer() as writer:
-            for obj in objects:
-                writer.add_document(**obj.to_index())
-        print("Stored %s %s objects in index in %.2f seconds" % (
-                len(objects), cls.__name__, time.time() - now))
-
-    # Empty index
-    elif command in ('clean', 'clear'):
-        create_index(cls)
-        ix = create_in(INDEX_DIR, schema=cls.SCHEMA, indexname=cls.NAME)
-        print("Emptied %s index" % cls.__name__)
-
-    # Unknown command
-    else:
-        print("Unknown command '%s'" % command)
-        sys.exit(2)
-
+    print("All A-OK")
     sys.exit(None)
 
 
