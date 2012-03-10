@@ -5,7 +5,6 @@ from operator import itemgetter
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.index import open_dir, create_in
-from whoosh.formats import Frequency
 
 from nlh import populate_chapters
 from codes import create_index, INDEX_DIR
@@ -26,7 +25,7 @@ def _tf_log_norm(frequency):
 class Task3:
 
     SCHEMA = Schema(code=ID(stored=True, unique=True),
-                    text=TEXT(vector=Frequency(), analyzer=ANALYZER))
+                    text=TEXT(vector=True, analyzer=ANALYZER))
     NAME = 'task3'
     ALL = {}
 
@@ -118,14 +117,14 @@ def check_similarities(cases, chapters):
                 chapter_highest.code, chapter_highest.title, highest_sum))
 
 
-def calculate_vectordistance(vectors):
+def calculate_vectordistance(vector):
     AB_dotproduct = 0
     A_magnitude = 0
     B_magnitude = 0
-    for i in range(len(vectors)):
-        AB_dotproduct += vectors[i][0] * vectors[i][1]
-        A_magnitude += vectors[i][0] ** 2
-        B_magnitude += vectors[i][1] ** 2
+    for a, b, term in vector:
+        AB_dotproduct += a * b
+        A_magnitude += a ** 2
+        B_magnitude += b ** 2
 
     AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
     return AB_dotproduct / AB_magnitude
@@ -140,22 +139,23 @@ def match_cases_to_chapters():
         results = []
         for chapter in therapy:
 
-            vectors = []
+            vector = []
             for term, value in case.vector.items():
                 if term in chapter.vector:
-                    vectors.append((value, chapter.vector[term]))
+                    vector.append((value, chapter.vector[term], term))
 
-            if vectors:
-                results.append((chapter, calculate_vectordistance(vectors)))
-                print(vectors, calculate_vectordistance(vectors))
-                break
+            if vector:
+                print(vector, calculate_vectordistance(vector))
+                results.append((chapter, calculate_vectordistance(vector)))
 
         results.sort(key=itemgetter(1), reverse=True)
 
         # Print results
         print("Case %s" % code)
-        for chapter, value in results[:10]:
-            print(str(chapter), value)
+        print(', '.join(i.code for i, v in results[:30]))
+        #for chapter, value in results[:20]:
+        #    print(str(chapter), value)
+        break
 
     print("Matched cases with chapters in %.2f seconds" % (time.time() - now))
 
