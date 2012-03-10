@@ -18,21 +18,24 @@ from collections import OrderedDict, Counter
 
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser, OrGroup
+from whoosh.analysis import StandardAnalyzer
 
 from codes import ATC, ICD10, INDEX_DIR, is_indices_empty, populate_codes
 from nlh import Chapter, populate_chapters
 
 
-OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
-
-
-def read_stopwords():
+def _read_stopwords():
     """Read in and return stop-words from file."""
     with open('etc/stoppord.txt', 'r') as f:
         return set(i.strip() for i in f.readlines() if i.strip())
 
 
-def remove_stopwords(lines, words=read_stopwords()):
+OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
+
+ANALYZER = StandardAnalyzer(stoplist=_read_stopwords())
+
+
+def remove_stopwords(lines, words=_read_stopwords()):
     """Remove stop-words from lines."""
     output = []
     for line in lines:

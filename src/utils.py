@@ -11,7 +11,7 @@ from operator import itemgetter
 
 from nlh import populate_chapters, Chapter
 from codes import populate_codes, ATC, ICD10
-from tasks import read_stopwords, OUTPUT_FOLDER, read_cases_from_files
+from tasks import _read_stopwords, OUTPUT_FOLDER, read_cases_from_files
 
 
 def calculate_chapter_statistics():
@@ -38,7 +38,7 @@ def calculate_chapter_statistics():
 def generate_stopwords_table():
     """Generate a LaTeX table with all stopwords."""
     columns = 6
-    words = sorted(read_stopwords())
+    words = sorted(_read_stopwords())
     count = len(words)
     step = (count // columns) + 1
     words.extend([''] * columns)

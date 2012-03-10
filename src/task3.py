@@ -2,40 +2,33 @@ import sys
 import time
 import math
 from operator import itemgetter
-from pprint import pprint
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.index import open_dir, create_in
-from whoosh.analysis import StandardAnalyzer
 
 from nlh import populate_chapters
 from codes import create_index, INDEX_DIR
-from tasks import read_stopwords, read_cases_from_files
+from tasks import read_cases_from_files, ANALYZER
 
 
 class Task3:
 
     SCHEMA = Schema(code=ID(stored=True, unique=True),
-                title=ID(stored=True), type=ID(stored=True),
-                text=TEXT(vector=True,
-                    analyzer=StandardAnalyzer(stoplist=read_stopwords())))
-
+                    text=TEXT(vector=True, analyzer=ANALYZER))
     NAME = 'task3'
-
     ALL = {}
 
-    _fields = ('code', 'text', 'title', 'type')
-
-    def __init__(self, code, text, title=None, type=None):
+    def __init__(self, code, text):
         Task3.ALL[code] = self
         self.code = code
         self.text = text
-        self.title = title
-        self.type = type
         self.vector = None
 
+    def __str__(self):
+        return self.code
+
     def to_index(self):
-        return {i: getattr(self, i) for i in self._fields if getattr(self, i)}
+        return {'code': self.code, 'text': self.text}
 
     def set_vector(self, searcher, doc_num):
         self.vector = {}
@@ -48,19 +41,40 @@ class Task3:
         reader = ix.reader()
         with ix.searcher() as searcher:
             for doc_num in searcher.document_numbers():
-                if reader.has_vector(doc_num, 'text'):
-                    code = searcher.stored_fields(doc_num)['code']
-                    cls.ALL[code].set_vector(searcher, doc_num)
-                else:
-                    print(searcher.stored_fields(doc_num))
+                #if reader.has_vector(doc_num, 'text'):
+                code = searcher.stored_fields(doc_num)['code']
+                cls.ALL[code].set_vector(searcher, doc_num)
 
     @classmethod
     def populate(cls, cases, chapters):
         for name, lines in cases.items():
-            cls(name, '\n'.join(lines), type='case')
+            PatientCase(name, '\n'.join(lines))
         for chapter in chapters:
             if chapter.text:
-                cls(chapter.code, chapter.text, chapter.title, type='chapter')
+                Therapy(chapter)
+
+
+class Therapy(Task3):
+
+    ALL = {}
+
+    def __init__(self, chapter):
+        Therapy.ALL[chapter.code] = self
+        self.title = chapter.title
+        self.chapter = chapter
+        super().__init__(chapter.code, chapter.text)
+
+    def __str__(self):
+        return '%s: %s' % (self.code, self.title)
+
+
+class PatientCase(Task3):
+
+    ALL = {}
+
+    def __init__(self, code, *args, **vargs):
+        PatientCase.ALL[code] = self
+        super().__init__(code, *args, **vargs)
 
 
 def check_similarities(cases, chapters):
@@ -87,18 +101,16 @@ def check_similarities(cases, chapters):
                 chapter_highest.code, chapter_highest.title, highest_sum))
 
 
-def calculate_vectordistance():
-    vector_1 = [0.5, 0, 0]
-    vector_2 = [1, 0.5, 1]
+def calculate_vectordistance(vectors):
     AB_dotproduct = 0
     A_magnitude = 0
     B_magnitude = 0
-    for i in range(len(vector_1)):
-        AB_dotproduct += (vector_1[i] * vector_2[i])
-        A_magnitude += vector_1[i]**2
-        B_magnitude += vector_2[i]**2
+    for i in range(len(vectors)):
+        AB_dotproduct += vectors[i][0] * vectors[i][1]
+        A_magnitude += vectors[i][0] ** 2
+        B_magnitude += vectors[i][1] ** 2
 
-    AB_magnitude = math.sqrt(A_magnitude)*math.sqrt(B_magnitude)
+    AB_magnitude = math.sqrt(A_magnitude) * math.sqrt(B_magnitude)
     return AB_dotproduct / AB_magnitude
 
 
@@ -112,6 +124,28 @@ def main(script, command=''):
         now = time.time()
         Task3.create_vectors()
         print("Created vectors in %.2f seconds" % (time.time() - now))
+
+        # Match patient cases to therapy chapters
+        therapy = list(Therapy.ALL.values())
+        for code, case in sorted(PatientCase.ALL.items(), key=itemgetter(0)):
+
+            results = []
+            for chapter in therapy:
+
+                vectors = []
+                for term, value in case.vector.items():
+                    if term in chapter.vector:
+                        vectors.append((value, chapter.vector[term]))
+
+                if vectors:
+                    results.append((str(chapter.chapter),
+                                    calculate_vectordistance(vectors)))
+
+            results.sort(key=itemgetter(1), reverse=True)
+
+            print("Case %s" % code)
+            for name, value in results[:10]:
+                print(name, value)
 
     elif command == 'store':
         create_index(Task3)
