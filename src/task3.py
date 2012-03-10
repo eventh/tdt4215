@@ -6,16 +6,21 @@ from pprint import pprint
 
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.index import open_dir, create_in
+from whoosh.analysis import StandardAnalyzer
 
 import tasks
 from nlh import populate_chapters
 from codes import create_index, INDEX_DIR
+from tasks import read_stopwords
 
 
 class Task3:
 
+
     SCHEMA = Schema(code=ID(stored=True, unique=True),
-                title=ID(stored=True), type=ID(stored=True), text=TEXT)
+                title=ID(stored=True), type=ID(stored=True),
+                text=TEXT(vector=True,
+                    analyzer=StandardAnalyzer(stoplist=read_stopwords())))
 
     NAME = 'task3'
 
@@ -58,6 +63,7 @@ def checkSimilarities(cases, chapters):
         print("%s | %s - %s | %f" % (name,
                 chapter_highest.code, chapter_highest.title, highest_sum))
 
+
 def calculate_vectordistance():
     vector_1 = [0.5, 0, 0]
     vector_2 = [1, 0.5, 1]
@@ -77,6 +83,7 @@ def main(script, command=''):
     cases = tasks.read_cases_from_files('etc/')
     chapters = populate_chapters()
 
+    # Populate Task3 objects
     for name, lines in cases.items():
         Task3(name, '\n'.join(lines), type='case')
     for chapter in chapters:
@@ -86,9 +93,9 @@ def main(script, command=''):
         create_index(Task3)
         ix = open_dir(INDEX_DIR, indexname=Task3.NAME)
         reader = ix.reader()
-        ##print(len([i for i in reader.lexicon('text')]))
-        pprint([i for i in reader.most_frequent_terms('text', 100)])
-        #pprint([i for i in reader.most_distinctive_terms('text', 100)])
+        #print(len([i for i in reader.lexicon('text')]))
+        #pprint([i for i in reader.most_frequent_terms('text', 50)])
+        #pprint([i for i in reader.most_distinctive_terms('text', 50)])
         #qp = QueryParser('text', schema=ix.schema, group=OrGroup)
 
     elif command == 'store':
