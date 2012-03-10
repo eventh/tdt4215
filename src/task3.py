@@ -8,14 +8,12 @@ from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 from whoosh.index import open_dir, create_in
 from whoosh.analysis import StandardAnalyzer
 
-import tasks
 from nlh import populate_chapters
 from codes import create_index, INDEX_DIR
-from tasks import read_stopwords
+from tasks import read_stopwords, read_cases_from_files
 
 
 class Task3:
-
 
     SCHEMA = Schema(code=ID(stored=True, unique=True),
                 title=ID(stored=True), type=ID(stored=True),
@@ -34,18 +32,43 @@ class Task3:
         self.text = text
         self.title = title
         self.type = type
+        self.vector = None
 
     def to_index(self):
         return {i: getattr(self, i) for i in self._fields if getattr(self, i)}
 
+    def set_vector(self, searcher, doc_num):
+        self.vector = {}
+        for term, score in searcher.key_terms([doc_num], 'text', numterms=1000):
+            self.vector[term] = score * searcher.idf('text', term)
 
-def checkSimilarities(cases, chapters):
+    @classmethod
+    def create_vectors(cls):
+        ix = open_dir(INDEX_DIR, indexname=cls.NAME)
+        reader = ix.reader()
+        with ix.searcher() as searcher:
+            for doc_num in searcher.document_numbers():
+                if reader.has_vector(doc_num, 'text'):
+                    code = searcher.stored_fields(doc_num)['code']
+                    cls.ALL[code].set_vector(searcher, doc_num)
+                else:
+                    print(searcher.stored_fields(doc_num))
+
+    @classmethod
+    def populate(cls, cases, chapters):
+        for name, lines in cases.items():
+            cls(name, '\n'.join(lines), type='case')
+        for chapter in chapters:
+            if chapter.text:
+                cls(chapter.code, chapter.text, chapter.title, type='chapter')
+
+
+def check_similarities(cases, chapters):
     print('Case # | Relevant chapter | Hits')
 
     for name, lines in sorted(cases.items(), key=itemgetter(0)):
         case = '\n'.join(lines)
         words_case = case.split()
-
 
         chapter_highest = ''
         highest_sum = 0
@@ -80,23 +103,15 @@ def calculate_vectordistance():
 
 
 def main(script, command=''):
-    cases = tasks.read_cases_from_files('etc/')
+    cases = read_cases_from_files('etc/')
     chapters = populate_chapters()
-
-    # Populate Task3 objects
-    for name, lines in cases.items():
-        Task3(name, '\n'.join(lines), type='case')
-    for chapter in chapters:
-        Task3(chapter.code, chapter.text, chapter.title, type='chapter')
+    Task3.populate(cases, chapters)
 
     if command == 'search':
         create_index(Task3)
-        ix = open_dir(INDEX_DIR, indexname=Task3.NAME)
-        reader = ix.reader()
-        #print(len([i for i in reader.lexicon('text')]))
-        #pprint([i for i in reader.most_frequent_terms('text', 50)])
-        #pprint([i for i in reader.most_distinctive_terms('text', 50)])
-        #qp = QueryParser('text', schema=ix.schema, group=OrGroup)
+        now = time.time()
+        Task3.create_vectors()
+        print("Created vectors in %.2f seconds" % (time.time() - now))
 
     elif command == 'store':
         create_index(Task3)
@@ -114,7 +129,7 @@ def main(script, command=''):
         print("Emptied %s index" % Task3.__name__)
 
     else:
-        checkSimilarities(cases, chapters)
+        check_similarities(cases, chapters)
         print(calculate_vectordistance())
 
 

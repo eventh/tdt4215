@@ -70,7 +70,6 @@ def read_cases_from_files(folder_or_path):
                 case_nr = filename.replace('case', '')
                 cases[case_nr] = remove_stopwords(f.readlines())
 
-    print("Loaded %s cases from '%s'" % (len(cases), folder_or_path))
     return cases
 
 
@@ -145,20 +144,6 @@ def task_2(lines):
 
             results.append(codes)
     return results
-
-
-def task_3():
-    cases = read_cases_from_files('etc/')
-    populate_chapters()
-
-    text = []
-    for name, lines in cases.items():
-        text.extend(lines)
-    words = re.findall('\w+', '\n'.join(text).lower())
-    count = Counter(words)
-    print(len(count))
-    print(count.most_common())
-
 
 
 def _code_list_to_str(codes):
@@ -301,6 +286,7 @@ def main(script, task='', case='', output=''):
         if not case:
             case = 'etc/'
         cases = read_cases_from_files(case)
+        print("Loaded %s cases from '%s'" % (len(cases), case))
         _perform_task(task, CASE_TASKS[task], cases, OUTPUTS[output])
 
     # Perform a task which uses chapters as input
