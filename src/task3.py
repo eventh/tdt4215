@@ -30,20 +30,23 @@ class Task3:
     def to_index(self):
         return {'code': self.code, 'text': self.text}
 
-    def set_vector(self, searcher, doc_num):
-        self.vector = {}
-        for term, score in searcher.key_terms([doc_num], 'text', numterms=1000):
-            self.vector[term] = score * searcher.idf('text', term)
+    def to_json(self):
+        return {'code': self.code, 'text': self.text, 'vector': self.vector}
 
     @classmethod
     def create_vectors(cls):
+        now = time.time()
         ix = open_dir(INDEX_DIR, indexname=cls.NAME)
         reader = ix.reader()
         with ix.searcher() as searcher:
+            idf = lambda t: searcher.idf('text', t)
+
             for doc_num in searcher.document_numbers():
-                #if reader.has_vector(doc_num, 'text'):
                 code = searcher.stored_fields(doc_num)['code']
-                cls.ALL[code].set_vector(searcher, doc_num)
+                cls.ALL[code].vector = {t: s * idf(t) for t, s in
+                        searcher.key_terms([doc_num], 'text', 1000)}
+
+        print("Created vectors in %.2f seconds" % (time.time() - now))
 
     @classmethod
     def populate(cls, cases, chapters):
@@ -114,6 +117,33 @@ def calculate_vectordistance(vectors):
     return AB_dotproduct / AB_magnitude
 
 
+def match_cases_to_chapters():
+    """Match patient cases to therapy chapters."""
+    now = time.time()
+    therapy = list(Therapy.ALL.values())
+    for code, case in sorted(PatientCase.ALL.items(), key=itemgetter(0)):
+
+        results = []
+        for chapter in therapy:
+
+            vectors = []
+            for term, value in case.vector.items():
+                if term in chapter.vector:
+                    vectors.append((value, chapter.vector[term]))
+
+            if vectors:
+                results.append((chapter, calculate_vectordistance(vectors)))
+
+        results.sort(key=itemgetter(1), reverse=True)
+
+        # Print results
+        print("Case %s" % code)
+        for chapter, value in results[:10]:
+            print(str(chapter), value)
+
+    print("Matched cases with chapters in %.2f seconds" % (time.time() - now))
+
+
 def main(script, command=''):
     cases = read_cases_from_files('etc/')
     chapters = populate_chapters()
@@ -121,31 +151,8 @@ def main(script, command=''):
 
     if command == 'search':
         create_index(Task3)
-        now = time.time()
         Task3.create_vectors()
-        print("Created vectors in %.2f seconds" % (time.time() - now))
-
-        # Match patient cases to therapy chapters
-        therapy = list(Therapy.ALL.values())
-        for code, case in sorted(PatientCase.ALL.items(), key=itemgetter(0)):
-
-            results = []
-            for chapter in therapy:
-
-                vectors = []
-                for term, value in case.vector.items():
-                    if term in chapter.vector:
-                        vectors.append((value, chapter.vector[term]))
-
-                if vectors:
-                    results.append((str(chapter.chapter),
-                                    calculate_vectordistance(vectors)))
-
-            results.sort(key=itemgetter(1), reverse=True)
-
-            print("Case %s" % code)
-            for name, value in results[:10]:
-                print(name, value)
+        match_cases_to_chapters()
 
     elif command == 'store':
         create_index(Task3)
