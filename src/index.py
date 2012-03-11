@@ -108,24 +108,30 @@ def _create_vectors():
     def _tf_log_norm(frequency):
         return 1 + log(frequency)  # Log normalization
 
-    for cls in (PatientCase, Therapy):
-        now = time.time()
-        ix = create_or_open_index(cls)
-        with ix.searcher() as searcher:
-            def idf(term):
-                N = searcher.doc_count()
-                n = searcher.doc_frequency('text', term)
-                return _idf(N, n)
+    c_ix = create_or_open_index(PatientCase)
+    t_ix = create_or_open_index(Therapy)
+    with c_ix.searcher() as c_searcher, t_ix.searcher() as t_searcher:
 
-            for doc_num in searcher.document_numbers():
-                obj = cls.ALL[searcher.stored_fields(doc_num)['code']]
+        # Inverse document frequency
+        N = c_searcher.doc_count() + t_searcher.doc_count()
+        def idf(term):
+            n = t_searcher.doc_frequency('text', term)
+            n += c_searcher.doc_frequency('text', term)
+            return _idf(N, n)
+
+        # Calcuate TF-IDF
+        for cls, search in ((PatientCase, c_searcher), (Therapy, t_searcher)):
+            now = time.time()
+            for doc_num in search.document_numbers():
+                obj = cls.ALL[search.stored_fields(doc_num)['code']]
                 obj.vector = {t: _tf_log_norm(w) * idf(t) for t, w in
-                              searcher.vector_as('weight', doc_num, 'text')}
+                              search.vector_as('weight', doc_num, 'text')}
 
-        with open(cls._JSON, 'w') as f:
-            json.dump([i.to_json() for i in cls.ALL.values()], f, indent=4)
-        print("Created %s vectors in %.2f seconds" % (
-                cls.__name__, time.time() - now))
+            # Dump to JSON
+            with open(cls._JSON, 'w') as f:
+                json.dump([i.to_json() for i in cls.ALL.values()], f, indent=4)
+            print("Created %s vectors in %.2f seconds" % (
+                    cls.__name__, time.time() - now))
 
 
 def search(cls, field, query):

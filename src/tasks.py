@@ -105,39 +105,24 @@ def task_3():
 
         results = []
         for chapter in therapy:
+            matches = [chapter.vector[t] * v for t, v in
+                            case.vector.items() if t in chapter.vector]
 
-            vector = []
-            for term, value in case.vector.items():
-                if term in chapter.vector:
-                    vector.append((value, chapter.vector[term], term))
-
-            if vector:
-                print(vector, calculate_vectordistance(vector))
-                results.append((chapter, calculate_vectordistance(vector)))
+            if matches:
+                AB_dotproduct = sum(matches)
+                A_magnitude = sum(i ** 2 for i in chapter.vector.values())
+                B_magnitude = sum(i ** 2 for i in case.vector.values())
+                AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
+                results.append((chapter, AB_dotproduct / AB_magnitude))
 
         results.sort(key=itemgetter(1), reverse=True)
 
         # Print results
-        print("Case %s" % code)
-        print(', '.join(i.code for i, v in results[:30]))
+        print("Case %s: %s" % (code, ', '.join(i.code for i, v in results[:10])))
         #for chapter, value in results[:20]:
         #    print(str(chapter), value)
-        break
 
     print("Matched cases with chapters in %.2f seconds" % (time.time() - now))
-
-
-def calculate_vectordistance(vector):
-    AB_dotproduct = 0
-    A_magnitude = 0
-    B_magnitude = 0
-    for a, b, term in vector:
-        AB_dotproduct += a * b
-        A_magnitude += a ** 2
-        B_magnitude += b ** 2
-
-    AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
-    return AB_dotproduct / AB_magnitude
 
 
 def check_similarities(cases, chapters):
@@ -253,7 +238,8 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b': ('Chapter', 'Sentence', 'ICD-10'),
                '1b2': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
-               '2b': ('Chapter', 'Sentence', 'ATC')}
+               '2b': ('Chapter', 'Sentence', 'ATC'),
+               '3': ('Clinical note', 'Chapters')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
@@ -299,6 +285,7 @@ def main(script, task='', case='', output=''):
 
     populate_all()
 
+    # Perform complex task
     if task == '3':
         task_3()
 
