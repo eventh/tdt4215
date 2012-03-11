@@ -25,14 +25,14 @@ from index import create_or_open_index, get_empty_indices
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
 
 
-def task_1(lines):
+def task_1(obj):
     """Task 1: Search through ICD10 codes."""
     ix = create_or_open_index(ICD)
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
     results = []
     with ix.searcher() as searcher:
-        for line in lines:
+        for line in obj.text.split('\n'):
             q = qp.parse(line)
             objs = searcher.search(q)
 
@@ -49,14 +49,14 @@ def task_1(lines):
     return results
 
 
-def task_1_alt(lines):
+def task_1_alt(obj):
     """Task 1 alternative: Search through ICD10 codes."""
     ix = create_or_open_index(ICD)
     qp = QueryParser('description', schema=ix.schema, group=OrGroup)
 
     results = []
     with ix.searcher() as searcher:
-        for line in lines:
+        for line in obj.text.split('\n'):
             q = qp.parse(line)
             objs = searcher.search(q)
 
@@ -73,14 +73,14 @@ def task_1_alt(lines):
     return results
 
 
-def task_2(lines):
+def task_2(obj):
     """Task 2: Search through ATC codes."""
     ix = create_or_open_index(ATC)
     qp = QueryParser('title', schema=ix.schema, group=OrGroup)
 
     results = []
     with ix.searcher() as searcher:
-        for i, line in enumerate(lines):
+        for line in obj.text.split('\n'):
             q = qp.parse(line)
             objs = searcher.search(q)
 
@@ -97,32 +97,22 @@ def task_2(lines):
     return results
 
 
-def task_3():
+def task_3(case):
     """Task 3: Match patient cases to therapy chapters."""
-    now = time.time()
-    therapy = list(Therapy.ALL.values())
-    for code, case in sorted(PatientCase.ALL.items(), key=itemgetter(0)):
+    results = []
+    for chapter in Therapy.ALL.values():
+        matches = [chapter.vector[t] * v for t, v in
+                        case.vector.items() if t in chapter.vector]
 
-        results = []
-        for chapter in therapy:
-            matches = [chapter.vector[t] * v for t, v in
-                            case.vector.items() if t in chapter.vector]
+        if matches:
+            AB_dotproduct = sum(matches)
+            A_magnitude = sum(i ** 2 for i in chapter.vector.values())
+            B_magnitude = sum(i ** 2 for i in case.vector.values())
+            AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
+            results.append((chapter, AB_dotproduct / AB_magnitude))
 
-            if matches:
-                AB_dotproduct = sum(matches)
-                A_magnitude = sum(i ** 2 for i in chapter.vector.values())
-                B_magnitude = sum(i ** 2 for i in case.vector.values())
-                AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
-                results.append((chapter, AB_dotproduct / AB_magnitude))
-
-        results.sort(key=itemgetter(1), reverse=True)
-
-        # Print results
-        print("Case %s: %s" % (code, ', '.join(i.code for i, v in results[:10])))
-        #for chapter, value in results[:20]:
-        #    print(str(chapter), value)
-
-    print("Matched cases with chapters in %.2f seconds" % (time.time() - now))
+    results.sort(key=itemgetter(1), reverse=True)
+    return [[i.code] for i, v in results[:10]]
 
 
 def check_similarities(cases, chapters):
@@ -210,10 +200,12 @@ def output_print(task, results, fields):
     'fields' is the fields to represent in the output.
     """
     for case, lines in results.items():
-        print("%s | %s | %s" % fields + " (task %s)" % task)
+        print("%s" % ' | '.join(fields) + " (task %s)" % task)
         print("--------------------------------------------")
+
         for i, codes in enumerate(lines):
             print("%s | %s | %s" % (case, i + 1, _code_list_to_str(codes)))
+
         print()
 
 
@@ -228,7 +220,7 @@ OUTPUTS = {'json': output_json, 'latex': output_latex,
 
 
 # Maps valid task names to functions which perform tasks
-CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2}
+CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2, '3': task_3}
 CHAPTER_TASKS = {'1b': task_1, '1b2': task_1_alt, '2b': task_2}
 
 
@@ -239,7 +231,7 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b2': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC'),
-               '3': ('Clinical note', 'Chapters')}
+               '3': ('Clinical note', 'Result', 'Chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
@@ -252,7 +244,7 @@ def _perform_task(task_name, func, inputs, output, progress=False):
         if progress:
             i += 1
             print("[%i] %s" % (i, name))
-        results[name] = func(obj.text.split('\n'))
+        results[name] = func(obj)
 
     output(task_name, results, TASK_FIELDS[task_name])
     print("Performed '%s' in %.2f seconds" % (func.__doc__, time.time() - now))
@@ -285,12 +277,8 @@ def main(script, task='', case='', output=''):
 
     populate_all()
 
-    # Perform complex task
-    if task == '3':
-        task_3()
-
     # Perform a task which uses patient cases as input
-    elif task in CASE_TASKS:
+    if task in CASE_TASKS:
         cases = {name: obj for name, obj in PatientCase.ALL.items()
                     if (not case or name == case)}
         if not cases:
