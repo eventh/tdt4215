@@ -115,6 +115,12 @@ def task_3(case):
     return [[i.code] for i, v in results[:10]]
 
 
+def task_4(case):
+    """Task 4: Evaluate results from task 3."""
+    results = task_3(case)
+    print("Todo")
+
+
 def check_similarities(cases, chapters):
     print('Case # | Relevant chapter | Hits')
 
@@ -220,7 +226,8 @@ OUTPUTS = {'json': output_json, 'latex': output_latex,
 
 
 # Maps valid task names to functions which perform tasks
-CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2, '3': task_3}
+CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2,
+              '3': task_3, '4': task_4}
 CHAPTER_TASKS = {'1b': task_1, '1b2': task_1_alt, '2b': task_2}
 
 
@@ -231,7 +238,8 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b2': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC'),
-               '3': ('Clinical note', 'Result', 'Chapter')}
+               '3': ('Clinical note', 'Result', 'Chapter'),
+               '4': ('Clinical note', 'Result', 'Chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
@@ -244,9 +252,11 @@ def _perform_task(task_name, func, inputs, output, progress=False):
         if progress:
             i += 1
             print("[%i] %s" % (i, name))
+
         results[name] = func(obj)
 
-    output(task_name, results, TASK_FIELDS[task_name])
+    if list(results.values())[-1] is not None:
+        output(task_name, results, TASK_FIELDS[task_name])
     print("Performed '%s' in %.2f seconds" % (func.__doc__, time.time() - now))
 
 
