@@ -1,0 +1,75 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{textcomp} % Euro symbols etc
+\usepackage{graphicx} % support graphics
+\usepackage{hyperref} % links in the document
+\usepackage{float} % position of figures
+\usepackage{paralist} % inline lists
+\usepackage{verbatim} % multi-line comments
+\usepackage{listings} % Syntax colored code
+\usepackage{booktabs} % Professional tables
+\usepackage{tabularx} % Simple column stretching
+\usepackage{multirow} % Row spanning
+\usepackage{wrapfig} % Wrap text around figures
+\usepackage{array}
+\usepackage[normalsize, bf]{caption}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{fixltx2e}
+
+% Configure links in pdfs
+\hypersetup{
+    bookmarksopen=false, % Hide bookmarks menu
+    colorlinks=true, % Don't wrap links in colored boxes
+%    pdfborder={0 0 0} % Remove ugly boxes
+}
+
+
+%============
+% Top matter
+%============
+\title{Task 4: Evaluation}
+\author{Group 1: Even Wiik Thomassen, Terje Snarby, Weilin Wang}
+\date{\today}
+
+\begin{document}
+
+%\begin{abstract}
+%Your abstract goes here
+%\end{abstract}
+
+\maketitle
+\tableofcontents
+%\newpage
+
+
+%=====================
+\section{Introduction}
+%=====================
+This paper presents our results from task 3, and the evaluation of them which
+is task 4, in the project in the course ... at NTNU.
+
+%================
+\section{Results}
+%================
+
+
+%===================
+\section{Evaluation}
+%===================
+
+
+%=====================
+% Section: Appendices
+%=====================
+\appendix
+\section{Appendices}
+This section list patient cases used as input in this project, with Norwegian
+stopwords removed. The stopwords are listed in \autoref{tab:stopwords}.
+\include{stopwords}
+\include{cases}
+
+\end{document}
+

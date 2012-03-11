@@ -19,10 +19,17 @@ report:
 
 results:
 	@echo "Building LaTeX tables standalone"
-	@pdflatex standalone_tables.tex
-	@pdflatex standalone_tables.tex
-	@mv standalone_tables.pdf tables.pdf
+	@pdflatex tables_standalone.tex
+	@pdflatex tables_standalone.tex
+	@mv tables_standalone.pdf tables.pdf
 	evince tables.pdf
+
+eval:
+	@echo "Building LaTeX evaluation standalone"
+	@pdflatex -output-directory .tmp evaluation_standalone.tex
+	@pdflatex -output-directory .tmp evaluation_standalone.tex
+	@mv .tmp/evaluation_standalone.pdf evaluation.pdf
+	evince evaluation.pdf
 
 clean:
 	@echo "Removing LaTeX build files"
