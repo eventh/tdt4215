@@ -21,7 +21,7 @@ import json
 from html.parser import HTMLParser
 from xml.etree import ElementTree
 
-from data import ATC, ICD, PatientCase, Therapy, _read_stopwords
+from data import ATC, ICD, PatientCase, Therapy, get_stopwords
 
 
 class NLHParser(HTMLParser):
@@ -228,7 +228,7 @@ def parse_pro_file(path):
     return objects
 
 
-def parse_case_file(path, stopwords=_read_stopwords()):
+def parse_case_file(path, stopwords=get_stopwords()):
     """Read lines from case file in 'path'."""
     # Read in lines from case files
     with open(path) as f:

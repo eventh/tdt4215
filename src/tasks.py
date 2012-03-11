@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Module for handling patient cases and performing the project tasks.
+Module for performing the project tasks.
 
-Runs all or specified project tasks, with all or specified patient cases.
+Runs a specified project task, with all or specified inputs.
 Outputs either to stdout, or saves to JSON files or generates LaTeX tables.
 
 Usage: python3 <task> [<case|chapter>] [latex|json]
@@ -14,7 +14,7 @@ import time
 import json
 from math import sqrt
 from operator import itemgetter
-from collections import OrderedDict, Counter
+from collections import OrderedDict
 
 from whoosh.qparser import QueryParser, OrGroup
 

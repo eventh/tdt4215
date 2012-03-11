@@ -9,12 +9,14 @@ Run 'python3 index.py build' to build all empty indices at once.
 import os
 import sys
 import time
+import json
+from math import log
 
 from whoosh.index import create_in, open_dir, exists_in
 from whoosh.analysis import StandardAnalyzer
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
 
-from data import ATC, ICD, Medicin, Therapy, populate_all, get_stopwords
+from data import ATC, ICD, PatientCase, Therapy, populate_all, get_stopwords
 
 
 # Folder to store whoosh index in
@@ -33,13 +35,13 @@ ATC_SCHEMA = Schema(code=ID(stored=True), title=TEXT(stored=True))
 ICD_SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
                     label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
                     icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
-                    inclusions=TEXT, exclusions=TEXT, description=TEXT)
+                    inclusions=TEXT, exclusions=TEXT,
+                    description=TEXT(analyzer=ANALYZER))
 
 
-# Schema for storing and indexing Therapy chapters and PatientCase's
-MEDIC_SCHEMA = Schema(code=ID(stored=True, unique=True),
-                      title=TEXT(stored=True),
-                      text=TEXT(vector=True, analyzer=ANALYZER))
+# Schema for storing and indexing PatientCase
+CASE_SCHEMA = Schema(code=ID(stored=True, unique=True),
+                     text=TEXT(vector=True, analyzer=ANALYZER))
 
 
 # Schema for storing and indexing chapters in whoosh database
@@ -50,12 +52,12 @@ THERAPY_SCHEMA = Schema(code=ID(stored=True, unique=True),
 
 # Map index name to schema
 SCHEMA_MAP = {'atc': ATC_SCHEMA, 'icd': ICD_SCHEMA,
-              'medicin': MEDIC_SCHEMA, 'therapy': THERAPY_SCHEMA}
+              'case': CASE_SCHEMA, 'therapy': THERAPY_SCHEMA}
 
 
 def get_empty_indices():
     """Check if indices exists and contains documents."""
-    classes = [ATC, ICD, Medicin, Therapy]
+    classes = [ATC, ICD, PatientCase, Therapy]
     if os.path.isdir(INDEX_DIR):
         for i in reversed(range(len(classes))):
             if exists_in(INDEX_DIR, indexname=classes[i]._NAME):
@@ -94,10 +96,43 @@ def store_objects_in_index(cls):
             len(objects), cls.__name__, time.time() - now))
 
 
+def _create_vectors():
+    """Create vectors for PatientCase and Therapy objects."""
+    def _idf(N, n):
+        return log(N / n)  # Inverse frequency
+    def _idf_smooth(N, n):
+        return log(1 + (N / n))  # Inverse frequency smooth
+    def _idf_prob(N, n):
+        return log((N - n) / n)  # Probabilistic inverse frequency
+    def _tf_log_norm(frequency):
+        return 1 + log(frequency)  # Log normalization
+
+    for cls in (PatientCase, Therapy):
+        now = time.time()
+        ix = create_or_open_index(cls)
+        with ix.searcher() as searcher:
+            def idf(term):
+                N = searcher.doc_count()
+                n = searcher.doc_frequency('text', term)
+                return _idf(N, n)
+
+            for doc_num in searcher.document_numbers():
+                obj = cls.ALL[searcher.stored_fields(doc_num)['code']]
+                obj.vector = {t: _tf_log_norm(w) * idf(t) for t, w in
+                              searcher.vector_as('weight', doc_num, 'text')}
+
+        with open(cls._JSON, 'w') as f:
+            json.dump([i.to_json() for i in cls.ALL.values()], f, indent=4)
+        print("Created %s vectors in %.2f seconds" % (
+                cls.__name__, time.time() - now))
+
+
 def main(script, command='', index=''):
     """Store or clear data in whoosh indices.
 
-    Usage: python3 index.py <build|store|clear> [index]
+    Can also be used to create vectors needed for task 3.
+
+    Usage: python3 index.py <build|store|clear|vector> [index]
     """
     # Store all objects in index
     if command == 'build':
@@ -107,7 +142,7 @@ def main(script, command='', index=''):
             store_objects_in_index(cls)
         return
 
-    classes = [ATC, ICD, Medicin, Therapy]
+    classes = [ATC, ICD, PatientCase, Therapy]
     if index:
         classes = [i for i in classes if i._NAME == index]
 
@@ -124,10 +159,15 @@ def main(script, command='', index=''):
             create_in(INDEX_DIR, SCHEMA_MAP[cls._NAME], cls._NAME)
             print("Emptied %s index" % cls.__name__)
 
+    # Create vectors
+    elif command.startswith('vector'):
+        populate_all()
+        _create_vectors()
+
     # Unknown command
     else:
         print("Unknown command '%s'" % command)
-        print("Usage: python3 index.py <build|store|clear> [index]")
+        print("Usage: python3 index.py <build|store|clear|vector> [index]")
         sys.exit(2)
 
     sys.exit(None)

@@ -101,6 +101,7 @@ r'''\begin{table}[htbp] \footnotesize \center
 
 
 def main(script):
+    """Run all the functions in this module."""
     data.main()  # Populate all objects
 
     calculate_chapter_statistics()

@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Module which holds representation of all the different data we need.
 """
 import sys
 import os
 import time
 import json
-from math import log
 from collections import OrderedDict
 
 
 class BaseData:
+    """Baseclass for our data objects."""
 
     def __init__(self, code, title=''):
+        """Create a new object."""
         self.code = code
         self.title = title
 
@@ -23,14 +25,17 @@ class BaseData:
         else:
             return self.code
 
-    def to_json(self):
+    def to_index(self):
+        """Create a dictionary with values to store in whoosh index."""
         raise NotImplementedError("%s must implement this!" % self)
 
-    def to_index(self):
+    def to_json(self):
+        """Create a dictionary with object values for JSON dump."""
         raise NotImplementedError("%s must implement this!" % self)
 
     @classmethod
     def from_json(cls, values):
+        """Create an object from json value dictionary."""
         raise NotImplementedError("%s must implement this!" % cls.__name__)
 
     @classmethod
@@ -138,73 +143,41 @@ class ICD(BaseData):
         return obj
 
 
-# Inverse Document and Term Frequency Weight functions
-def _idf(N, n):
-    return log(N / n)  # Inverse frequency
-def _idf_smooth(N, n):
-    return log(1 + (N / n))  # Inverse frequency smooth
-def _idf_prob(N, n):
-    return log((N - n) / n)  # Probabilistic inverse frequency
-def _tf_log_norm(frequency):
-    return 1 + log(frequency)  # Log normalization
-
-
-class Medicin(BaseData):
-
-    ALL = {}
-    _NAME = 'medicin'
-
-    def __init__(self, code, text):
-        Medicin.ALL[code] = self
-        self.code = code
-        self.text = text
-        self.vector = None
-
-    @classmethod
-    def create_vectors(cls):
-        now = time.time()
-        ix = open_dir(INDEX_DIR, indexname=cls.NAME)
-        with ix.searcher() as searcher:
-            def idf(term):
-                N = searcher.doc_count()
-                n = searcher.doc_frequency('text', term)
-                return _idf(N, n)
-
-            for doc_num in searcher.document_numbers():
-                obj = cls.ALL[searcher.stored_fields(doc_num)['code']]
-                obj.vector = {t: _tf_log_norm(w) * idf(t) for t, w in
-                              searcher.vector_as('weight', doc_num, 'text')}
-
-        print("Created vectors in %.2f seconds" % (time.time() - now))
-
-
-class PatientCase(Medicin):
+class PatientCase(BaseData):
+    """A specific patient case."""
 
     ALL = {}  # All PatientCase objects
+    _NAME = 'case'  # Index name
     _JSON = 'etc/cases.json'  # JSON file
 
     def __init__(self, code, text):
         """Create a new PatientCase object."""
         PatientCase.ALL[code] = self
-        super().__init__(code, text)
+        super().__init__(code)
+        self.text = text
+        self.vector = None
 
     def to_index(self):
+        """Create a dictionary with values to store in whoosh index."""
         return {'code': self.code, 'text': self.text}
 
     def to_json(self):
         """Create a dictionary with object values for JSON dump."""
         obj = OrderedDict()
         obj['code'] = self.code
-        obj['lines'] = self.text.split('\n')
+        obj['text'] = self.text.split('\n')
+        obj['vector'] = self.vector
         return obj
 
     @classmethod
     def from_json(cls, values):
         """Create an object from json value dictionary."""
-        return cls(values['code'], '\n'.join(values['lines']))
+        obj = cls(values['code'], '\n'.join(values['text']))
+        obj.vector = values.get('vector', None)
+        return obj
 
 
-class Therapy(Medicin):
+class Therapy(BaseData):
     """A (sub)*chapter in norsk legemiddelhandbok."""
 
     ALL = {}  # All Therapy objects
@@ -220,6 +193,7 @@ class Therapy(Medicin):
         self.title = title
         self.text = text
         self.links = []
+        self.vector = None
 
     def to_index(self):
         """Create a dictionary with values to store in whoosh index."""
@@ -232,6 +206,7 @@ class Therapy(Medicin):
         obj['title'] = self.title
         obj['text'] = [i for i in self.text.split('\n') if i]
         obj['links'] = self.links
+        obj['vector'] = self.vector
         return obj
 
     @classmethod
@@ -239,6 +214,7 @@ class Therapy(Medicin):
         """Create an object from json value dictionary."""
         obj = cls(values['code'], values['title'], '\n'.join(values['text']))
         obj.links = values['links']
+        obj.vector = values.get('vector', None)
         return obj
 
 
@@ -249,6 +225,7 @@ def get_stopwords():
 
 
 def populate_all():
+    """Load all json files to populate all data objects."""
     for cls in (ATC, ICD, PatientCase, Therapy):
         cls.populate()
         if not cls.ALL:
