@@ -15,6 +15,7 @@ from math import log
 from whoosh.index import create_in, open_dir, exists_in
 from whoosh.analysis import StandardAnalyzer
 from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+from whoosh.qparser import QueryParser, OrGroup
 
 from data import ATC, ICD, PatientCase, Therapy, populate_all, get_stopwords
 
@@ -127,12 +128,40 @@ def _create_vectors():
                 cls.__name__, time.time() - now))
 
 
-def main(script, command='', index=''):
-    """Store or clear data in whoosh indices.
+def search(cls, field, query):
+    """Perform a search on cls._NAME index on 'field' with 'query'."""
+    ix = create_or_open_index(cls)
+    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
+
+    with ix.searcher() as searcher:
+        q = qp.parse(query)
+        objs = searcher.search(q)
+        return [dict(i.items()) for i in searcher.search(q)]
+
+
+def extract(fields, results, limit=10):
+    """Extract specific values from each search result."""
+    out = []
+    for obj in results[:limit]:
+        out.append(', '.join('%s: %s' % (key, obj[key]) for key in fields))
+    return out
+
+
+def print_result(result):
+    """Simply print all results from a search."""
+    print("Showing top %i results:" % len(result))
+    for i, res in enumerate(result):
+        print(i, res)
+
+
+def main(script, command='', index='', field='', *query):
+    """Store, clear or search data in whoosh indices.
 
     Can also be used to create vectors needed for task 3.
+    'command' is either build|store|clean|search|vector
+    'index' is either atc|icd|therapy|case
 
-    Usage: python3 index.py <build|store|clear|vector> [index]
+    Usage: python3 index.py <command> [index] [field] [query]
     """
     # Store all objects in index
     if command == 'build':
@@ -145,6 +174,9 @@ def main(script, command='', index=''):
     classes = [ATC, ICD, PatientCase, Therapy]
     if index:
         classes = [i for i in classes if i._NAME == index]
+        if not classes:
+            print("Unknown index %s, valids: atc|icd|case|therapy" % index)
+            sys.exit(2)
 
     # Store objects in index, will create duplicates if run several times
     if command == 'store':
@@ -164,10 +196,19 @@ def main(script, command='', index=''):
         populate_all()
         _create_vectors()
 
+    # Search in whoosh index
+    elif command == 'search':
+        mapping = {'icd': ('short', 'label'), 'atc': ('code', 'title'),
+                   'therapy': ('code', 'title'), 'case': ('code',)}
+        query = ''.join(query)  # Flatten query
+        cls, = classes  # Can only search on one index at a time
+        print_result(extract(mapping[cls._NAME], search(cls, field, query)))
+
     # Unknown command
     else:
         print("Unknown command '%s'" % command)
-        print("Usage: python3 index.py <build|store|clear|vector> [index]")
+        print("Usage: python3 index.py <command> [index] [field] [query]")
+        print("Command is either build|store|clean|search|vector")
         sys.exit(2)
 
     sys.exit(None)
