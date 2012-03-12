@@ -266,9 +266,6 @@ chapter and patient case one can be seen in \autoref{tab:terms}, where
 relevant medical terms are bolded. The patient case concerns a patient with
 diabetes mellitus and the first result ``T3.1 Diabetes mellitus'' is spot on,
 while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
-In this patient case six out of ten retrieved documents are deemed relevant,
-giving a precision of \( 3/5 \). \autoref{tab:precision} list precision for
-all eight patient cases.
 \begin{table}[htbp] \footnotesize \center
 \caption{Terms shared betwen patient case 1 and relevant chapters\label{tab:terms}}
 \begin{tabularx}{\textwidth}{c l l X}
@@ -289,20 +286,26 @@ all eight patient cases.
 \end{tabularx}
 \end{table}
 
+We evaluate average precision when ten documents have been seen (P@10). In the
+first patient case six out of ten retrieved documents are deemed relevant,
+giving a precision of \( 60\% \). \autoref{tab:precision} list P@10 for all
+eight patient cases.
 \begin{table}[htbp] \footnotesize \center
-\caption{Precision of patient cases\label{tab:precision}}
+\caption{Average precision at 10 (P@10)\label{tab:precision}}
 \begin{tabular}{c c c}
     \toprule
-    Case & Relevant chapters & Precision \\
+    Case & Relevant chapters & Average precision \\
     \midrule
-	1 & 6 out of 10 & \( 3/5 \) \\
-	2 & 3 out of 10 & \( 3/10 \) \\
-	3 & 9 out of 10 & \( 9/10 \) \\
-	4 & 7 out of 10 & \( 7/10 \) \\
-	5 & 7 out of 10 & \( 7/10 \) \\
-	6 & 8 out of 10 & \( 4/5 \) \\
-	7 & 10 out of 10 & \( 1 \) \\
-	8 & 9 out of 10 & \( 9/10 \) \\
+	1 & 6 out of 10 & \( 60\% \) \\
+	2 & 3 out of 10 & \( 30\% \) \\
+	3 & 9 out of 10 & \( 90\% \) \\
+	4 & 7 out of 10 & \( 70\% \) \\
+	5 & 7 out of 10 & \( 70\% \) \\
+	6 & 8 out of 10 & \( 80\% \) \\
+	7 & 10 out of 10 & \( 100\% \) \\
+	8 & 9 out of 10 & \( 90\% \) \\
+    \midrule
+	& Averaged: & \( 74\% \) \\
 	\bottomrule
 \end{tabular}
 \end{table}
