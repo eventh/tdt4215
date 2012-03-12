@@ -62,16 +62,30 @@ and evaluation of the results (\autoref{sec:evaluation}).
 
 \subsection{Preprocessing and parsing}
 %-------------------------------------
-Patient cases were provided as a Word file, which included eight cases.
-We created a text file for each case, and made sure they were utf-8.
+Patient cases were provided as a Word file, which included eight cases. We
+created a text file for each case, and made sure they were in utf-8 charset.
 
+Therapy chapters from Norsk legemiddelhåndbok were provided as HTML files,
+invalid html5 files in iso-8859-1 charset. We first preprocessed these files
+by removing some of the HTML tags to make them easier to parse, and we
+converted them to utf-8 charset.
 
+We created a custom parser for parsing therapy chapters, based on Python's
+HTMLParser. We parse one HTML file at a time, creating Therapy objects for
+each chapter or sub*-chapter. The text found in these chapters are stored
+on the objects. We stored links as a list on each object, while we preserved
+their text in the object text. Sections which list relevant drugs we removed
+from the text but stored the links in case they might be used later.
+
+We store the results after preprocessing and parsing in JSON files, so they
+can be quickly loaded.
 
 \subsubsection{Stopwords}
+TODO: Something about stopwords.
 
-
-\subsection{}
-%-------------
+\subsection{Task 3: Calculate similarities}
+%------------------------------------------
+To calculate similarities we 
 
 
 %===============
