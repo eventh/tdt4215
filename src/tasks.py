@@ -112,7 +112,7 @@ def task_3(case):
             results.append((chapter, AB_dotproduct / AB_magnitude))
 
     results.sort(key=itemgetter(1), reverse=True)
-    return [[i.code] for i, v in results[:10]]
+    return [[i] for i, v in results[:10]]
 
 
 def task_4(case):
@@ -151,7 +151,7 @@ def _code_list_to_str(codes):
         return '.'
     if len(codes) > 6:
         codes = codes[:5] + ['...']
-    return ', '.join(codes)
+    return ', '.join(str(i) for i in codes)
 
 
 def output_json(task, results, fields=None):
