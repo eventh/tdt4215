@@ -256,7 +256,56 @@ The importance of the evaluation can be seen in the context of the mandatory ass
 
 \subsection{Manual evaluation}
 %-----------------------------
-TODO
+To manually evaulate results of task 3 we have decided to look at precision.
+For each relevant therapy chapter found, we look at terms the therapy chapter
+and the patient case share. If these terms contain relevant medical
+information we judge the retrieved document to be relevant. Precision is then
+simply the fraction of retrieved documents that are relevant for each query
+(patient case). An example of terms shared between each retrieved therapy
+chapter and patient case one can be seen in \autoref{tab:terms}, where
+relevant medical terms are bolded. The patient case concerns a patient with
+diabetes mellitus and the first result ``T3.1 Diabetes mellitus'' is spot on,
+while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
+In this patient case six out of ten retrieved documents are deemed relevant,
+giving a precision of \( 3/5 \). \autoref{tab:precision} list precision for
+all eight patient cases.
+\begin{table}[htbp] \footnotesize \center
+\caption{Terms shared betwen patient case 1 and relevant chapters\label{tab:terms}}
+\begin{tabularx}{\textwidth}{c c c X}
+    \toprule
+    Rank & Chapter & Score & Terms \\
+    \midrule
+	1 & T3.1 & 0.0832 & bruker, delvis, henvisning, hatt, \textbf{acetonlukt}, \textbf{injeksjon}, år, hurtigvirkende, hvert, \textbf{mellitus}, siste, lite, hurtig, \textbf{insulin}, håndtere, synes, flere, dessuten, vurderer, \textbf{diabetes}, kvelden, måltid, langtidsvirkende, \textbf{blodtrykk}, normalt, døgn, sykehus \\
+	2 & T10.2.1 & 0.0429 & bruker, delvis, hurtig, flere, dessuten, vurderer \\
+	3 & T14.5.1 & 0.0407 & \textbf{insulin}, uteblir \\
+	4 & T23.1.1.2 & 0.0372 & lite, \textbf{insulin}, dessuten, normalt, døgn \\
+	5 & T5.4.1 & 0.0372 & delvis, år, fått, hvert, lite, håndtere, synes, flere, \textbf{diabetes} \\
+	6 & T14.2.1 & 0.0332 & bruker, siste, brukt, flere, tatt \\
+	7 & T10.2.1.1 & 0.0325 & bruker, delvis, henvisning, hatt, år, fått, hvert, hurtig, synes, flere, langtidsvirkende, døgn \\
+	8 & T18.1.4 & 0.0309 & hvert, kontroller \\
+	9 & T16.13.1 & 0.0304 & tørr, huden, \textbf{mellitus}, flere, \textbf{diabetes} \\
+	10 & *T9.1.5 & 0.0290 & \textbf{injiserer}, hatt, \textbf{injeksjon}, år, hurtig, \textbf{blodtrykk}, sykehus \\
+	\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Precision of patient cases\label{tab:precision}}
+\begin{tabular}{c c c}
+    \toprule
+    Case & Relevant chapters & Precision \\
+    \midrule
+	1 & 6 out of 10 & \( 3/5 \) \\
+	2 & 6 out of 10 & \( 3/5 \) \\
+	3 & 6 out of 10 & \( 3/5 \) \\
+	4 & 6 out of 10 & \( 3/5 \) \\
+	5 & 6 out of 10 & \( 3/5 \) \\
+	6 & 6 out of 10 & \( 3/5 \) \\
+	7 & 6 out of 10 & \( 3/5 \) \\
+	8 & 6 out of 10 & \( 3/5 \) \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Automatic evaluation}
 %--------------------------------

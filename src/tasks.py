@@ -117,8 +117,27 @@ def task_3(case):
 
 def task_4(case):
     """Task 4: Evaluate results from task 3."""
-    results = task_3(case)
-    print("Todo")
+    results = []
+    for chapter in Therapy.ALL.values():
+        matches = [chapter.vector[t] * v for t, v in
+                        case.vector.items() if t in chapter.vector]
+
+        if matches:
+            AB_dotproduct = sum(matches)
+            A_magnitude = sum(i ** 2 for i in chapter.vector.values())
+            B_magnitude = sum(i ** 2 for i in case.vector.values())
+            AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
+
+            terms = [t for t, v in case.vector.items() if t in chapter.vector]
+            results.append((chapter, AB_dotproduct / AB_magnitude, terms))
+
+    results.sort(key=itemgetter(1), reverse=True)
+
+    print("Rank | Chapter | Score | Terms")
+    for i, tmp in enumerate(results[:10]):
+        obj, v, terms = tmp
+        #print('\t%i & %s & %.4f & %s \\\\' % (i+1, obj.code, v, ', '.join(terms)))
+        print('%i | %s | %.4f | %s' % (i+1, obj.code, v, ', '.join(terms)))
 
 
 def _code_list_to_str(codes):
