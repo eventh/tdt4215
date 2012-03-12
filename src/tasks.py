@@ -121,30 +121,6 @@ def task_4(case):
     print("Todo")
 
 
-def check_similarities(cases, chapters):
-    print('Case # | Relevant chapter | Hits')
-
-    for name, lines in sorted(cases.items(), key=itemgetter(0)):
-        case = '\n'.join(lines)
-        words_case = case.split()
-
-        chapter_highest = ''
-        highest_sum = 0
-        for chapter in chapters:
-            sum_ = 0
-            words = chapter.text.split()
-            for word in words_case:
-                if word in words:
-                    sum_ += 1
-            sum_ = sum_ / len(words) if words else sum_
-            if sum_ > highest_sum:
-                highest_sum = sum_
-                chapter_highest = chapter
-
-        print("%s | %s - %s | %f" % (name,
-                chapter_highest.code, chapter_highest.title, highest_sum))
-
-
 def _code_list_to_str(codes):
     """Convert a list of codes to a string of codes."""
     if not codes:
