@@ -82,7 +82,8 @@ from the text but stored the links in case they might be used later.
 We store the results after preprocessing and parsing in JSON files, so they
 can be quickly loaded.
 
-\subsubsection{Stopwords}
+\subsection{Stopwords}
+%---------------------
 TODO: Something about stopwords.
 
 The list of stopwords can be found in \autoref{tab:stopwords},
@@ -99,10 +100,13 @@ and almost 1000 documents, a full term-document matrix would have 30M fields.
 
 TODO: show the formulas for IDF, TF and TF-IDF..
 
-We then took 
+For each clinical note (which we have defined to be a patient case), we
+calculate the similarities with all therapy chapter vectors.
+TODO: describe and add the formula to the sim method.
 
+We sort the list of results based on their similarity score, and return the
+top 10 results.
 
-To calculate similarities we started with 
 
 %===============
 \section{Result}
