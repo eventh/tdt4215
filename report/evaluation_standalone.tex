@@ -1,4 +1,4 @@
-\documentclass[a4paper, 12pt]{article}
+\documentclass[a4paper, 11pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -13,11 +13,13 @@
 \usepackage{tabularx} % Simple column stretching
 \usepackage{multirow} % Row spanning
 \usepackage{wrapfig} % Wrap text around figures
+\usepackage{amsmath} % Advanced maths
 \usepackage{array}
 \usepackage[normalsize, bf]{caption}
 \usepackage{color}
 \usepackage{textcomp}
 \usepackage{fixltx2e}
+%\usepackage{fullpage} % smaller margins
 
 \setcounter{tocdepth}{2} % Depth of table of contents
 
@@ -97,24 +99,37 @@ found online, and we added a few words ourself. A list of these stopwords can
 be found in \autoref{tab:stopwords}, and patient cases with stopwords removed
 can be found in \autoref{appendix}.
 
-\subsection{Task 3: Calculate similarities}
-%------------------------------------------
+\subsection{Calculate similarities}
+%----------------------------------
 We decided to use a vector model for calculating the similarities between
 patient cases and therapy chapters. For each document, both patient cases
 and therapy chapters, we created a vector with all the terms and their
 TF-IDF value. These document-vectors gives us a pseudo term-document matrix,
 without having to create an actual matrix. As there were over 30,000 terms
 and almost 1000 documents, a full term-document matrix would have 30M fields.
-
-TODO: show the formulas for IDF, TF and TF-IDF..
+We use the log normalization version of TF weight, and inverse frequency for
+IDF weight, as can be seen in (\ref{eq:tfidf}). \( f_{i,j} \) is the frequency
+of term \( i \) in document \( j \), \( N \) is the total number of documents,
+while \( n_{i} \) is the document frequency of term \( i \).
+\begin{equation} \label{eq:tfidf}
+	w_{i,j} =
+	\begin{cases}
+		(1 + \log f_{i,j}) \times \log(\frac{N}{n_{i}}) & \text{if } f_{i,j} > 0 \\
+		0												& \text{otherwise}
+	\end{cases}
+\end{equation}
 
 For each clinical note (which we have defined to be a patient case), we
-calculate the similarities with all therapy chapter vectors.
-
-TODO: describe and add the formula to the sim method.
-
-We sort the list of results based on their similarity score, and return the
-top 10 results.
+calculate the similarities with all therapy chapter vectors. The similarity is
+calculated as the \emph{cosine of the angle} between the two vectors, as seen
+in (\ref{eq:sim}). \( d_{j} \) is the term vector of therapy chapter \( j \),
+\( q \) is a patient case vector and \( t \) is the total number of terms.
+\begin{align} \label{eq:sim}
+	sim(d_{j}, q) &= \frac{\vec{d_{j}} \bullet \vec{q}}{|\vec{d}| \times |\vec{q}|} \nonumber \\
+				  &= \frac{\sum_{i=1}^{t} w_{i,j} \times w_{i,q}}{\sqrt{\sum_{i=1}^{t} w_{i,j}^2} \times \sqrt{\sum_{i=1}^{t} w_{i,q}^2}}
+\end{align}
+We sort the list of results based on their similarity score (highest first),
+and return the first 10 results.
 
 
 %===============
