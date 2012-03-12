@@ -17,18 +17,12 @@ report:
 	@mv .tmp/index.pdf report.pdf
 	evince report.pdf
 
-results:
-	@echo "Building LaTeX tables standalone"
-	@pdflatex tables_standalone.tex
-	@pdflatex tables_standalone.tex
-	@mv tables_standalone.pdf tables.pdf
-	evince tables.pdf
-
 eval:
-	@echo "Building LaTeX evaluation standalone"
-	@pdflatex -output-directory .tmp evaluation_standalone.tex
-	@pdflatex -output-directory .tmp evaluation_standalone.tex
-	@mv .tmp/evaluation_standalone.pdf evaluation.pdf
+	@echo "Building LaTeX evaluation"
+	@mkdir .tmp -p
+	@pdflatex -output-directory .tmp evaluation.tex
+	@pdflatex -output-directory .tmp evaluation.tex
+	@mv .tmp/evaluation.pdf evaluation.pdf
 	evince evaluation.pdf
 
 clean:
