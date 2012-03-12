@@ -1,113 +1,3 @@
-<<<<<<< HEAD
-\documentclass[a4paper, 12pt]{article}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
-\usepackage{textcomp} % Euro symbols etc
-\usepackage{graphicx} % support graphics
-\usepackage{hyperref} % links in the document
-\usepackage{float} % position of figures
-\usepackage{paralist} % inline lists
-\usepackage{verbatim} % multi-line comments
-\usepackage{listings} % Syntax colored code
-\usepackage{booktabs} % Professional tables
-\usepackage{tabularx} % Simple column stretching
-\usepackage{multirow} % Row spanning
-\usepackage{wrapfig} % Wrap text around figures
-\usepackage{array}
-\usepackage[normalsize, bf]{caption}
-\usepackage{color}
-\usepackage{textcomp}
-\usepackage{fixltx2e}
-
-% Configure links in pdfs
-\hypersetup{
-    bookmarksopen=false, % Hide bookmarks menu
-    colorlinks=true, % Don't wrap links in colored boxes
-%    pdfborder={0 0 0} % Remove ugly boxes
-}
-
-
-%============
-% Top matter
-%============
-\title{TDT4215 Web-intelligence\\Project task 4: evaluation}
-\author{Group 1:\\Even Wiik Thomassen, Terje Snarby, Weilin Wang}
-\date{\today}
-
-\begin{document}
-
-%\begin{abstract}
-%Your abstract goes here
-%\end{abstract}
-
-\maketitle
-\tableofcontents
-%\newpage
-
-
-%=====================
-\section{Introduction}
-%=====================
-This paper presents task 4 of the project in TDT4215 Web-intelligence at
-Norwegian University of Science and Technology (NTNU). It will
-describe the method we used to solve task 3 (\autoref{sec:method}),
-the results from task 3 (\autoref{sec:result}),
-and evaluation of the results (\autoref{sec:evaluation}).
-
-
-%===============
-\section{Method}
-%===============
-\label{sec:method}
-This section describes what methods we used to solve the given task.
-
-\subsection{Preprocessing and parsing}
-%-------------------------------------
-Patient cases were provided as a Word file, which included eight cases.
-We created a text file for each case, and made sure they were utf-8.
-
-
-
-\subsubsection{Stopwords}
-
-
-\subsection{}
-%-------------
-
-
-%===============
-\section{Result}
-%===============
-\label{sec:result}
-
-
-%===================
-\section{Evaluation}
-%===================
-\label{sec:evaluation}
-Evaluation of results are important, in order to achieve high quality and correctness for a given query.
-
-\subsection{Automatic Evaluation}
-Given the importance of result evaluation, it are to be a part of a good information retrieval system. On the other hand, having humans, especially experts, to do this job would be a costly matter. To circumvent this problem, automatic solutions to do the job have been developed.
-
-In the following subsections, we describe methods and techniques that we could have utilized to make automatic evaluation of our search results.
-
-
-
-%=====================
-% Section: Appendices
-%=====================
-\appendix
-\section{Appendices}
-This section list patient cases used as input in this project, with Norwegian
-stopwords removed. The stopwords are listed in \autoref{tab:stopwords}.
-\include{stopwords}
-\include{cases}
-
-\end{document}
-
-=======
 \documentclass[a4paper, 12pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -230,6 +120,12 @@ top 10 results.
 \section{Evaluation}
 %===================
 \label{sec:evaluation}
+Evaluation of results are important, in order to achieve high quality and correctness for a given query.
+
+\subsection{Automatic Evaluation}
+Given the importance of result evaluation, it are to be a part of a good information retrieval system. On the other hand, having humans, especially experts, to do this job would be a costly matter. To circumvent this problem, automatic solutions to do the job have been developed.
+
+In the following subsections, we describe methods and techniques that we could have utilized to make automatic evaluation of our search results.
 
 
 %=====================
@@ -245,4 +141,3 @@ stopwords removed. The stopwords are listed in \autoref{tab:stopwords}.
 
 \end{document}
 
->>>>>>> 739a4073d5db00d1418289159084f4ebbe93504e
