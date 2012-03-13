@@ -97,34 +97,35 @@ def store_objects_in_index(cls):
             len(objects), cls.__name__, time.time() - now))
 
 
-def _create_vectors():
-    """Create vectors for PatientCase and Therapy objects."""
-    def _idf(N, n):
-        return log(N / n)  # Inverse frequency
-    def _idf_smooth(N, n):
-        return log(1 + (N / n))  # Inverse frequency smooth
-    def _idf_prob(N, n):
-        return log((N - n) / n)  # Probabilistic inverse frequency
-    def _tf_log_norm(frequency):
-        return 1 + log(frequency)  # Log normalization
+def _idf(N, n):
+    return log(N / n)  # Inverse frequency
+def _idf_smooth(N, n):
+    return log(1 + (N / n))  # Inverse frequency smooth
+def _idf_prob(N, n):
+    return log((N - n) / n)  # Probabilistic inverse frequency
+def _tf_log_norm(frequency):
+    return 1 + log(frequency)  # Log normalization
 
+
+def create_vectors(tf=_tf_log_norm, idf=_idf):
+    """Create vectors for PatientCase and Therapy objects."""
     c_ix = create_or_open_index(PatientCase)
     t_ix = create_or_open_index(Therapy)
     with c_ix.searcher() as c_searcher, t_ix.searcher() as t_searcher:
 
         # Inverse document frequency
         N = c_searcher.doc_count() + t_searcher.doc_count()
-        def idf(term):
+        def calc_idf(term):
             n = t_searcher.doc_frequency('text', term)
             n += c_searcher.doc_frequency('text', term)
-            return _idf(N, n)
+            return idf(N, n)
 
         # Calcuate TF-IDF
         for cls, search in ((PatientCase, c_searcher), (Therapy, t_searcher)):
             now = time.time()
             for doc_num in search.document_numbers():
                 obj = cls.ALL[search.stored_fields(doc_num)['code']]
-                obj.vector = {t: _tf_log_norm(w) * idf(t) for t, w in
+                obj.vector = {t: tf(w) * calc_idf(t) for t, w in
                               search.vector_as('weight', doc_num, 'text')}
 
             # Dump to JSON
@@ -200,7 +201,7 @@ def main(script, command='', index='', field='', *query):
     # Create vectors
     elif command.startswith('vector'):
         populate_all()
-        _create_vectors()
+        create_vectors()
 
     # Search in whoosh index
     elif command == 'search':
