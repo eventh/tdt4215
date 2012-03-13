@@ -317,14 +317,16 @@ TODO: do some other manual or aggregated evaluation?
 Every good information retrieval system require evaluation of the results. This is a complex task, which is difficult and time consuming for humans to do. It would be beneficial to be able to automatically evaluate the results.
 
 In the following paragraphs, we propose methods and techniques that could be used to make automatic evaluation of our search results.
+%=====================
 \paragraph{Reference collections}
 One automatic evaluation method that has proven to be effective is the use of reference collections. A reference collection is a large collection of documents and queries, where the correct results for the queries are determined by a expert of the domain.
 
 In our assignment, such a collection could consist of therapy chapters and patient records (cases), where the correct therapy chapter for a given patient case is known. Either based on fictional patient records and classifications made by an expert, or even better, real patient records and known correct classifications collected from a practitioner. 
 
 By using such a reference collection it is possible to automatically evaluate and see if the results given by our system is correct and how good it is compared to the "gold standard".
+%=====================
 \paragraph{Partially result comparison}
-
+Each patient case could be divided into sub cases, so that for instance two or three sentences would form a new case. Having a collection of say six sub cases from one patient case, these could individually be run through the system and give results from the therapy chapters. This could be combined in a way to give a better picture of what results that might be correct or incorrect for the case as whole.
 
 %=====================
 % Section: Appendices
