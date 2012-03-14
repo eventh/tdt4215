@@ -270,7 +270,13 @@ chapter and patient case one can be seen in \autoref{tab:terms}, where
 relevant medical terms are bolded. The patient case concerns a patient with
 diabetes mellitus and the first result ``T3.1 Diabetes mellitus'' is spot on,
 while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
-\begin{table}[htbp] \footnotesize \center
+
+We have calculated average precision at ten documents seen (P@10) and
+R-precision. In the first patient case six out of ten retrieved documents were
+automatically deemed relevant, giving a precision of \( 60\% \) and
+R-precision of \( 0.67 \) (as there are 4 relevant documents in top 6).
+
+\begin{table}[tbp] \footnotesize \center
 \caption{Terms shared betwen patient case 1 and relevant chapters\label{tab:terms}}
 \begin{tabularx}{\textwidth}{c l l c X}
     \toprule
@@ -290,26 +296,23 @@ while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
 \end{tabularx}
 \end{table}
 
-We calculated average precision at ten documents seen (P@10). In
-the first patient case six out of ten retrieved documents were automatically
-deemed relevant, giving a precision of \( 60\% \).
-\autoref{tab:precision} list P@10 for all eight patient cases.
-\begin{table}[htbp] \footnotesize \center
-\caption{Average precision at 10 (P@10)\label{tab:precision}}
-\begin{tabular}{c c c}
+\autoref{tab:precision} list P@10 and R-precision for all eight patient cases.
+\begin{table}[tbp] \footnotesize \center
+\caption{Precision\label{tab:precision}}
+\begin{tabular}{c c c c}
     \toprule
-    Case & Relevant chapters & Average precision \\
+    Case & Relevant chapters & P@10 & R-precision \\
     \midrule
-	1 & 6 out of 10 & \( 60\% \) \\
-	2 & 3 out of 10 & \( 50\% \) \\
-	3 & 9 out of 10 & \( 90\% \) \\
-	4 & 7 out of 10 & \( 70\% \) \\
-	5 & 7 out of 10 & \( 80\% \) \\
-	6 & 8 out of 10 & \( 80\% \) \\
-	7 & 10 out of 10 & \( 100\% \) \\
-	8 & 9 out of 10 & \( 90\% \) \\
+	1 & 6 out of 10 & 60\% & 0.67 \\
+	2 & 3 out of 10 & 50\% & 0.80 \\
+	3 & 9 out of 10 & 90\% & 0.89 \\
+	4 & 7 out of 10 & 70\% & 0.71 \\
+	5 & 7 out of 10 & 80\% & 0.88 \\
+	6 & 8 out of 10 & 80\% & 0.75 \\
+	7 & 10 out of 10 & 100\% & 1.00 \\
+	8 & 9 out of 10 & 90\% & 0.89 \\
     \midrule
-	& Averaged: & \( 78\% \) \\
+	& Averaged: & 77.5\% & 0.82 \\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -333,6 +336,7 @@ By using such a reference collection it is possible to automatically evaluate an
 
 \paragraph{Partially result comparison}
 Each patient case could be divided into sub cases, so that for instance two or three sentences would form a new case. Having a collection of say six sub cases from one patient case, these could individually be run through the system and give results from the therapy chapters. This could be combined in a way to give a better picture of what results that might be correct or incorrect for the case as whole.
+
 
 %=====================
 % Section: Appendices

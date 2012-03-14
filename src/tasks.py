@@ -116,7 +116,7 @@ def task_3(case):
     return [[i] for i, v in results[:10]]
 
 
-def task_4(case, medical=get_medical_terms()):
+def task_4(case, medical=get_medical_terms(), hack=[]):
     """Task 4: Evaluate results from task 3."""
     results = []
     for chapter in Therapy.ALL.values():
@@ -147,12 +147,24 @@ def task_4(case, medical=get_medical_terms()):
                 b_terms.append('\\textbf{%s}' % term)
             else:
                 b_terms.append(term)
-        print('\t%i & %s & %.4f & %s & %s \\\\' %
-                (i+1, obj.code, v, r, ', '.join(b_terms)))
+        #print('\t%i & %s & %.4f & %s & %s \\\\' % (
+        #        i+1, obj.code, v, r, ', '.join(b_terms)))
+        #print('%i | %s | %.4f | %s | %s' % (
+        #        i+1, obj.code, v, r, ', '.join(terms)))
 
-        #print('%i | %s | %.4f | %s | %s' % (i+1, obj.code, v, r, ', '.join(terms)))
+    # Precision at 10
+    rel_count = sum([0] + [1 for r in results[:10] if r[3]])
+    print('Precision at 10 (P@10): %i%%' % (rel_count * 10))
 
-    print('Precision at 10 (P@10): %i%%' % (sum([0] + [1 for r in results[:10] if r[3]]) * 10))
+    # R-Precision
+    r_precision = sum([0] + [1 for r in results[:rel_count] if r[3]])
+    print("R-Precision (%i): %.2f" % (rel_count, r_precision / rel_count))
+
+    hack.append((rel_count, r_precision / rel_count))
+    if len(hack) == 8:
+        print("Avg p: %.1f" % (sum(i for i, j in hack) * 10 / 8))
+        print("Avg r: %.2f" % (sum(j for i, j in hack) / 8))
+
 
 
 def _code_list_to_str(codes):
