@@ -224,6 +224,12 @@ def get_stopwords():
         return set(i.strip() for i in f.readlines() if i.strip())
 
 
+def get_medical_terms():
+    """Read in and return list of medical terms."""
+    with open('etc/medical.txt', 'r') as f:
+        return set(i.strip() for i in f.readlines() if i.strip())
+
+
 def populate_all():
     """Load all json files to populate all data objects."""
     for cls in (ATC, ICD, PatientCase, Therapy):

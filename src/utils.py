@@ -10,8 +10,9 @@ from collections import Counter
 from operator import itemgetter
 
 import data
-from data import ATC, ICD, Therapy, PatientCase, get_stopwords
 from tasks import OUTPUT_FOLDER
+from data import (ATC, ICD, Therapy, PatientCase,
+                  get_stopwords, get_medical_terms)
 
 
 def calculate_chapter_statistics():
@@ -37,36 +38,42 @@ def calculate_chapter_statistics():
 
 def generate_stopwords_table():
     """Generate a LaTeX table with all stopwords."""
-    columns = 6
     words = sorted(get_stopwords())
+    caption = '\\caption{Norwegian stopwords\\label{tab:stopwords}}\n'
+    #A - D & D - H & H - K & K - N & N - S & S - Å \\
+    _generate_columned_table(words, 6, 'stopwords', caption)
+
+
+def generate_medical_terms_table():
+    """Generate a LaTeX table with all medical terms."""
+    words = sorted(get_medical_terms())
+    caption = '\\caption{Medical terms\\label{tab:medicalterms}}\n'
+    _generate_columned_table(words, 4, 'medicalterms', caption)
+
+
+def _generate_columned_table(words, columns, name, caption='\n'):
+    filename = '%s/%s.tex' % (OUTPUT_FOLDER, name)
     count = len(words)
     step = (count // columns) + 1
-    words.extend([''] * columns)
+    words = list(words) + [''] * columns
+    heading = ' & '.join('%s - %s' % (words[step*i][0],
+                words[min(step*(i+1), count)-1][0]) for i in range(columns))
 
-    filename = '%s/stopwords.tex' % OUTPUT_FOLDER
     with open(filename, 'w') as f:
         f.write(
-r'''
-\chapter{Stop words}
-\autoref{tab:stopwords} contains a list of Norwegian stop words used on search
-queries such as patient cases and therapy chapters.
-An initial list were %% TODO: add a reference to
-Additional words with low relevenance, but which are frequently used in
-patient cases, have been added.
-
-\begin{table}[htbp] \footnotesize \center
-\caption{Norwegian stop words\label{tab:stopwords}}
-\begin{tabular}{%s}
+r'''\begin{table}[htbp] \footnotesize \center
+%s\begin{tabular}{%s}
     \toprule
-    A - D & D - H & H - K & K - N & N - S & S - Å \\
+    %s \\
     \midrule
-''' % (' '.join(['l'] * columns)))
+''' % (caption, ' '.join(['l'] * columns), heading.upper()))
         for i in range(step):
-            tmp = tuple([words[i+(step*j)] for j in range(columns)])
-            f.write('    %s & %s & %s & %s & %s & %s \\\\\n' % tmp)
+            args = tuple([words[i+(step*j)] for j in range(columns)])
+            string = '    ' + ' & '.join(['%s'] * columns) + '\\\\\n'
+            f.write(string % args)
 
         f.write('    \\bottomrule\n\\end{tabular}\n\\end{table}\n\n\n')
-    print("Dumped %i stopwords to '%s'" % (count, filename))
+    print("Dumped %i terms to '%s'" % (count, filename))
     print()
 
 
@@ -75,12 +82,6 @@ def generate_cases_table():
     cases = PatientCase.ALL
     filename = '%s/cases.tex' % OUTPUT_FOLDER
     with open(filename, 'w') as f:
-        f.write(
-r'''\chapter{Patient cases}
-This chapter contains patient cases used as input in this project.
-Norwegian stop words have been removed from these patient cases.
-''')
-
         for case_nr, obj in sorted(cases.items()):
             f.write(
 r'''\begin{table}[htbp] \footnotesize \center
@@ -100,12 +101,23 @@ r'''\begin{table}[htbp] \footnotesize \center
     print()
 
 
+def calculate_case_statistics():
+    terms = get_medical_terms()
+    print("Case | Terms | Medical terms")
+    for code, case in sorted(PatientCase.ALL.items()):
+        print(' | '.join((code, str(len(case.vector)),
+                str(len([i for i in case.vector.keys() if i in terms])))))
+    print()
+
+
 def main(script):
     """Run all the functions in this module."""
     data.main()  # Populate all objects
 
     calculate_chapter_statistics()
+    calculate_case_statistics()
     generate_stopwords_table()
+    generate_medical_terms_table()
     generate_cases_table()
 
 
