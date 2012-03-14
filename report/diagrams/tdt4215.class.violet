@@ -69,12 +69,17 @@ label
 type
 icpc2_code
 icpc2_label
-parent</string> 
+parent
+description
+inclusions
+exclusions
+terms
+synonyms</string> 
        </void> 
       </void> 
       <void property="methods"> 
        <void property="text"> 
-        <string>description()
+        <string>
 to_index()
 to_json()
 from_json()</string> 
@@ -143,8 +148,8 @@ from_json()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>40.0</double> 
      <double>30.0</double> 
+     <double>40.0</double> 
     </void> 
    </object> 
   </void> 
@@ -187,8 +192,8 @@ parse_case_file()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>390.0</double> 
-     <double>540.0</double> 
+     <double>350.0</double> 
+     <double>510.0</double> 
     </void> 
    </object> 
   </void> 
@@ -198,14 +203,10 @@ parse_case_file()</string>
      <object id="PackageNode5" class="com.horstmann.violet.PackageNode"> 
       <void property="contents"> 
        <void property="text"> 
-        <string>INDEX_DIR
-ANALYZER
-ATC_SCHEMA
+        <string>ATC_SCHEMA
 ICD_SCHEMA
 CASE_SCHEMA
 THERAPY_SCHEMA
-SCHEMA_MAP
-
 get_empty_indices()
 create_or_open_index()
 store_objects_in_index()
@@ -229,8 +230,8 @@ print_result()</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>720.0</double> 
-     <double>370.0</double> 
+     <double>530.0</double> 
+     <double>230.0</double> 
     </void> 
    </object> 
   </void> 
@@ -240,12 +241,7 @@ print_result()</string>
      <object id="PackageNode7" class="com.horstmann.violet.PackageNode"> 
       <void property="contents"> 
        <void property="text"> 
-        <string>OUTPUT_FOLDER
-OUTPUTS
-CASE_TASKS
-CHAPTER_TASKS
-TASK_FIELDS
-task_1()
+        <string>task_1()
 task_1_alt()
 task_2()
 task_3()
@@ -253,7 +249,7 @@ task_4()
 output_json()
 output_latex()
 output_print()
-output_none()
+
 </string> 
        </void> 
       </void> 
@@ -265,32 +261,8 @@ output_none()
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>560.0</double> 
-     <double>180.0</double> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="addNode"> 
-   <object id="PackageNode8" class="com.horstmann.violet.PackageNode"> 
-    <void method="addChild"> 
-     <object id="PackageNode9" class="com.horstmann.violet.PackageNode"> 
-      <void property="contents"> 
-       <void property="text"> 
-        <string>calculate_chapter_statistics()
-generate_stopwords_table()
-generate_cases_table()</string> 
-       </void> 
-      </void> 
-     </object> 
-    </void> 
-    <void property="name"> 
-     <string>utils.py</string> 
-    </void> 
-   </object> 
-   <object class="java.awt.geom.Point2D$Double"> 
-    <void method="setLocation"> 
-     <double>350.0</double> 
-     <double>30.0</double> 
+     <double>360.0</double> 
+     <double>40.0</double> 
     </void> 
    </object> 
   </void> 
@@ -298,17 +270,8 @@ generate_cases_table()</string>
    <object idref="PackageNode5"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>727.0</double> 
-     <double>403.0</double> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="addNode"> 
-   <object idref="PackageNode9"/> 
-   <object class="java.awt.geom.Point2D$Double"> 
-    <void method="setLocation"> 
-     <double>363.0</double> 
-     <double>61.0</double> 
+     <double>540.0</double> 
+     <double>261.0</double> 
     </void> 
    </object> 
   </void> 
@@ -317,7 +280,7 @@ generate_cases_table()</string>
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
      <double>49.0</double> 
-     <double>59.0</double> 
+     <double>68.0</double> 
     </void> 
    </object> 
   </void> 
@@ -326,7 +289,7 @@ generate_cases_table()</string>
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
      <double>66.0</double> 
-     <double>184.0</double> 
+     <double>193.0</double> 
     </void> 
    </object> 
   </void> 
@@ -334,7 +297,7 @@ generate_cases_table()</string>
    <object idref="ClassNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>203.0</double> 
+     <double>206.0</double> 
      <double>80.0</double> 
     </void> 
    </object> 
@@ -343,8 +306,8 @@ generate_cases_table()</string>
    <object idref="ClassNode2"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>218.0</double> 
-     <double>233.0</double> 
+     <double>214.0</double> 
+     <double>206.0</double> 
     </void> 
    </object> 
   </void> 
@@ -352,8 +315,8 @@ generate_cases_table()</string>
    <object idref="ClassNode3"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>46.0</double> 
-     <double>457.0</double> 
+     <double>44.0</double> 
+     <double>482.0</double> 
     </void> 
    </object> 
   </void> 
@@ -361,8 +324,8 @@ generate_cases_table()</string>
    <object idref="ClassNode4"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>159.0</double> 
-     <double>462.0</double> 
+     <double>154.0</double> 
+     <double>500.0</double> 
     </void> 
    </object> 
   </void> 
@@ -370,8 +333,8 @@ generate_cases_table()</string>
    <object idref="ClassNode5"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>551.0</double> 
-     <double>572.0</double> 
+     <double>512.0</double> 
+     <double>542.0</double> 
     </void> 
    </object> 
   </void> 
@@ -379,8 +342,8 @@ generate_cases_table()</string>
    <object idref="PackageNode3"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>398.0</double> 
-     <double>585.0</double> 
+     <double>359.0</double> 
+     <double>555.0</double> 
     </void> 
    </object> 
   </void> 
@@ -388,8 +351,8 @@ generate_cases_table()</string>
    <object idref="PackageNode7"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>567.0</double> 
-     <double>211.0</double> 
+     <double>373.0</double> 
+     <double>73.0</double> 
     </void> 
    </object> 
   </void> 
@@ -458,6 +421,9 @@ generate_cases_table()</string>
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VH"/> 
+    </void> 
     <void property="endArrowHead"> 
      <object class="com.horstmann.violet.ArrowHead" field="V"/> 
     </void> 
@@ -482,36 +448,6 @@ generate_cases_table()</string>
    </object> 
    <object idref="PackageNode2"/> 
    <object idref="PackageNode0"/> 
-  </void> 
-  <void method="connect"> 
-   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
-    <void property="bentStyle"> 
-     <object class="com.horstmann.violet.BentStyle" field="HV"/> 
-    </void> 
-    <void property="endArrowHead"> 
-     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
-    </void> 
-    <void property="lineStyle"> 
-     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
-    </void> 
-   </object> 
-   <object idref="PackageNode8"/> 
-   <object idref="PackageNode0"/> 
-  </void> 
-  <void method="connect"> 
-   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
-    <void property="bentStyle"> 
-     <object class="com.horstmann.violet.BentStyle" field="HV"/> 
-    </void> 
-    <void property="endArrowHead"> 
-     <object class="com.horstmann.violet.ArrowHead" field="V"/> 
-    </void> 
-    <void property="lineStyle"> 
-     <object class="com.horstmann.violet.LineStyle" field="DOTTED"/> 
-    </void> 
-   </object> 
-   <object idref="PackageNode8"/> 
-   <object idref="PackageNode6"/> 
   </void> 
   <void method="connect"> 
    <object class="com.horstmann.violet.ClassRelationshipEdge"> 
