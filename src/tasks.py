@@ -18,8 +18,9 @@ from collections import OrderedDict
 
 from whoosh.qparser import QueryParser, OrGroup
 
-from data import ATC, ICD, Therapy, PatientCase, populate_all
 from index import create_or_open_index, get_empty_indices
+from data import (ATC, ICD, Therapy, PatientCase,
+                  populate_all, get_medical_terms)
 
 
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
@@ -115,7 +116,7 @@ def task_3(case):
     return [[i] for i, v in results[:10]]
 
 
-def task_4(case):
+def task_4(case, medical=get_medical_terms()):
     """Task 4: Evaluate results from task 3."""
     results = []
     for chapter in Therapy.ALL.values():
@@ -129,15 +130,29 @@ def task_4(case):
             AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
 
             terms = [t for t, v in case.vector.items() if t in chapter.vector]
-            results.append((chapter, AB_dotproduct / AB_magnitude, terms))
+            rel = [t for t in terms if t.lower() in medical]
+            results.append((chapter, AB_dotproduct / AB_magnitude, terms, rel))
 
     results.sort(key=itemgetter(1), reverse=True)
 
-    print("Rank | Chapter | Score | Terms")
+    # Evaluate results
+    print("Rank | Chapter | Score | Relevant | Terms")
     for i, tmp in enumerate(results[:10]):
-        obj, v, terms = tmp
-        #print('\t%i & %s & %.4f & %s \\\\' % (i+1, obj.code, v, ', '.join(terms)))
-        print('%i | %s | %.4f | %s' % (i+1, obj.code, v, ', '.join(terms)))
+        obj, v, terms, rel = tmp
+        r = 'Yes' if rel else 'No'
+
+        b_terms = []
+        for term in terms:
+            if term in medical:
+                b_terms.append('\\textbf{%s}' % term)
+            else:
+                b_terms.append(term)
+        print('\t%i & %s & %.4f & %s & %s \\\\' %
+                (i+1, obj.code, v, r, ', '.join(b_terms)))
+
+        #print('%i | %s | %.4f | %s | %s' % (i+1, obj.code, v, r, ', '.join(terms)))
+
+    print('Precision at 10 (P@10): %i%%' % (sum([0] + [1 for r in results[:10] if r[3]]) * 10))
 
 
 def _code_list_to_str(codes):

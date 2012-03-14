@@ -126,3 +126,4 @@ peroral
 streptokokker
 tonsillene
 petekkier
+blodtrykk

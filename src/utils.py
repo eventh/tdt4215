@@ -40,7 +40,6 @@ def generate_stopwords_table():
     """Generate a LaTeX table with all stopwords."""
     words = sorted(get_stopwords())
     caption = '\\caption{Norwegian stopwords\\label{tab:stopwords}}\n'
-    #A - D & D - H & H - K & K - N & N - S & S - Å \\
     _generate_columned_table(words, 6, 'stopwords', caption)
 
 
@@ -48,7 +47,7 @@ def generate_medical_terms_table():
     """Generate a LaTeX table with all medical terms."""
     words = sorted(get_medical_terms())
     caption = '\\caption{Medical terms\\label{tab:medicalterms}}\n'
-    _generate_columned_table(words, 4, 'medicalterms', caption)
+    _generate_columned_table(words, 3, 'medicalterms', caption)
 
 
 def _generate_columned_table(words, columns, name, caption='\n'):
@@ -69,7 +68,7 @@ r'''\begin{table}[htbp] \footnotesize \center
 ''' % (caption, ' '.join(['l'] * columns), heading.upper()))
         for i in range(step):
             args = tuple([words[i+(step*j)] for j in range(columns)])
-            string = '    ' + ' & '.join(['%s'] * columns) + '\\\\\n'
+            string = '    ' + ' & '.join(['%s'] * columns) + ' \\\\\n'
             f.write(string % args)
 
         f.write('    \\bottomrule\n\\end{tabular}\n\\end{table}\n\n\n')
