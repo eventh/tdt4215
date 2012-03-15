@@ -116,55 +116,73 @@ def task_3(case):
     return [[i] for i, v in results[:10]]
 
 
-def task_4(case, medical=get_medical_terms(), hack=[]):
+def task_4(case, medical=get_medical_terms()):
     """Task 4: Evaluate results from task 3."""
-    results = []
-    for chapter in Therapy.ALL.values():
-        matches = [chapter.vector[t] * v for t, v in
-                        case.vector.items() if t in chapter.vector]
+    print(case)
+    if not hasattr(PatientCase.ALL["1"], 'vector2'):
+        from index import create_vectors, _tf_raw_freq, _idf_prob
+        #B create_vectors(idf=_idf_prob, attr='vector2')
+        #C create_vectors(tf=_tf_raw_freq, attr='vector2')
+        #D create_vectors(tf=_tf_raw_freq, idf=_idf_prob, attr='vector2')
 
-        if matches:
-            AB_dotproduct = sum(matches)
-            A_magnitude = sum(i ** 2 for i in chapter.vector.values())
-            B_magnitude = sum(i ** 2 for i in case.vector.values())
-            AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
+    results = _task_4_search(case, medical)
+    #results2 = _task_4_search(case, medical, 'vector2')
 
-            terms = [t for t, v in case.vector.items() if t in chapter.vector]
-            rel = [t for t in terms if t.lower() in medical]
-            results.append((chapter, AB_dotproduct / AB_magnitude, terms, rel))
+    _task_4_precision(results)
+    #_task_4_precision(results2)
 
-    results.sort(key=itemgetter(1), reverse=True)
-
-    # Evaluate results
+    """# Prints out terms/medical terms etc
     print("Rank | Chapter | Score | Relevant | Terms")
     for i, tmp in enumerate(results[:10]):
         obj, v, terms, rel = tmp
         r = 'Yes' if rel else 'No'
 
         b_terms = []
-        for term in terms:
-            if term in medical:
-                b_terms.append('\\textbf{%s}' % term)
-            else:
-                b_terms.append(term)
+        for t in terms:
+            b_terms.append('\\textbf{%s}' % t if t in medical else t)
         #print('\t%i & %s & %.4f & %s & %s \\\\' % (
         #        i+1, obj.code, v, r, ', '.join(b_terms)))
         #print('%i | %s | %.4f | %s | %s' % (
         #        i+1, obj.code, v, r, ', '.join(terms)))
+    """
 
-    # Precision at 10
-    rel_count = sum([0] + [1 for r in results[:10] if r[3]])
-    print('Precision at 10 (P@10): %i%%' % (rel_count * 10))
 
-    # R-Precision
+def _task_4_search(case, medical, attr='vector'):
+    results = []
+    case_vector = getattr(case, attr)
+    for chapter in Therapy.ALL.values():
+        chapter_vector = getattr(chapter, attr)
+
+        matches = [chapter_vector[t] * v for t, v in
+                        case_vector.items() if t in chapter_vector]
+
+        if matches:
+            AB_dotproduct = sum(matches)
+            A_magnitude = sum(i ** 2 for i in chapter_vector.values())
+            B_magnitude = sum(i ** 2 for i in case_vector.values())
+            AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
+
+            terms = [t for t, v in case_vector.items() if t in chapter_vector]
+            rel = [t for t in terms if t.lower() in medical]
+            results.append((chapter, AB_dotproduct / AB_magnitude, terms, rel))
+
+    return sorted(results, key=itemgetter(1), reverse=True)
+
+
+def _task_4_precision(results, count=10, hack=[]):
+    """Calculate precision at 'count' and R-precision."""
+    rel_count = sum([0] + [1 for r in results[:count] if r[3]])
     r_precision = sum([0] + [1 for r in results[:rel_count] if r[3]])
+    print('Precision at 10 (P@10): %i%%' % (rel_count * count))
     print("R-Precision (%i): %.2f" % (rel_count, r_precision / rel_count))
-
     hack.append((rel_count, r_precision / rel_count))
     if len(hack) == 8:
-        print("Avg p: %.1f" % (sum(i for i, j in hack) * 10 / 8))
+        print("Avg p: %.1f" % (sum(i for i, j in hack) * count / 8))
         print("Avg r: %.2f" % (sum(j for i, j in hack) / 8))
 
+
+def _kendall_tau(result1, result2):
+    pass
 
 
 def _code_list_to_str(codes):

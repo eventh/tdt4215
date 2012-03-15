@@ -103,11 +103,13 @@ def _idf_smooth(N, n):
     return log(1 + (N / n))  # Inverse frequency smooth
 def _idf_prob(N, n):
     return log((N - n) / n)  # Probabilistic inverse frequency
+def _tf_raw_freq(frequency):
+    return frequency  # Raw frequency
 def _tf_log_norm(frequency):
     return 1 + log(frequency)  # Log normalization
 
 
-def create_vectors(tf=_tf_log_norm, idf=_idf):
+def create_vectors(tf=_tf_log_norm, idf=_idf, attr='vector'):
     """Create vectors for PatientCase and Therapy objects."""
     c_ix = create_or_open_index(PatientCase)
     t_ix = create_or_open_index(Therapy)
@@ -124,9 +126,10 @@ def create_vectors(tf=_tf_log_norm, idf=_idf):
         for cls, search in ((PatientCase, c_searcher), (Therapy, t_searcher)):
             now = time.time()
             for doc_num in search.document_numbers():
-                obj = cls.ALL[search.stored_fields(doc_num)['code']]
-                obj.vector = {t: tf(w) * calc_idf(t) for t, w in
+                vector = {t: tf(w) * calc_idf(t) for t, w in
                               search.vector_as('weight', doc_num, 'text')}
+                obj = cls.ALL[search.stored_fields(doc_num)['code']]
+                setattr(obj, attr, vector)
 
             # Dump to JSON
             with open(cls._JSON, 'w') as f:

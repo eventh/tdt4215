@@ -146,7 +146,7 @@ class ICD(BaseData):
 class PatientCase(BaseData):
     """A specific patient case."""
 
-    ALL = {}  # All PatientCase objects
+    ALL = OrderedDict()  # All PatientCase objects
     _NAME = 'case'  # Index name
     _JSON = 'etc/cases.json'  # JSON file
 
@@ -180,7 +180,7 @@ class PatientCase(BaseData):
 class Therapy(BaseData):
     """A (sub)*chapter in norsk legemiddelhandbok."""
 
-    ALL = {}  # All Therapy objects
+    ALL = OrderedDict()  # All Therapy objects
     _NAME = 'therapy'  # Index name
     _JSON = 'etc/therapy.json'  # JSON file
 
