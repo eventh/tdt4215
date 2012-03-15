@@ -7,12 +7,8 @@ Probably generating some useless tables etc.
 """
 import sys
 from collections import Counter
-from operator import itemgetter
 
-import data
-from tasks import OUTPUT_FOLDER
-from data import (ATC, ICD, Therapy, PatientCase,
-                  get_stopwords, get_medical_terms)
+from data import ATC, ICD, Therapy, PatientCase
 
 
 def calculate_chapter_statistics():
@@ -36,21 +32,9 @@ def calculate_chapter_statistics():
     print()
 
 
-def generate_stopwords_table():
-    """Generate a LaTeX table with all stopwords."""
-    words = sorted(get_stopwords())
-    _generate_columned_table(words, 6, 'stopwords', 'Norwegian stopwords')
-
-
-def generate_medical_terms_table():
-    """Generate a LaTeX table with all medical terms."""
-    words = sorted(get_medical_terms())
-    _generate_columned_table(words, 3, 'medicalterms', 'Medical terms')
-
-
 def generate_cases_table():
     """Generate LaTeX tables for patient cases."""
-    filename = '%s/cases.tex' % OUTPUT_FOLDER
+    filename = 'output/cases.tex'
     with open(filename, 'w') as f:
         for nr, obj in sorted(PatientCase.ALL.items()):
             rows = [('c', 'X'), ('\#', 'Lines (stopwords removed)')]
@@ -64,6 +48,7 @@ def generate_cases_table():
 
 
 def _generate_columned_table(words, columns, name, caption):
+    """Generate LaTeX table of lot of words."""
     count = len(words)
     step = (count // columns) + 1
     words = list(words) + [''] * columns
@@ -71,18 +56,25 @@ def _generate_columned_table(words, columns, name, caption):
     rows.append('%s - %s' % (words[step * i][0].upper(),
                              words[min(step * (i + 1), count) - 1][0].upper())
                                     for i in range(columns))
-
     for i in range(step):
         rows.append([words[i+(step*j)] for j in range(columns)])
 
-    filename = '%s/%s.tex' % (OUTPUT_FOLDER, name)
-    with open(filename, 'w') as f:
-        f.write(create_latex_table(name, caption, rows))
-    print("Dumped %i terms to '%s'" % (count, filename))
+    create_latex_table(name, caption, rows, filename='output/%s.tex' % name)
     print()
 
 
-def create_latex_table(label, caption, rows, tabularx=False):
+def create_latex_table(label, caption, rows, tabularx=False, filename=None):
+    """Create a LaTeX table.
+
+    'label' is a string with the table label for referencing.
+    'caption' is a string with the table caption.
+    'rows' is a list of table rows, first row is the table layout,
+        second row is column headers and rest is rows of fields.
+    'tabularx' creates tabular table if False, tabularx if True.
+    'filename' is a filename to save the table to.
+
+    returns a string with the table nicely formatted.
+    """
     tabx = 'x}{\\textwidth' if tabularx else ''
     end = 'x' if tabularx else ''
     text = r'''\begin{table}[htbp] \footnotesize \center
@@ -95,10 +87,17 @@ def create_latex_table(label, caption, rows, tabularx=False):
     for row in rows[2:]:
         text += '    ' + ' & '.join(row) + ' \\\\\n'
     text += '    \\bottomrule\n\\end{tabular%s}\n\\end{table}\n\n' % end
+
+    if filename is not None:
+        with open(filename, 'w') as f:
+            f.write(text)
+        print("Dumped %i %s to '%s'" % (len(rows) - 2, label, filename))
+
     return text
 
 
 def calculate_case_statistics():
+    """Calculate statistics of patient cases."""
     terms = get_medical_terms()
     print("Case | Terms | Medical terms")
     for code, case in sorted(PatientCase.ALL.items()):
@@ -109,13 +108,20 @@ def calculate_case_statistics():
 
 def main(script):
     """Run all the functions in this module."""
+    import data
     data.main()  # Populate all objects
 
+    # Generate a LaTeX table with all stopwords
+    _generate_columned_table(sorted(data.get_stopwords()),
+                             6, 'stopwords', 'Norwegian stopwords')
+
+    # Generate a LaTeX table with all medical terms
+    _generate_columned_table(sorted(data.get_medical_terms()),
+                             3, 'medicalterms', 'Medical terms')
+
+    generate_cases_table()
     calculate_chapter_statistics()
     calculate_case_statistics()
-    generate_stopwords_table()
-    generate_medical_terms_table()
-    generate_cases_table()
 
 
 if __name__ == '__main__':
