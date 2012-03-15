@@ -118,36 +118,37 @@ def task_3(case):
 
 def task_4(case, medical=get_medical_terms()):
     """Task 4: Evaluate results from task 3."""
-    print(case)
-    if not hasattr(PatientCase.ALL["1"], 'vector2'):
-        from index import create_vectors, _tf_raw_freq, _idf_prob
-        #B create_vectors(idf=_idf_prob, attr='vector2')
-        #C create_vectors(tf=_tf_raw_freq, attr='vector2')
-        #D create_vectors(tf=_tf_raw_freq, idf=_idf_prob, attr='vector2')
+    #if not hasattr(PatientCase.ALL["1"], 'vector2'):
+    #    from index import create_vectors, _tf_raw_freq, _idf_prob
+    #    create_vectors(idf=_idf_prob, attr='vector2')  # B
+    #    #create_vectors(tf=_tf_raw_freq, attr='vector2')  # C
+    #    #create_vectors(tf=_tf_raw_freq, idf=_idf_prob, attr='vector3')  # D
 
     results = _task_4_search(case, medical)
-    #results2 = _task_4_search(case, medical, 'vector2')
-
+    #results2 = _task_4_search(case, medical, 'vector3')
+    #print("[%s]: Kendal Tau: %.3f" % (case.code, _kendall_tau(results, results2, 1000)))
+    _task_4_print_terms(results)
     _task_4_precision(results)
     #_task_4_precision(results2)
 
-    """# Prints out terms/medical terms etc
+
+def _task_4_print_terms(results, medical=get_medical_terms()):
+    """Prints out terms/medical terms etc for task 4"""
     print("Rank | Chapter | Score | Relevant | Terms")
     for i, tmp in enumerate(results[:10]):
         obj, v, terms, rel = tmp
         r = 'Yes' if rel else 'No'
-
         b_terms = []
         for t in terms:
             b_terms.append('\\textbf{%s}' % t if t in medical else t)
         #print('\t%i & %s & %.4f & %s & %s \\\\' % (
         #        i+1, obj.code, v, r, ', '.join(b_terms)))
-        #print('%i | %s | %.4f | %s | %s' % (
-        #        i+1, obj.code, v, r, ', '.join(terms)))
-    """
+        print('%i | %s | %.4f | %s | %s' % (
+                i+1, obj.code, v, r, ', '.join(terms)))
 
 
 def _task_4_search(case, medical, attr='vector'):
+    """Perform a task 4 search."""
     results = []
     case_vector = getattr(case, attr)
     for chapter in Therapy.ALL.values():
@@ -181,8 +182,30 @@ def _task_4_precision(results, count=10, hack=[]):
         print("Avg r: %.2f" % (sum(j for i, j in hack) / 8))
 
 
-def _kendall_tau(result1, result2):
-    pass
+def _kendall_tau(result1, result2, K=10, hack=[]):
+    """Calculate Kendall Tau Coefficient of two search results."""
+    K = min(K, len(result1), len(result2))
+    result1 = [i[0].code for i in result1[:K]]
+    result2 = [i[0].code for i in result2[:K]]
+    delta = 0
+    for i, a in enumerate(result1):
+        for j, b in enumerate(result1):
+            if j < i:
+                try:
+                    rank1 = result2.index(a)
+                except ValueError:
+                    rank1 = K + 1
+                try:
+                    rank2 = result2.index(b)
+                except ValueError:
+                    rank2 = K + 1
+                if rank1 < rank2:
+                    delta += 1
+    tau = 1.0 - ((2.0 * delta) / (K * (K - 1)))
+    hack.append(tau)
+    if len(hack) == 8:
+        print("Avg: %.3f" % (sum(hack) / 8.0))
+    return tau
 
 
 def _code_list_to_str(codes):

@@ -219,15 +219,35 @@ with the four different TF-IDF definitions A to D as described in
 \end{tabular}
 \end{table}
 
-\subsubsection{Kendal Tau Coefficient}
+\subsubsection{Kendal tau coefficient}
 Rank correlation metrics are an automatic way for comparing two ranking
 methods, to determine how differently one varies from another. It does not
 consider relevance of retrieved documents, only the relative ordering of two
 rankings.
 
 We have calculated the Kendall Tau coefficient for the four ranking methods
-described in \autoref{sec:similarities}.
-TODO!!!
+described in \autoref{sec:similarities}, which can be found in
+\autoref{tab:kendalltau}. When calculating precision we limit results to the
+top ten, but for kendall tau coefficient we have taken all returned results.
+\begin{table}[tbp] \footnotesize \center
+\caption{Kendall tau coefficients\label{tab:kendalltau}}
+\begin{tabular}{c c c c c c c}
+    \toprule
+	Case & A vs B & A vs C & A vs D & B vs C & B vs D & C vs D \\
+    \midrule
+	1 & 0.981 & 0.941 & 0.947 & 0.931 & 0.944 & 0.978 \\
+	2 & 0.984 & 0.937 & 0.940 & 0.931 & 0.939 & 0.981 \\
+	3 & 0.989 & 0.948 & 0.950 & 0.945 & 0.950 & 0.988 \\
+	4 & 0.975 & 0.957 & 0.959 & 0.942 & 0.962 & 0.971 \\
+	5 & 0.985 & 0.951 & 0.952 & 0.945 & 0.953 & 0.983 \\
+	6 & 0.971 & 0.954 & 0.954 & 0.937 & 0.960 & 0.964 \\
+	7 & 0.981 & 0.944 & 0.944 & 0.936 & 0.946 & 0.978 \\
+	8 & 0.985 & 0.943 & 0.948 & 0.935 & 0.944 & 0.984 \\
+    \midrule
+	Avg & 0.981 & 0.947 & 0.949 & 0.938 & 0.950 & 0.979 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Manual evaluation}
 %-----------------------------
@@ -236,6 +256,10 @@ To see that our automatic evaluation method is sound, we have done a manual eval
 After a closer look at the 10 suggested results for each case, we see that most of the suggested therapy chapters were relevant. Only one case retrieves low amount of relevant therapy chapters, but by looking at the R-precision we can tell that the chapters that actually were relevant must have been among the top results. Probably result 1, 2 and 3. For the other cases, we see the same tendency; R-precision values are high. This suggests that our algorithm for finding the relevant results is good.
 
 It is important to consider how many therapy chapters that actually can be relevant for a case. It might only exist three relevant chapters for case 2, thereby the rest of the results are not relevant. In such cases it is important to have the relevant chapters as top results, which our system seems to handle well. 
+
+\subsection{Summary}
+%-------------------
+TODO: summarize the automatic evaluation results
 
 
 %=====================
