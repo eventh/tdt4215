@@ -19,7 +19,6 @@
 \usepackage{color}
 \usepackage{textcomp}
 \usepackage{fixltx2e}
-%\usepackage{fullpage} % smaller margins
 
 \setcounter{tocdepth}{2} % Depth of table of contents
 
@@ -39,14 +38,8 @@
 \date{\today}
 
 \begin{document}
-
-%\begin{abstract}
-%Your abstract goes here
-%\end{abstract}
-
 \maketitle
 \tableofcontents
-%\newpage
 
 
 %=====================
@@ -137,8 +130,107 @@ and return the first 10 results.
 %===============
 \label{sec:result}
 The results of task 3 can be seen in \autoref{tab:task3a} and
-\autoref{tab:task3b}. Case in the tables are patient case/clinical note
+\autoref{tab:task3b} in \autoref{appendix}.
+Case in the tables are patient case/clinical note
 number and rank is the rank of the relevant therapy chapter.
+
+
+%===================
+\section{Evaluation}
+%===================
+\label{sec:evaluation}
+Evaluating results for a given query give great insight in what level of quality and correctness you can expect from an information retrieval system. Doing this evaluation requires human relevance judgement.
+
+The importance of the evaluation can be seen in the context of the mandatory assignment; if a doctor were to base treatment of a patient on the results of our information retrieval system, it is crucial to know the reliability of the results. A consequence of incorrect results could lead to wrong treatment and even death.
+
+
+\subsection{Automatic evaluation}
+%--------------------------------
+Every good information retrieval system require evaluation of the results. This is a complex task, which is difficult and time consuming for humans to do. It would be beneficial to be able to automatically evaluate the results.
+
+The problem with automatic evaluation is with deciding if a retrieved document
+is relevant or not. As the queries in this task is patient cases, which is
+known beforehand, we can create a critera for whether a document is relevant
+or not. We have simply taken all the words in the patient cases and created a
+list of those with medical importance, and if both the query and a retrieved
+document contains such a word we deem it relevant. These medical terms are
+listed in \autoref{tab:medicalterms}.
+
+An example of terms shared between each retrieved therapy
+chapter and patient case one can be seen in \autoref{tab:terms}, where
+relevant medical terms are bolded. The patient case concerns a patient with
+diabetes mellitus and the first result ``T3.1 Diabetes mellitus'' is spot on,
+while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
+
+We have calculated average precision at ten documents seen (P@10) and
+R-precision. In the first patient case six out of ten retrieved documents were
+automatically deemed relevant, giving a precision of \( 60\% \) and
+R-precision of \( 0.67 \) (as there are 4 relevant documents in top 6).
+
+\begin{table}[tbp] \footnotesize \center
+\caption{Terms shared betwen patient case 1 and relevant chapters\label{tab:terms}}
+\begin{tabularx}{\textwidth}{c l l c X}
+    \toprule
+    Rank & Chapter & Score & Relevant & Terms \\
+    \midrule
+	1 & T3.1 & 0.0832 & Yes & bruker, delvis, henvisning, hatt, \textbf{acetonlukt}, injeksjon, år, hurtigvirkende, hvert, \textbf{mellitus}, siste, lite, hurtig, \textbf{insulin}, håndtere, synes, flere, dessuten, vurderer, \textbf{diabetes}, kvelden, måltid, langtidsvirkende, \textbf{blodtrykk}, normalt, døgn, sykehus \\
+	2 & T10.2.1 & 0.0429 & No & bruker, delvis, hurtig, flere, dessuten, vurderer \\
+	3 & T14.5.1 & 0.0407 & Yes & \textbf{insulin}, uteblir \\
+	4 & T23.1.1.2 & 0.0372 & Yes & lite, \textbf{insulin}, dessuten, normalt, døgn \\
+	5 & T5.4.1 & 0.0372 & Yes & delvis, år, fått, hvert, lite, håndtere, synes, flere, \textbf{diabetes} \\
+	6 & T14.2.1 & 0.0332 & No & bruker, siste, brukt, flere, tatt \\
+	7 & T10.2.1.1 & 0.0325 & No & bruker, delvis, henvisning, hatt, år, fått, hvert, hurtig, synes, flere, langtidsvirkende, døgn \\
+	8 & T18.1.4 & 0.0309 & No & hvert, kontroller \\
+	9 & T16.13.1 & 0.0304 & Yes & tørr, huden, \textbf{mellitus}, flere, \textbf{diabetes} \\
+	10 & *T9.1.5 & 0.0290 & Yes & \textbf{injiserer}, hatt, injeksjon, år, hurtig, \textbf{blodtrykk}, sykehus \\
+	\bottomrule
+\end{tabularx}
+\end{table}
+
+\autoref{tab:precision} list P@10 and R-precision for all eight patient cases.
+\begin{table}[tbp] \footnotesize \center
+\caption{Precision\label{tab:precision}}
+\begin{tabular}{c c c c}
+    \toprule
+    Case & Relevant chapters & P@10 & R-precision \\
+    \midrule
+	1 & 6 out of 10 & 60\% & 0.67 \\
+	2 & 3 out of 10 & 50\% & 0.80 \\
+	3 & 9 out of 10 & 90\% & 0.89 \\
+	4 & 7 out of 10 & 70\% & 0.71 \\
+	5 & 7 out of 10 & 80\% & 0.88 \\
+	6 & 8 out of 10 & 80\% & 0.75 \\
+	7 & 10 out of 10 & 100\% & 1.00 \\
+	8 & 9 out of 10 & 90\% & 0.89 \\
+    \midrule
+	& Averaged: & 77.5\% & 0.82 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{Manual evaluation}
+%-----------------------------
+To see that our automatic evaluation method is sound, we have done a manual evaluation of the results. We are not experts in the medical field, but when reading a case and the suggested result, we can easily determine if the result is relevant (at least to a certain degree). 
+
+After a closer look at the 10 suggested results for each case, we see that most of the suggested therapy chapters were relevant. Only one case retrieves low amount of relevant therapy chapters, but by looking at the R-precision we can tell that the chapters that actually were relevant must have been among the top results. Probably result 1, 2 and 3. For the other cases, we see the same tendency; R-precison values are high. This suggests that our algorithm for finding the relevant results is good.
+
+It is important to consider how many therapy chapters that actually can be relevant for a case. It might only exist three relevant chapters for case 2, thereby the rest of the results are not relevant. In such cases it is important to have the relevant chapters as top results, which our system seems to handle well. 
+
+
+%=====================
+% Section: Appendices
+%=====================
+\appendix
+\section{Appendix}
+\label{appendix}
+This appendix list results from task 3, and stopwords and medical terms.
+The results are listed in \autoref{tab:task3a} and \autoref{tab:task3b}.
+Stopwords removed from patient cases and therapy chapters are listed in
+\autoref{tab:stopwords}.
+Medical terms found in patient cases used for evaluating relevant results are
+listed in \autoref{tab:medicalterms}.
+
 \begin{table}[htbp] \footnotesize \center
 \caption{Task 3 results (A)\label{tab:task3a}}
 \begin{tabular}{c c l}
@@ -245,118 +337,9 @@ number and rank is the rank of the relevant therapy chapter.
 \end{tabularx}
 \end{table}
 
-
-%===================
-\section{Evaluation}
-%===================
-\label{sec:evaluation}
-Evaluating results for a given query give great insight in what level of quality and correctness you can expect from an information retrieval system. Doing this evaluation requires human relevance judgement.
-
-The importance of the evaluation can be seen in the context of the mandatory assignment; if a doctor were to base treatment of a patient on the results of our information retrieval system, it is crucial to know the reliability of the results. A consequence of incorrect results could lead to wrong treatment and even death.
-
-
-\subsection{Automatic evaluation}
-%--------------------------------
-%suggestion, include this text here and remove the svada section
-Every good information retrieval system require evaluation of the results. This is a complex task, which is difficult and time consuming for humans to do. It would be beneficial to be able to automatically evaluate the results.
-
-The problem with automatic evaluation is with deciding if a retrieved document
-is relevant or not. As the queries in this task is patient cases, which is
-known beforehand, we can create a critera for whether a document is relevant
-or not. We have simply taken all the words in the patient cases and created a
-list of those with medical importance, and if both the query and a retrieved
-document contains such a word we deem it relevant. These medical terms are
-listed in \autoref{tab:medicalterms}.
-
-An example of terms shared between each retrieved therapy
-chapter and patient case one can be seen in \autoref{tab:terms}, where
-relevant medical terms are bolded. The patient case concerns a patient with
-diabetes mellitus and the first result ``T3.1 Diabetes mellitus'' is spot on,
-while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
-
-We have calculated average precision at ten documents seen (P@10) and
-R-precision. In the first patient case six out of ten retrieved documents were
-automatically deemed relevant, giving a precision of \( 60\% \) and
-R-precision of \( 0.67 \) (as there are 4 relevant documents in top 6).
-
-\begin{table}[tbp] \footnotesize \center
-\caption{Terms shared betwen patient case 1 and relevant chapters\label{tab:terms}}
-\begin{tabularx}{\textwidth}{c l l c X}
-    \toprule
-    Rank & Chapter & Score & Relevant & Terms \\
-    \midrule
-	1 & T3.1 & 0.0832 & Yes & bruker, delvis, henvisning, hatt, \textbf{acetonlukt}, injeksjon, år, hurtigvirkende, hvert, \textbf{mellitus}, siste, lite, hurtig, \textbf{insulin}, håndtere, synes, flere, dessuten, vurderer, \textbf{diabetes}, kvelden, måltid, langtidsvirkende, \textbf{blodtrykk}, normalt, døgn, sykehus \\
-	2 & T10.2.1 & 0.0429 & No & bruker, delvis, hurtig, flere, dessuten, vurderer \\
-	3 & T14.5.1 & 0.0407 & Yes & \textbf{insulin}, uteblir \\
-	4 & T23.1.1.2 & 0.0372 & Yes & lite, \textbf{insulin}, dessuten, normalt, døgn \\
-	5 & T5.4.1 & 0.0372 & Yes & delvis, år, fått, hvert, lite, håndtere, synes, flere, \textbf{diabetes} \\
-	6 & T14.2.1 & 0.0332 & No & bruker, siste, brukt, flere, tatt \\
-	7 & T10.2.1.1 & 0.0325 & No & bruker, delvis, henvisning, hatt, år, fått, hvert, hurtig, synes, flere, langtidsvirkende, døgn \\
-	8 & T18.1.4 & 0.0309 & No & hvert, kontroller \\
-	9 & T16.13.1 & 0.0304 & Yes & tørr, huden, \textbf{mellitus}, flere, \textbf{diabetes} \\
-	10 & *T9.1.5 & 0.0290 & Yes & \textbf{injiserer}, hatt, injeksjon, år, hurtig, \textbf{blodtrykk}, sykehus \\
-	\bottomrule
-\end{tabularx}
-\end{table}
-
-\autoref{tab:precision} list P@10 and R-precision for all eight patient cases.
-\begin{table}[tbp] \footnotesize \center
-\caption{Precision\label{tab:precision}}
-\begin{tabular}{c c c c}
-    \toprule
-    Case & Relevant chapters & P@10 & R-precision \\
-    \midrule
-	1 & 6 out of 10 & 60\% & 0.67 \\
-	2 & 3 out of 10 & 50\% & 0.80 \\
-	3 & 9 out of 10 & 90\% & 0.89 \\
-	4 & 7 out of 10 & 70\% & 0.71 \\
-	5 & 7 out of 10 & 80\% & 0.88 \\
-	6 & 8 out of 10 & 80\% & 0.75 \\
-	7 & 10 out of 10 & 100\% & 1.00 \\
-	8 & 9 out of 10 & 90\% & 0.89 \\
-    \midrule
-	& Averaged: & 77.5\% & 0.82 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-
-\subsection{Manual evaluation}
-%-----------------------------
-%TODO: Manually evaluate results, to see if our automatic method is sound, and list false positives and true negatives?
-To see that our automatic evaluation method is sound, we have done a manual evaluation of the results. We are not experts in the medical field, but when reading a case and the suggested result, we can easily determine if the result is relevant (at least to a certain degree). 
-
-After a closer look at the 10 suggested results for each case, we see that most of the suggested therapy chapters were relevant. Only one case retrieves low amount of relevant therapy chapters, but by looking at the R-precision we can tell that the chapters that actually were relevant must have been among the top results. Probably result 1, 2 and 3. For the other cases, we see the same tendency; R-precison values are high. This suggests that our algorithm for finding the relevant results is good.
-
-It is important to consider how many therapy chapters that actually can be relevant for a case. It might only exist three relevant chapters for case 2, thereby the rest of the results are not relevant. In such cases it is important to have the relevant chapters as top results, which our system seems to handle well. 
-
-%\subsection{Svada?}
-%%------------------
-%Every good information retrieval system require evaluation of the results. This is a complex task, which is difficult and time consuming for humans to do. It would be beneficial to be able to automatically evaluate the results.
-%
-%In the following paragraphs, we propose methods and techniques that could be used to make automatic evaluation of our search results.
-%
-%\paragraph{Reference collections}
-%One automatic evaluation method that has proven to be effective is the use of reference collections. A reference collection is a large collection of documents and queries, where the correct results for the queries are determined by a expert of the domain.
-%In our assignment, such a collection could consist of therapy chapters and patient records (cases), where the correct therapy chapter for a given patient case is known. Either based on fictional patient records and classifications made by an expert, or even better, real patient records and known correct classifications collected from a practitioner. 
-%By using such a reference collection it is possible to automatically evaluate and see if the results given by our system is correct and how good it is compared to the ``gold standard''.
-%
-%\paragraph{Partially result comparison}
-%Each patient case could be divided into sub cases, so that for instance two or three sentences would form a new case. Having a collection of say six sub cases from one patient case, these could individually be run through the system and give results from the therapy chapters. This could be combined in a way to give a better picture of what results that might be correct or incorrect for the case as whole.
-
-%=====================
-% Section: Appendices
-%=====================
-\appendix
-\section{Appendix}
-\label{appendix}
-This section list patient cases used as input in this project, with Norwegian
-stopwords removed. The stopwords are listed in \autoref{tab:stopwords}.
-Medical terms found in patient cases used for evaluating relevant results are
-listed in \autoref{tab:medicalterms}.
 \include{stopwords}
 \include{medicalterms}
-\include{cases}
+%\include{cases}
 
 \end{document}
 
