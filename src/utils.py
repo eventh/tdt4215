@@ -8,7 +8,7 @@ Probably generating some useless tables etc.
 import sys
 from collections import Counter
 
-from data import ATC, ICD, Therapy, PatientCase
+from data import ATC, ICD, Therapy, PatientCase, get_medical_terms
 
 
 def calculate_chapter_statistics():
@@ -116,7 +116,7 @@ def main(script):
                              6, 'stopwords', 'Norwegian stopwords')
 
     # Generate a LaTeX table with all medical terms
-    _generate_columned_table(sorted(data.get_medical_terms()),
+    _generate_columned_table(sorted(get_medical_terms()),
                              3, 'medicalterms', 'Medical terms')
 
     generate_cases_table()

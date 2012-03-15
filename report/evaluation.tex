@@ -63,7 +63,7 @@ This section describe methods used to solve task 3.
 Patient cases were provided as a Word file, which included eight cases. We
 created a text file for each case, and made sure they were in utf-8 charset.
 
-Therapy chapters from Norsk legemiddelhåndbok were provided as HTML files,
+Therapy chapters from ``Norsk legemiddelhåndbok'' were provided as HTML files,
 invalid html5 files in iso-8859-1 charset. We first preprocessed these files
 by removing some of the HTML tags to make them easier to parse, and we
 converted them to utf-8 charset.
@@ -225,10 +225,10 @@ methods, to determine how differently one varies from another. It does not
 consider relevance of retrieved documents, only the relative ordering of two
 rankings.
 
-We have calculated the Kendall Tau coefficient for the four ranking methods
+We have calculated the Kendall tau coefficient for the four ranking methods
 described in \autoref{sec:similarities}, which can be found in
 \autoref{tab:kendalltau}. When calculating precision we limit results to the
-top ten, but for kendall tau coefficient we have taken all returned results.
+top ten, but for Kendall tau coefficient we have taken all returned results.
 \begin{table}[tbp] \footnotesize \center
 \caption{Kendall tau coefficients\label{tab:kendalltau}}
 \begin{tabular}{c c c c c c c}
@@ -383,8 +383,108 @@ listed in \autoref{tab:medicalterms}.
 \end{tabularx}
 \end{table}
 
-\include{stopwords}
-\include{medicalterms}
+\begin{table}[htbp] \footnotesize \center
+\caption{Norwegian stopwords\label{tab:stopwords}}
+\begin{tabular}{l l l l l l}
+    \toprule
+    A - D & D - H & H - K & K - N & N - S & S - Å \\
+    \midrule
+    alle & dit & har & kun & noe & so \\
+    andre & ditt & hennar & kunne & noen & som \\
+    at & du & henne & kva & noka & somme \\
+    av & dykk & hennes & kvar & noko & somt \\
+    bare & dykkar & her & kvarhelst & nokon & start \\
+    begge & då & hit & kven & nokor & stille \\
+    behandling & eg & hjå & kvi & nokre & syk \\
+    ble & ein & ho & kvifor & ny & så \\
+    blei & eit & hoe & lage & nå & sånn \\
+    bli & eitt & honom & lang & når & tid \\
+    blir & eller & hos & lege & og & til \\
+    blitt & elles & hoss & lik & også & tilbake \\
+    bort & en & hossen & like & om & um \\
+    bra & ene & hun & man & opp & under \\
+    bruk & eneste & hva & mange & oss & upp \\
+    bruke & enhver & hvem & me & over & ut \\
+    både & enn & hver & med & pasienten & uten \\
+    båe & er & hvilke & medan & pasienter & var \\
+    bør & et & hvilken & meg & pga & vart \\
+    ca & ett & hvis & meget & på & varte \\
+    da & etter & hvor & mellom & rett & ved \\
+    de & for & hvordan & men & riktig & verdi \\
+    deg & fordi & hvorfor & mens & samme & vere \\
+    dei & forsøke & i & mer & seg & verte \\
+    deim & fra & ikke & mest & selv & vi \\
+    deira & fram & ikkje & mg & si & vil \\
+    deires & få & ingen & mi & sia & ville \\
+    dem & før & ingi & min & sidan & vite \\
+    den & først & inkje & mine & siden & vore \\
+    denne & gjorde & inn & mitt & sin & vors \\
+    der & gjøre & innen & mot & sine & vort \\
+    dere & god & inni & mye & sist & vår \\
+    deres & gå & ja & mykje & sitt & være \\
+    det & går & jeg & må & sjøl & vært \\
+    dette & ha & kan & måte & skal & å \\
+    di & hadde & kom & ned & skulle &  \\
+    din & han & korleis & nei & slik &  \\
+    disse & hans & korso & no & slutt &  \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Medical terms\label{tab:medicalterms}}
+\begin{tabular}{l l l}
+    \toprule
+    A - H & H - P & P - V \\
+    \midrule
+    acetonlukt & hemoglobin & penicillin \\
+    allergier & hemolytiske & penicillintabletter \\
+    analgetika & hemorroider & peroral \\
+    angina & hjernehinnebetennelse & petekkier \\
+    antibiotika & hjertelydene & pharynx \\
+    apocillin & hodepine & postoperativt \\
+    astma & hostet & pulmicort \\
+    atrovent & influensa & pulsen \\
+    attføring & injiserer & pusteplager \\
+    avføring & insulin & rektaleksplorasjon \\
+    avføringen & insulinkrevende & respirator \\
+    bakteriologisk & insulinpenn & røntgenbildet \\
+    blod & intramuskulære & sacrum \\
+    blodkulturer & intravenøs & sederende \\
+    blodmangel & intravenøse & serogruppe \\
+    blodprøver & intravenøst & serumspeil \\
+    blodprøves & intuberes & skjelett \\
+    blodtrykk & ketorax & slim \\
+    blodtrykket & kloramfenikol & smertelindring \\
+    blødningskilde & kneplager & småblødninger \\
+    bricanyl & kortisonpreparat & spinalpunksjon \\
+    bronkiene & krampeanfall & spinalvæske \\
+    brystsmerter & kvalm & spinalvæsken \\
+    cancer & lungeflatene & spirometri \\
+    colli & lymfeknuter & spirometriundersøkelse \\
+    colonoscopi & mellitus & stetoskop \\
+    desorientert & meningitidis & strept.test \\
+    diabetes & meniskoperert & streptokokker \\
+    diazepam & meniskplager & streptokokktonsilitt \\
+    diplokokker & metastaser & støtdoser \\
+    dolcontin & mikrobiologisk & submandibulært \\
+    ekspiratoriske & morfin & sukkersyke \\
+    ekspiriet & muskulatur & svelgbesvær \\
+    endetarmsåpningen & muskulært & tarmveggen \\
+    endoskopisk & nakkestiv & tonsilleforstørrelse \\
+    femoris & napren & tonsillene \\
+    foetor & neisseria & tonsiller \\
+    fractura & nevrogen & totalprotese \\
+    gane & nitroglycerin & tykktarmen \\
+    glandler & opioider & vaksinasjon \\
+    halebenet & ortopedisk & væsketillførsel \\
+    halsflora & palpasjonsømhet &  \\
+    halsinfeksjon & paralgin &  \\
+    halsprøve & pectoris &  \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
 
 \end{document}
 
