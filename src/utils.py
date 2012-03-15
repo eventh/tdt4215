@@ -39,65 +39,63 @@ def calculate_chapter_statistics():
 def generate_stopwords_table():
     """Generate a LaTeX table with all stopwords."""
     words = sorted(get_stopwords())
-    caption = '\\caption{Norwegian stopwords\\label{tab:stopwords}}\n'
-    _generate_columned_table(words, 6, 'stopwords', caption)
+    _generate_columned_table(words, 6, 'stopwords', 'Norwegian stopwords')
 
 
 def generate_medical_terms_table():
     """Generate a LaTeX table with all medical terms."""
     words = sorted(get_medical_terms())
-    caption = '\\caption{Medical terms\\label{tab:medicalterms}}\n'
-    _generate_columned_table(words, 3, 'medicalterms', caption)
-
-
-def _generate_columned_table(words, columns, name, caption='\n'):
-    filename = '%s/%s.tex' % (OUTPUT_FOLDER, name)
-    count = len(words)
-    step = (count // columns) + 1
-    words = list(words) + [''] * columns
-    heading = ' & '.join('%s - %s' % (words[step*i][0],
-                words[min(step*(i+1), count)-1][0]) for i in range(columns))
-
-    with open(filename, 'w') as f:
-        f.write(
-r'''\begin{table}[htbp] \footnotesize \center
-%s\begin{tabular}{%s}
-    \toprule
-    %s \\
-    \midrule
-''' % (caption, ' '.join(['l'] * columns), heading.upper()))
-        for i in range(step):
-            args = tuple([words[i+(step*j)] for j in range(columns)])
-            string = '    ' + ' & '.join(['%s'] * columns) + ' \\\\\n'
-            f.write(string % args)
-
-        f.write('    \\bottomrule\n\\end{tabular}\n\\end{table}\n\n\n')
-    print("Dumped %i terms to '%s'" % (count, filename))
-    print()
+    _generate_columned_table(words, 3, 'medicalterms', 'Medical terms')
 
 
 def generate_cases_table():
     """Generate LaTeX tables for patient cases."""
-    cases = PatientCase.ALL
     filename = '%s/cases.tex' % OUTPUT_FOLDER
     with open(filename, 'w') as f:
-        for case_nr, obj in sorted(cases.items()):
-            f.write(
-r'''\begin{table}[htbp] \footnotesize \center
-\caption{Patient case %s\label{tab:pcase%s}}
-\begin{tabularx}{\textwidth}{c X}
-    \toprule
-    \# & Lines (stop words removed) \\
-    \midrule
-''' % (case_nr, case_nr))
-
+        for nr, obj in sorted(PatientCase.ALL.items()):
+            rows = [('c', 'X'), ('\#', 'Lines (stopwords removed)')]
             for i, line in enumerate(obj.text.split('\n')):
-                f.write('\t%i & %s \\\\\n' % (i + 1, line.replace('%', '\%')))
-
-            f.write('\t\\bottomrule\n\\end{tabularx}\n\\end{table}\n\n\n')
-
-    print("Dumped %i patient cases to '%s'" % (len(cases), filename))
+                rows.append((str(i + 1), line.replace('%', '\%')))
+            text = create_latex_table('case%s' % nr,
+                                      'Patient case %s' % nr, rows, True)
+            f.write(text)
+    print("Dumped %i patient cases to '%s'" % (len(PatientCase.ALL), filename))
     print()
+
+
+def _generate_columned_table(words, columns, name, caption):
+    count = len(words)
+    step = (count // columns) + 1
+    words = list(words) + [''] * columns
+    rows = [['l'] * columns]
+    rows.append('%s - %s' % (words[step * i][0].upper(),
+                             words[min(step * (i + 1), count) - 1][0].upper())
+                                    for i in range(columns))
+
+    for i in range(step):
+        rows.append([words[i+(step*j)] for j in range(columns)])
+
+    filename = '%s/%s.tex' % (OUTPUT_FOLDER, name)
+    with open(filename, 'w') as f:
+        f.write(create_latex_table(name, caption, rows))
+    print("Dumped %i terms to '%s'" % (count, filename))
+    print()
+
+
+def create_latex_table(label, caption, rows, tabularx=False):
+    tabx = 'x}{\\textwidth' if tabularx else ''
+    end = 'x' if tabularx else ''
+    text = r'''\begin{table}[htbp] \footnotesize \center
+\caption{%s\label{tab:%s}}
+\begin{tabular%s}{%s}
+    \toprule
+    %s \\
+    \midrule
+''' % (caption, label, tabx, ' '.join(rows[0]), ' & '.join(rows[1]))
+    for row in rows[2:]:
+        text += '    ' + ' & '.join(row) + ' \\\\\n'
+    text += '    \\bottomrule\n\\end{tabular%s}\n\\end{table}\n\n' % end
+    return text
 
 
 def calculate_case_statistics():
