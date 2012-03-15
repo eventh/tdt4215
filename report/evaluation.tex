@@ -82,7 +82,7 @@ between runs and loaded quickly.
 %---------------------
 To reduce the number of terms in documents, and to remove words which provide
 little or no relevant information value, we removed stopwords.
-We used a list of Norwegian stopwords in both bokmål and nynorsk which we
+We used a list of Norwegian stopwords in both ``bokmål'' and ``nynorsk'' which we
 found online\footnote{Stopword source: \url{http://www.wisweb.no/999/147/33899-170.html}},
 and we added a few words ourself. A complete list of these stopwords can
 be found in \autoref{tab:stopwords} in \autoref{appendix}.
@@ -157,7 +157,7 @@ Every good information retrieval system require evaluation of the results. This 
 
 The problem with automatic evaluation is with deciding if a retrieved document
 is relevant or not. As the queries in this task is patient cases, which is
-known beforehand, we can create a critera for whether a document is relevant
+known beforehand, we can create a criteria for whether a document is relevant
 or not. We have simply taken all the words in the patient cases and created a
 list of those with medical importance, and if both the query and a retrieved
 document contains such a word we deem it relevant. These medical terms are
@@ -165,7 +165,7 @@ listed in \autoref{tab:medicalterms}.
 
 An example of terms shared between each retrieved therapy
 chapter and patient case one can be seen in \autoref{tab:terms}, where
-relevant medical terms are bolded. The patient case concerns a patient with
+relevant medical terms are boldfaced. The patient case concerns a patient with
 diabetes mellitus and the first result ``T3.1 Diabetes mellitus'' is spot on,
 while the second result ``T20.2.1. Bronkial astma'' is not relevant at all.
 
@@ -174,11 +174,11 @@ R-precision. In the first patient case six out of ten retrieved documents were
 automatically deemed relevant, giving a precision of \( 60\% \) and
 R-precision of \( 0.67 \) (as there are four relevant documents in top six).
 \autoref{tab:precision} list P@10 and R-precision for all eight patient cases
-with the four different TF-IDF defintions A to D as described in
+with the four different TF-IDF definitions A to D as described in
 \autoref{sec:similarities}.
 
 \begin{table}[tbp] \footnotesize \center
-\caption{Terms shared betwen patient case 1 and relevant chapters\label{tab:terms}}
+\caption{Terms shared between patient case 1 and relevant chapters\label{tab:terms}}
 \begin{tabularx}{\textwidth}{c l l c X}
     \toprule
     Rank & Chapter & Score & Relevant & Terms \\
@@ -233,7 +233,7 @@ TODO!!!
 %-----------------------------
 To see that our automatic evaluation method is sound, we have done a manual evaluation of the results. We are not experts in the medical field, but when reading a case and the suggested result, we can easily determine if the result is relevant (at least to a certain degree). 
 
-After a closer look at the 10 suggested results for each case, we see that most of the suggested therapy chapters were relevant. Only one case retrieves low amount of relevant therapy chapters, but by looking at the R-precision we can tell that the chapters that actually were relevant must have been among the top results. Probably result 1, 2 and 3. For the other cases, we see the same tendency; R-precison values are high. This suggests that our algorithm for finding the relevant results is good.
+After a closer look at the 10 suggested results for each case, we see that most of the suggested therapy chapters were relevant. Only one case retrieves low amount of relevant therapy chapters, but by looking at the R-precision we can tell that the chapters that actually were relevant must have been among the top results. Probably result 1, 2 and 3. For the other cases, we see the same tendency; R-precision values are high. This suggests that our algorithm for finding the relevant results is good.
 
 It is important to consider how many therapy chapters that actually can be relevant for a case. It might only exist three relevant chapters for case 2, thereby the rest of the results are not relevant. In such cases it is important to have the relevant chapters as top results, which our system seems to handle well. 
 
