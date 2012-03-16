@@ -128,23 +128,34 @@ This is ABSTRACT!
 %\bibliographystyle{plain}
 
 
-%============
-% Appendices
-%============
 \appendix
-\chapter{Stop words}
-\autoref{tab:stopwords} contains a list of Norwegian stop words used on search
+%=================
+\chapter{Appendix}
+%=================
+
+
+\section{Stopwords}
+%------------------
+\autoref{tab:stopwords} contains a list of Norwegian stopwords used on search
 queries such as patient cases and therapy chapters.
 An initial list were %% TODO: add a reference to
 Additional words with low relevenance, but which are frequently used in
 patient cases, have been added.
-\include{stopwords}
 
-\chapter{Patient cases}
+
+\section{Medical terms}
+%----------------------
+
+
+\section{Patient cases}
+%----------------------
 This chapter contains patient cases used as input in this project.
 Norwegian stop words have been removed from these patient cases.
-\include{cases}
 
+
+\include{stopwords}
+\include{medicalterms}
+\include{cases}
 
 \end{document}
 
