@@ -89,12 +89,12 @@ takes to parse input data and loading JSON files in \autoref{tab:times}.
 \end{table}
 
 
-\section{Task 1 A: Autocoding ICD-10}
-%------------------------------------
-Results for patient case 1, 4, 5, and 6 can be seen in \autoref{tab:task1a},
-which list relevant ICD-10 codes for each sentence in these patient cases.
+\section{Task 1: Autocoding ICD-10}
+%----------------------------------
+Results for task 1 A (patient case 1, 4, 5, and 6) can be seen in
+\autoref{tab:task1a}, which list relevant ICD-10 codes for each sentence.
 \begin{table}[htbp] \footnotesize \center
-\caption{Task 1a, patient case 1, 4, 5 and 6\label{tab:task1a}}
+\caption{Task 1 A, patient case 1, 4, 5 and 6\label{tab:task1a}}
 \begin{tabular}{c c l l}
     \toprule
     Clinical note & Sentence & Method A & Method B \\
@@ -143,17 +143,31 @@ which list relevant ICD-10 codes for each sentence in these patient cases.
 \end{tabular}
 \end{table}
 
+Results for task 1 B (therapy chapter T1.1.1, ) can be seen in
+\autoref{tab:task1b}, which list relevant ATC codes for each sentence.
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 1 B, therapy chapter T1.1.1, \label{tab:task1b}}
+\begin{tabular}{c c l l}
+    \toprule
+    Chapter & Sentence & Method A & Method B \\
+    \midrule
+	T1.1.1 & 1 & B01, B01.9, B01.8 & B01.9, B01, B01.8 \\
+	 & 2 & Z20, Z20.8, Z20.9 & A88.0, Z20, Z20.0 \\
+	 & 3 & B01, B01.9, B01.8 & B01.9, B02.9, B02.8 \\
+	 & 4 & C21.2 & O69.8 \\
+	 & 5 & Q90.2 & C92.5 \\
+	 & 6 & N92.4 & Z00.2 \\
+	 & 7 & R00-R99 & R00-R99 \\
+	 & 8 & P36.2 & A41.0, B95.6, G11.9 \\
+	 & 9 & G11.1 & B01.2†, G11.1, G11.9 \\
+	 & 10 & B01 & B01, B01.9, B01.8 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
-\section{Task 1 B}
-%-----------------
 
-
-\section{Task 2 A}
-%-----------------
-
-
-\section{Task 2 B}
-%-----------------
+\section{Task 2: Autocoding ATC}
+%-------------------------------
 
 
 \section{Task 3}
@@ -168,15 +182,11 @@ which list relevant ICD-10 codes for each sentence in these patient cases.
 %---------------
 
 
-\section{Task 6 A}
-%-----------------
-
-
-\section{Task 6 B}
-%-----------------
+\section{Task 6}
+%---------------
 
 
 \section{Task 7}
-%-----------------
+%---------------
 
 

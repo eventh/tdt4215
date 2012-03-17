@@ -34,7 +34,8 @@ ATC_SCHEMA = Schema(code=ID(stored=True), title=TEXT(stored=True))
 
 # Schema for storing and indexing ICD10 codes in whoosh database
 ICD_SCHEMA = Schema(code=ID(stored=True), short=ID(stored=True),
-                    label=TEXT(stored=True), type=TEXT, icpc2_code=ID,
+                    label=TEXT(stored=True, analyzer=ANALYZER),
+                    type=TEXT, icpc2_code=ID,
                     icpc2_label=TEXT, synonyms=TEXT, terms=TEXT,
                     inclusions=TEXT, exclusions=TEXT,
                     description=TEXT(analyzer=ANALYZER))
