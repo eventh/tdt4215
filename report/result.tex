@@ -1,21 +1,34 @@
 %---------------
 \chapter{Result}
 %---------------
+This chapter presents our results from parsing input files and project tasks.
 
 
 \section{Preprocessing and parsing}
 %----------------------------------
+The results of parsing the different input files can be seen in
+\autoref{tab:objects}. Each code, chapter and case is stored in an object,
+and saved to JSON files.
+\begin{table}[htbp] \footnotesize \center
+\caption{Parsed object counts\label{tab:objects}}
+\begin{tabular}{l r}
+    \toprule
+    Type & Count \\
+    \midrule
+	ATC codes & 7945 \\
+	ICD10 codes & 10521 \\
+	Patient cases & 8 \\
+	Therapy chapters & 917 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
 \autoref{tab:chapters} contains statistics showing the results of parsing
-``Norsk legemiddelhåndbok'' HTML files. The statistics lists the amount
-of chapters, in total and with text, for each of the different chapter
-types; from chapter to subsubsubsubchapter.
+``Norsk legemiddelhåndbok'' HTML files --- therapy chapters. The statistics
+lists the amount of chapters, in total and with text, for each of the
+different chapter types --- from chapter to subsubsubsubchapter.
 %Total amount of lines '\n': 3034
 %Total amount of sentences '.': 24924
-
-Parsing of patient cases are summarized in \autoref{tab:cases}. Stopwords
-refers to stopwords in the case text which have been removed, terms is the
-number of unqiue terms (words) in the text.
-
 \begin{table}[htbp] \footnotesize \center
 \caption{Norsk legemiddelhåndbok statistics\label{tab:chapters}}
 \begin{tabular}{l r r}
@@ -33,6 +46,9 @@ number of unqiue terms (words) in the text.
 \end{tabular}
 \end{table}
 
+Parsing of patient cases are summarized in \autoref{tab:cases}. Stopwords
+refers to stopwords in the case text which have been removed, terms is the
+number of unqiue terms (words) in the text.
 \begin{table}[htbp] \footnotesize \center
 \caption{Patient cases statistics\label{tab:cases}}
 \begin{tabular}{c r r r r}
@@ -53,29 +69,64 @@ number of unqiue terms (words) in the text.
 \end{tabular}
 \end{table}
 
+We store input data and results in JSON format, so we can work with them
+without having to parse or produce them first. To demonstrate the
+effectiveness of this method we list and compare the time (in seconds) it
+takes to parse input data and loading JSON files in \autoref{tab:times}.
+\begin{table}[htbp] \footnotesize \center
+\caption{Comparing effectivenes of JSON\label{tab:times}}
+\begin{tabular}{l r r c}
+    \toprule
+    Type & Parse time & JSON load time & Speedup \\
+    \midrule
+	ATC codes & 0.209 & 0.101 & 52\% \\
+	ICD10 codes & 9.496 & 0.549 & 94\% \\
+	Patient cases & 0.008 & 0.001 & 88\% \\
+	Therapy chapters & 11.326 & 0.177 & 98\% \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
-\section{Tasks}
-%--------------
 
-\subsection{Task 1 A}
+\section{Task 1 A}
+%-----------------
 Describe with tables etc short results, for example one single case.
 Also show ranking and matched terms and score for same case.
 
-\subsection{Task 1 B}
 
-\subsection{Task 2 A}
+\section{Task 1 B}
+%-----------------
 
-\subsection{Task 2 B}
 
-\subsection{Task 3}
+\section{Task 2 A}
+%-----------------
 
-\subsection{Task 4}
 
-\subsection{Task 5}
+\section{Task 2 B}
+%-----------------
 
-\subsection{Task 6 A}
 
-\subsection{Task 6 B}
+\section{Task 3}
+%---------------
 
-\subsection{Task 7}
+
+\section{Task 4}
+%---------------
+
+
+\section{Task 5}
+%---------------
+
+
+\section{Task 6 A}
+%-----------------
+
+
+\section{Task 6 B}
+%-----------------
+
+
+\section{Task 7}
+%-----------------
+
 

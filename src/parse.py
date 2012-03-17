@@ -286,7 +286,7 @@ def main(script, folder_or_path=''):
         elif file_ext == '.txt':
             parse_case_file(path)
             classes.add(PatientCase)
-    print("Parsed %s in %.2f seconds" % (folder_or_path, time.time() - now))
+    print("Parsed %s in %.5f seconds" % (folder_or_path, time.time() - now))
 
     # Dump to JSON
     for cls in classes:
