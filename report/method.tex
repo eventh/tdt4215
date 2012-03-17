@@ -16,6 +16,11 @@ results as JSON files.
 \subsection{ICD-10}
 ICD-10 were provided in an ownl2 file. We simply parsed it as a normal XML
 file, with the ElementTree module in the Python standard library.
+Nodes named umls\_tui, umls\_conceptId, and umls\_atomId we throw away.
+Nodes named underterm, synonym, inclusion, and exclusion we store as list of
+strings. The rest of the nodes are handled as strings. All these values we
+store as attributes on a single ICD object. ICD-10 codes that lack both label
+and code\_compacted we also throw away.
 
 \subsection{ATC}
 Parsing of ATC is very staight forward. Each line represent a code, title
