@@ -91,13 +91,13 @@ takes to parse input data and loading JSON files in \autoref{tab:times}.
 
 \section{Task 1: Autocoding ICD-10}
 %----------------------------------
-Results for task 1 A (patient case 1, 4, 5, and 6) can be seen in
+Autocoding of ICD-10 codes against patient case 1, 4, 5, and 6 can be seen in
 \autoref{tab:task1a}, which list relevant ICD-10 codes for each sentence.
 \autoref{tab:task1b} list results for task 1 B (therapy chapter T1.1.1, T5.5,
-T8.9.2 and T24.2.1.7). Results for both method A and method B is listed next
+T8.9.2, and T24.2.1.7). Results for both method A and method B is listed next
 to each other for easy comparison.
 \begin{table}[htbp] \footnotesize \center
-\caption{Task 1 A, patient case 1, 4, 5 and 6\label{tab:task1a}}
+\caption{Task 1 A, patient case 1, 4, 5, and 6\label{tab:task1a}}
 \begin{tabular}{c c l l}
     \toprule
     Clinical note & Sentence & Method A & Method B \\
@@ -147,7 +147,7 @@ to each other for easy comparison.
 \end{table}
 
 \begin{table}[htbp] \footnotesize \center
-\caption{Task 1 B, chapter T1.1.1, T5.5, T8.9.2 and T24.2.1.7\label{tab:task1b}}
+\caption{Task 1 B, chapter T1.1.1, T5.5, T8.9.2, and T24.2.1.7\label{tab:task1b}}
 \begin{tabular}{c c l l}
     \toprule
     Chapter & Sentence & Method A & Method B \\
@@ -199,6 +199,111 @@ to each other for easy comparison.
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------
+Autocoding of ATC codes against patient case 1, 2, 3, 7, and 8 can be seen in
+\autoref{tab:task2a}, where each sentence in patient cases are listed with
+relevant ATC codes. \autoref{tab:task2b} list relevant ATC codes for therapy
+chapter *T1.10, T2.2.5.1, T3.1, and T6.2.3.
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 2 A, patient case 1, 2, 3, 7, and 8\label{tab:task2a}}
+\begin{tabular}{c c l c l}
+    \toprule
+    Note & Sentence & ATC codes & Sentence & ATC codes \\
+    \midrule
+	1 & 1 & A10X & 8 & . \\
+	 & 2 & A10X & 9 & A10AD \\
+	 & 3 & A10AE & 10 & . \\
+	 & 4 & . & 11 & . \\
+	 & 5 & A10AB1 & 12 & . \\
+	 & 6 & . & 13 & . \\
+	 & 7 & . & & \\
+	\addlinespace
+	2 & 1 & . & 12 & . \\
+	 & 2 & . & 13 & . \\
+	 & 3 & . & 14 & A10AD1 \\
+	 & 4 & . & 15 & . \\
+	 & 5 & N1BB1 & 16 & . \\
+	 & 6 & . & 17 & . \\
+	 & 7 & D8AC2 & 18 & . \\
+	 & 8 & . & 19 & . \\
+	 & 9 & . & 20 & V3AN5, G3AA7, G3AA12 \\
+	 & 10 & . & 21 & R3BB1, R3BA2, R3AC3 \\
+	 & 11 & V4CX & 22 & A10AD1 \\
+	\addlinespace
+	3 & 1 & C1BA & 10 & . \\
+	 & 2 & . & 11 & . \\
+	 & 3 & . & 12 & J1CE1, D6AX2, D10AF3 \\
+	 & 4 & J7BB1 & 13 & N5BA1 \\
+	 & 5 & . & 14 & . \\
+	 & 6 & A10AD1 & 15 & . \\
+	 & 7 & . & 16 & . \\
+	 & 8 & . & 17 & . \\
+	 & 9 & . & & \\
+	\addlinespace
+	7 & 1 & . & 11 & N2 \\
+	 & 2 & V9B & 12 & N2BE1, M1AE2, M1AE2 \\
+	 & 3 & . & 13 & M1AE2, M1AE2 \\
+	 & 4 & . & 14 & N2AA59, N2AA59 \\
+	 & 5 & . & 15 & N2AB1 \\
+	 & 6 & . & 16 & B5BB \\
+	 & 7 & . & 17 & V10B \\
+	 & 8 & . & 18 & N2AA1 \\
+	 & 9 & . & 19 & N2AA1, N2AA1 \\
+	 & 10 & . & 20 & N2A, Z9OP, Z9SA \\
+	\addlinespace
+	8 & 1 & C1BA & 7 & V4CB \\
+	 & 2 & . & 8 & V4CB \\
+	 & 3 & A7AA, D1AA, G1AA & 9 & . \\
+	 & 4 & V4CB & 10 & A12AA12 \\
+	 & 5 & . & 11 & R1AX \\
+	 & 6 & J1CE2, J1CE1 & 12 & C2N \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 2 B, chapter *T1.10, T2.2.5.1, T3.1, and T6.2.3\label{tab:task2b}}
+\begin{tabular}{c c l c l}
+    \toprule
+    Chapter & Sentence & ATC codes & Sentence & ATC codes \\
+    \midrule
+	*T1.10 & 1 & C5A, D5A, A1AB & 6 & J1EE1, J1RA1 \\
+	 & 2 & V7, V7A & 7 & C10AC, N5BA1, M4AB \\
+	 & 3 & V9D, J1EB, A7EC1 & 8 & A5AB, D5BB, D10AF \\
+	 & 4 & J7BC20, A7EC1, N4AC & 9 & V4CB, V4CD, V4CG \\
+	 & 5 & B1AD12, B5A, C8D & 10 & J7BC20, A7EC1 \\
+	\addlinespace
+	T2.2.5.1 & 1 & M4AA, L3AB1, L3AB4 & 2 & A5AB, D5BB, D10AF \\
+	\addlinespace
+	T3.1 & 1 & C2LG51, A10X, V3AA & 23 & V3AH \\
+	 & 2 & C10AC, M4AB, H2AB & 24 & H4AA1, Z0CA, A5AB \\
+	 & 3 & B5D, B5BA3, B5CX1 & 25 & A5AB, D5BB, D10AF \\
+	 & 4 & A10BX2, A10BX3, Z0ET & 26 & B5BA3, B5CX1, V4CA2 \\
+	 & 5 & B5BB, G3, M5B & 27 & V9DX1 \\
+	 & 6 & V6DB & 28 & A14A \\
+	 & 7 & A10AD1 & 29 & B5BC2, D2AE1, B5BA3 \\
+	 & 8 & A10BA2, Z9MF, A10BD2 & 30 & A10AE, B5BB3, B5BB \\
+	 & 9 & A10AE & 31 & V7AD \\
+	 & 10 & A10BD, J7BC20, A10AD1 & 32 & A10AB1, A10AD4 \\
+	 & 11 & V3AH & 33 & . \\
+	 & 12 & A7EC1, N4AC & 34 & V3AH \\
+	 & 13 & B5BA3, B5CX1, V4CA2 & 35 & A10X, N4AC, N7 \\
+	 & 14 & A10AE & 36 & C5BA, C5AX, C5BB \\
+	 & 15 & A10BD3 & 37 & Z9AC \\
+	 & 16 & A10AE4, A10AE5 & 38 & Z9ST, V9G \\
+	 & 17 & A10AE & 39 & A5AX, M4AC, A7EC1 \\
+	 & 18 & A10AC1, N4AC & 40 & Z9A2 \\
+	 & 19 & C9AA5, A10AB, A10B & 41 & C10AC, M4AB, A10BA2 \\
+	 & 20 & A10AC1, A10AB & 42 & . \\
+	 & 21 & J4AK, S1KX, P1A & 43 & Z9AC \\
+	 & 22 & V3AH, J4AK, M9AX & 44 & J4AK, V4CB, V4CD \\
+	 & & & 45 & A1AB \\
+	\addlinespace
+	T6.2.3 & 1 & V3AA, N4AC & 4 & V9G, V4CB, V4CD \\
+	 & 2 & S3, V4CJ, A7EC1 & 5 & V3AA, N3AX12, Z9BD \\
+	 & 3 & N4AC & & \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 
 \section{Task 3}
