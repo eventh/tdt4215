@@ -17,7 +17,7 @@
 \usepackage{color}
 \usepackage[Glenn]{fncychap}
 
-\setcounter{tocdepth}{1} % Depth of table of contents
+\setcounter{tocdepth}{0} % Depth of table of contents
 
 % Configure links in pdfs
 \hypersetup{
@@ -99,10 +99,10 @@ This is ABSTRACT!
 %================
 % List of Tables
 %================
-%\clearpage
-%\phantomsection
-%\addcontentsline{toc}{chapter}{List of tables}
-%\listoftables
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of tables}
+\listoftables
 
 
 %==========
@@ -132,6 +132,7 @@ This is ABSTRACT!
 %=================
 \chapter{Appendix}
 %=================
+\label{appendix}
 
 
 \section{Stopwords}
