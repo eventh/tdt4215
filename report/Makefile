@@ -31,3 +31,6 @@ clean:
 	@rm -fr results/*.out results/*.aux *.toc *.log *.lof *.bbl *.blg *.acn
 	@rm -fr .tmp/
 
+count:
+	@echo "Counting words in report"
+	texcount -utf8 -total -inc -sum index.tex
