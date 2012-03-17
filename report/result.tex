@@ -2,7 +2,7 @@
 \chapter{Result}
 %---------------
 This chapter presents our results from the different project tasks, and
-parsing input files.
+parsing input files. For task 1 and 2 we only present a subset of the results.
 
 
 \section{Preprocessing and parsing}
@@ -93,6 +93,9 @@ takes to parse input data and loading JSON files in \autoref{tab:times}.
 %----------------------------------
 Results for task 1 A (patient case 1, 4, 5, and 6) can be seen in
 \autoref{tab:task1a}, which list relevant ICD-10 codes for each sentence.
+\autoref{tab:task1b} list results for task 1 B (therapy chapter T1.1.1, T5.5,
+T8.9.2 and T24.2.1.7). Results for both method A and method B is listed next
+to each other for easy comparison.
 \begin{table}[htbp] \footnotesize \center
 \caption{Task 1 A, patient case 1, 4, 5 and 6\label{tab:task1a}}
 \begin{tabular}{c c l l}
@@ -143,10 +146,8 @@ Results for task 1 A (patient case 1, 4, 5, and 6) can be seen in
 \end{tabular}
 \end{table}
 
-Results for task 1 B (therapy chapter T1.1.1, ) can be seen in
-\autoref{tab:task1b}, which list relevant ATC codes for each sentence.
 \begin{table}[htbp] \footnotesize \center
-\caption{Task 1 B, therapy chapter T1.1.1, \label{tab:task1b}}
+\caption{Task 1 B, chapter T1.1.1, T5.5, T8.9.2 and T24.2.1.7\label{tab:task1b}}
 \begin{tabular}{c c l l}
     \toprule
     Chapter & Sentence & Method A & Method B \\
@@ -161,6 +162,36 @@ Results for task 1 B (therapy chapter T1.1.1, ) can be seen in
 	 & 8 & P36.2 & A41.0, B95.6, G11.9 \\
 	 & 9 & G11.1 & B01.2†, G11.1, G11.9 \\
 	 & 10 & B01 & B01, B01.9, B01.8 \\
+	\addlinespace
+	T5.5 & 1 & F68.0, Z53.8, Z41.9 & R19.6 \\
+	 & 2 & U00-U49, Z31.5, Q95.4 & Z90.5, U00-U49, I25.2 \\
+	 & 3 & F32.8 & F33, F32.8 \\
+	 & 4 & F51.2 & R41.8, R41, E23 \\
+	 & 5 & F41.0, F32.3, F32.2 & F32.2, F32.3, F33.2 \\
+	 & 6 & F31.3 & F33.3, F33.2 \\
+	 & 7 & F31.8 & R70.0, F52, I51 \\
+	 & 8 & F31.4, F31.5 & F33.3 \\
+	 & 9 & Z34.9, Q97.1, F32.8 & Z34.9, O84.0 \\
+	 & 10 & Z29, Z29.9 & F33.3, F31.8, Z29 \\
+	 & 11 & O15.9 & Y4N \\
+	 & 12 & Z55.0 & R45.4, R19.6, R46.0 \\
+	 & 13 & P91.4, F20.4 & F60-F69 \\
+	\addlinespace
+	T8.9.2 & 1 & O42.1, O42.0 & O02.9, O02.8, G45.9 \\
+	 & 2 & O96, Z00.8, I63 & O96, I63.3 \\
+	 & 3 & G45.9, J46 & A50.0 \\
+	 & 4 & Z00, A52.2, I48 & Z00, Z92.2, Z03 \\
+	 & 5 & B20-B24 & I67, I68.0 *, I67.8 \\
+	\addlinespace
+	T24.2.1.7 & 1 & Z56.6 & F43 \\
+	 & 2 & K59.1, O34, O35 & I22 \\
+	 & 3 & I20 & I20.0, I20.1, I22 \\
+	 & 4 & P08.0, Y61.3, Y62.3 & Y61.3, Y62.3, Y60.3 \\
+	 & 5 & O63, P92.5, L21.1 & O63, R68.1, U00-U99 \\
+	 & 6 & J46, I20, I20.0 & I20.0, I44.1 \\
+	 & 7 & O42.1, O42.0 & F51.2, R96.1, F20.6 \\
+	 & 8 & O42.1, O42.0, Z39.0 & T80.1, T80.2, T80 \\
+	 & 9 & T32.3 & Z53 \\
 	\bottomrule
 \end{tabular}
 \end{table}
