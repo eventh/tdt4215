@@ -2,7 +2,8 @@
 \chapter{Method}
 %---------------
 \label{cha:method}
-This section describes methods used to solve the project tasks.
+This section describes methods used to solve the project tasks, including
+preprocessing and parsing of input files.
 
 
 \section{Preprocessing and parsing}
@@ -13,8 +14,12 @@ having to do parsing each time we want to run a task. We also store task
 results as JSON files.
 
 \subsection{ICD-10}
+ICD-10 were provided in an ownl2 file. We simply parsed it as a normal XML
+file, with the ElementTree module in the Python standard library.
 
 \subsection{ATC}
+Parsing of ATC is very staight forward. Each line represent a code, title
+pair where codes are not unique.
 
 \subsection{Therapy chapters}
 Therapy chapters from ``Norsk legemiddelhåndbok'' were provided as\\
@@ -48,13 +53,13 @@ and we added a few words ourself. A complete list of these stopwords can
 be found in \autoref{tab:stopwords} in \autoref{appendix}.
 
 
+\section{Task 1: Autocoding ICD-10}
+%----------------------------------
+Describe both methods...
+
 %Describe first methods which are used in several tasks, like Whoosh default
 %ranking method BM25F.
 %\url{http://packages.python.org/Whoosh/api/scoring.html#whoosh.scoring.BM27F}
-
-\section{Task 1: Autocoding ICD-10}
-%----------------------------------
-
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------
@@ -62,10 +67,68 @@ be found in \autoref{tab:stopwords} in \autoref{appendix}.
 
 \section{Task 3: Ranking using vector models}
 %--------------------------------------------
+\label{sec:task3}
+We decided to use a vector model for calculating the similarities between
+patient cases and therapy chapters. For each document, both patient cases
+and therapy chapters, we created a vector with all the terms and their
+TF-IDF value. These document-vectors gives us a pseudo term-document matrix,
+without having to create an actual matrix. As there were over 30,000 terms
+and almost 1000 documents, a full term-document matrix would have 30M cells.
+Our pseudo term-document only have 124,065 term-weight pairs.
+
+We have tested four different varieties of TF-IDF. For TF we tested log
+normalization (\( 1 + \log f_{i,j} \)) and raw frequency (\( f_{i,j} \)).
+For IDF we tested inverse frequency (\( \log(\frac{N}{n_{i}}) \)) and
+probabilistic inverse frequency (\( \log(\frac{N - n_{i}}{n_{i}}) \)).
+\begin{description}
+	\item[A] log normalization and inverse frequency as seen in \autoref{eq:tfidf}
+	\item[B] log normalization and probabilistic inverse frequency
+	\item[C] raw frequency and inverse frequency 
+	\item[D] raw frequency and probabilistic inverse frequency
+\end{description}
+Function \( f_{i,j} \) is the frequency of term \( i \) in document
+\( j \), \( N \) is the total number of documents, while \( n_{i} \) is the
+document frequency of term \( i \).
+\begin{equation} \label{eq:tfidf}
+	w_{i,j} =
+	\begin{cases}
+		(1 + \log f_{i,j}) \times \log(\frac{N}{n_{i}}) & \text{if } f_{i,j} > 0 \\
+		0												& \text{otherwise}
+	\end{cases}
+\end{equation}
+
+For each clinical note (which we have defined to be a patient case), we
+calculated the similarities with all therapy chapter vectors. The similarity is
+calculated as the \emph{cosine of the angle} between the two vectors, as seen
+in \autoref{eq:sim}, where \( d_{j} \) is the term vector of therapy chapter \( j \),
+\( q \) is a patient case vector and \( t \) is the total number of terms.
+\begin{align} \label{eq:sim}
+	sim(d_{j}, q) &= \frac{\vec{d_{j}} \bullet \vec{q}}{|\vec{d}| \times |\vec{q}|} \nonumber \\
+				  &= \frac{\sum_{i=1}^{t} w_{i,j} \times w_{i,q}}{\sqrt{\sum_{i=1}^{t} w_{i,j}^2} \times \sqrt{\sum_{i=1}^{t} w_{i,q}^2}}
+\end{align}
+We sorted results based on their similarity score (highest first), and
+returned the first 10 results.
 
 
 \section{Task 4: Evaluation}
 %---------------------------
+The problem with automatic evaluation is deciding if a retrieved document
+is relevant or not. As the queries in this task is patient cases, which is
+known beforehand, we can create a criteria for whether a document is relevant
+or not. We have simply taken all the words in the patient cases and created a
+list of those with medical importance, and if both the query and a retrieved
+document contains such a word we deem it relevant. These medical terms are
+listed in \autoref{tab:medicalterms} in \hyperref[appendix]{Appendix}.
+
+We have calculated average precision at ten documents seen (P@10) and
+R-precision for the four different TF-IDF definitions A to D as described in
+\autoref{sec:task3}.
+
+We have also calculated the Kendall tau coefficients for the four ranking
+methods. Kendall tau coefficient is a rank correlation metric for automatic
+comparing of two ranking methods to determine how differently one varies from
+another. It does not consider relevance of retrieved documents, only the
+relative ordering of two rankings.
 
 
 \section{Task 5: Exchange evaluations}
