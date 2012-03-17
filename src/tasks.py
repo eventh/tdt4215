@@ -301,8 +301,8 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b2': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC'),
-               '3': ('Clinical note', 'Result', 'Chapter'),
-               '4': ('Clinical note', 'Result', 'Chapter')}
+               '3': ('Case', 'Rank', 'Relevant chapter'),
+               '4': ('Case', 'Rank', 'Relevant chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
