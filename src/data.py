@@ -234,6 +234,7 @@ def populate_all():
     """Load all json files to populate all data objects."""
     for cls in (ATC, ICD, PatientCase, Therapy):
         now = time.time()
+        cls.populate()
         if not cls.ALL:
             print("Failed to populate %s from %s" % (cls.__name__, cls._JSON))
             sys.exit(1)

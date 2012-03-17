@@ -1,7 +1,8 @@
 %---------------
 \chapter{Result}
 %---------------
-This chapter presents our results from parsing input files and project tasks.
+This chapter presents our results from the different project tasks, and
+parsing input files.
 
 
 \section{Preprocessing and parsing}
@@ -88,10 +89,59 @@ takes to parse input data and loading JSON files in \autoref{tab:times}.
 \end{table}
 
 
-\section{Task 1 A}
-%-----------------
-Describe with tables etc short results, for example one single case.
-Also show ranking and matched terms and score for same case.
+\section{Task 1 A: Autocoding ICD-10}
+%------------------------------------
+Results for patient case 1, 4, 5, and 6 can be seen in \autoref{tab:task1a},
+which list relevant ICD-10 codes for each sentence in these patient cases.
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 1a, patient case 1, 4, 5 and 6\label{tab:task1a}}
+\begin{tabular}{c c l l}
+    \toprule
+    Clinical note & Sentence & Method A & Method B \\
+    \midrule
+	1 & 1 & E10-E14 & E12, E10-E14, E14 \\
+	 & 2 & E10-E14, E23.2 & E14 \\
+	 & 3 & Y61.3 & Y61.3, Y62.3, Y60.3 \\
+	 & 4 & Q02, P92.3 & P92.3 \\
+	 & 5 & Z97.2, Q26.3 & Z97.2 \\
+	 & 6 & . & E10-E14 \\
+	 & 7 & . & . \\
+	 & 8 & . & . \\
+	 & 9 & O36.6 & P03.5 \\
+	 & 10 & . & L85.3 \\
+	 & 11 & . & . \\
+	 & 12 & Z01.3 & Z34 \\
+	 & 13 & Z38.1, Z38.0, Z38.3 & Y87.2 \\
+	\addlinespace
+	4 & 1 & O96 & M08, O96, R06.2 \\
+	 & 2 & O33 & Q38.4 \\
+	 & 3 & P92.4 & Z58.6 \\
+	 & 4 & R96.0, N88.1, H91.2 & H91.2, M23.2 \\
+	 & 5 & I20 & I20.1, I20 \\
+	 & 6 & O84.0 & O84.0 \\
+	\addlinespace
+	5 & 1 & O26.2, N88.1 & O26.2, N91.1, N91.4 \\
+	 & 2 & R15, R19.5 & R19.5, R19.4 \\
+	 & 3 & Y65.0 & C77.8 \\
+	 & 4 & O46.9 & . \\
+	 & 5 & D83 & D83 \\
+	 & 6 & S63.1 & S60.0 \\
+	 & 7 & I84.3 & H60.0 \\
+	 & 8 & C86.6 & R85 \\
+	 & 9 & Q56.4, Q56, F70 & Q56, D57.3, M93.9 \\
+	 & 10 & D80.6 & D80.6 \\
+	 & 11 & Y61.4, Y62.4, Y60.4 & Y61.4, Y62.4, Y60.4 \\
+	\addlinespace
+	6 & 1 & R98, R59 & R98, R59.9, R59.0 \\
+	 & 2 & R76.2 & R76.2 \\
+	 & 3 & . & B90.9 \\
+	 & 4 & D83, U80.0 & U80 \\
+	 & 5 & E59, E58, E60 & U80 \\
+	 & 6 & Y84.4 & P24.3 \\
+	 & 7 & G81.0, G82.3, G82.0 & G81.0, G82.3, G82.0 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 
 \section{Task 1 B}
