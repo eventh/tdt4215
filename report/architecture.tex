@@ -48,7 +48,7 @@ The system consists of four Python modules: parse.py, data.py, index.py, and tas
 \end{figure}
 
 \paragraph{parse.py}
-This module preprocess and converts input files to the more preferred JSON format, which gives better readability and reduces complexity for the following modules, which now only have to support one type of file. The module supports multiple file formats as input, for further information see the input files section \ref{inputfiles}. The module is especially important for stripping out all the HTML tags from the therapy chapters. 
+This module preprocess and converts input files to the more preferred JSON format, which gives better readability and reduces complexity for the following modules, which now only have to support one type of file. The module supports multiple file formats as input, for further information see the input files \autoref{sec:inputfiles}. The module is especially important for stripping out all the HTML tags from the therapy chapters. 
 
 \paragraph{data.py}
 The JSON files created by the parse module, are used as input to the data module. The data module holds representation of all the data the system needs. As a basis for holding the data we have the BaseData class, which is inherited by more specific classes for the different representations. As the system loads a JSON file, it determines which representation that should be used, ICD, ATC, PatientCase or Therapy. 
@@ -62,12 +62,13 @@ This module contains the Command Line Interface (CLI), which makes the user able
 
 \section{Input files}
 %--------------------
-\label{inputfiles}
-The system needs to support multiple file formats to be able to preprocess and parse the files given in the assignment. The ICD-10 file is a .xml file, the ATC file is a .pro file, the Norsk Legemiddel Håndbok is HTML and the cases are .txt files. So the parse module has support for: xml, pro, htm and txt. 
+\label{sec:inputfiles}
+The system needs to support multiple file formats to be able to preprocess and parse the files given in the assignment. The ICD-10 file is a .xml file, the ATC file is a .pro file, the ``Norsk Legemiddel Håndbok'' is HTML and the cases are .txt files. So the parse module has support for: xml, pro, htm and txt. 
 
 
 \section{Output files}
 %---------------------
 The result of the system is always presented in the command line. To be able to store the results and present them in this report, it was necessary and beneficial for us to make an output feature. The system is able to print the results to a JSON- or LaTeX-file. 
+Storing results in JSON files are necessary to be able to use them for other tasks, such as task 6.
 
 
