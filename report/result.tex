@@ -3,10 +3,55 @@
 %---------------
 
 
-\section{Data inputs}
-%--------------------
-Describe with different statistics in tables results of our parsing,
-and how much data we inserted into whoosh index.
+\section{Preprocessing and parsing}
+%----------------------------------
+\autoref{tab:chapters} contains statistics showing the results of parsing
+``Norsk legemiddelhåndbok'' HTML files. The statistics lists the amount
+of chapters, in total and with text, for each of the different chapter
+types; from chapter to subsubsubsubchapter.
+%Total amount of lines '\n': 3034
+%Total amount of sentences '.': 24924
+
+Parsing of patient cases are summarized in \autoref{tab:cases}. Stopwords
+refers to stopwords in the case text which have been removed, terms is the
+number of unqiue terms (words) in the text.
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Norsk legemiddelhåndbok statistics\label{tab:chapters}}
+\begin{tabular}{l r r}
+    \toprule
+    Chapter type & Count & With text \\
+    \midrule
+	Chapter & 24 & 24 \\
+	Subchapter & 153 & 104 \\
+	Subsubchapter & 384 & 336 \\
+	Subsubsubchapter & 329 & 326 \\
+	Subsubsubsubchapter & 27 & 27 \\
+    \midrule
+	Total & 917 & 817 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Patient cases statistics\label{tab:cases}}
+\begin{tabular}{c r r r r}
+    \toprule
+	Case \# & Lines & Stopwords & Terms & Medical terms \\
+    \midrule
+	1 & 13 & 1 & 55 & 10 \\
+	2 & 22 & 1 & 169 & 24 \\
+	3 & 17 & 0 & 125 & 30 \\
+	4 & 6 & 1 & 49 & 4 \\
+	5 & 11 & 2 & 63 & 14 \\
+	6 & 7 & 0 & 41 & 9 \\
+	7 & 20 & 2 & 123 & 29 \\
+	8 & 12 & 0 & 90 & 19 \\
+    \midrule
+	Total & 108 & 7 & 715 & 125 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 
 \section{Tasks}
@@ -24,4 +69,13 @@ Also show ranking and matched terms and score for same case.
 
 \subsection{Task 3}
 
+\subsection{Task 4}
+
+\subsection{Task 5}
+
+\subsection{Task 6 A}
+
+\subsection{Task 6 B}
+
+\subsection{Task 7}
 

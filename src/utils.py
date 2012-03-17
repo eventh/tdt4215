@@ -8,7 +8,8 @@ Probably generating some useless tables etc.
 import sys
 from collections import Counter
 
-from data import ATC, ICD, Therapy, PatientCase, get_medical_terms
+import data
+from data import ATC, ICD, Therapy, PatientCase
 
 
 def calculate_chapter_statistics():
@@ -98,17 +99,19 @@ def create_latex_table(label, caption, rows, tabularx=False, filename=None):
 
 def calculate_case_statistics():
     """Calculate statistics of patient cases."""
-    terms = get_medical_terms()
-    print("Case | Terms | Medical terms")
+    words = data.get_stopwords()
+    terms = data.get_medical_terms()
+    print("Case | Lines | Stopwords | Terms | Medical terms")
     for code, case in sorted(PatientCase.ALL.items()):
-        print(' | '.join((code, str(len(case.vector)),
-                str(len([i for i in case.vector.keys() if i in terms])))))
+        print(' & '.join((code, str(len(case.text.split('\n'))),
+                str(len([i for i in case.text.split() if i in words])),
+                str(len(case.vector)),
+                str(len([i for i in case.vector.keys() if i in terms])))) + r' \\')
     print()
 
 
 def main(script):
     """Run all the functions in this module."""
-    import data
     data.main()  # Populate all objects
 
     # Generate a LaTeX table with all stopwords
@@ -116,7 +119,7 @@ def main(script):
                              6, 'stopwords', 'Norwegian stopwords')
 
     # Generate a LaTeX table with all medical terms
-    _generate_columned_table(sorted(get_medical_terms()),
+    _generate_columned_table(sorted(data.get_medical_terms()),
                              3, 'medicalterms', 'Medical terms')
 
     generate_cases_table()
