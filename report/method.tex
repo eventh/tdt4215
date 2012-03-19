@@ -9,8 +9,7 @@ preprocessing and parsing of input files.
 \section{Preprocessing and parsing}
 %----------------------------------
 We preprocess and parse input data files before we save them to disk as JSON
-files. This is to prevent being able to work on one task at a time, without
-having to do parsing each time we want to run a task. We also store task
+files. This is to allow us to run a task that might be dependent on other tasks, without having to re-run previous tasks. We also store task
 results as JSON files.
 
 \subsection{ICD-10}
@@ -51,7 +50,7 @@ created a text file for each case, and made sure they were in utf-8 charset.
 %------------------
 To reduce the number of terms in documents, and to remove words which provide
 little or no relevant information value, we removed stopwords.
-We used a list of Norwegian stopwords in both ``bokmål'' and ``nynorsk''
+We used a list of Norwegian stopwords in both Bokmål and Norwegian Nynorsk
 which we found
 online\footnote{Stopword source: \url{http://www.wisweb.no/999/147/33899-170.html}},
 and we added a few words ourself. A complete list of these stopwords can
@@ -60,7 +59,8 @@ be found in \autoref{tab:stopwords} in \autoref{appendix}.
 
 \section{Task 1: Autocoding ICD-10}
 %----------------------------------
-Describe both methods...
+
+
 
 %Describe first methods which are used in several tasks, like Whoosh default
 %ranking method BM25F.
