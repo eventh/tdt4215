@@ -26,79 +26,22 @@ from data import (ATC, ICD, Therapy, PatientCase,
 OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
 
 
-def task_1(obj):
+def task_1(case_or_chapter):
     """Task 1: Search through ICD-10 codes."""
-    ix = create_or_open_index(ICD)
-    qp = QueryParser('label', schema=ix.schema, group=OrGroup)
-
-    results = []
-    with ix.searcher() as searcher:
-        for line in obj.text.split('\n'):
-            q = qp.parse(line)
-            objs = searcher.search(q)
-
-            # Add up to 3 hits if they are higher than 9 and closer than 1.5
-            codes = []
-            for hit in objs:
-                if ((hit.score < 9 and codes) or
-                        (hit.score + 1.5 < objs[0].score) or
-                        (len(codes) > 2)):
-                    break
-                codes.append(hit['code'])
-
-            results.append(codes)
-    return results
+    return _index_searcher(ICD, 'label', case_or_chapter, 9, 1.5)
 
 
-def task_1_alt(obj):
+def task_1_alt(case_or_chapter):
     """Task 1 alternative: Search through ICD-10 codes."""
-    ix = create_or_open_index(ICD)
-    qp = QueryParser('description', schema=ix.schema, group=OrGroup)
-
-    results = []
-    with ix.searcher() as searcher:
-        for line in obj.text.split('\n'):
-            q = qp.parse(line)
-            objs = searcher.search(q)
-
-            # Add up to 3 hits if they are higher than 11 and closer than 3
-            codes = []
-            for hit in objs:
-                if ((hit.score < 11 and codes) or
-                        (hit.score + 3 < objs[0].score) or
-                        (len(codes) > 2)):
-                    break
-                codes.append(hit['code'])
-
-            results.append(codes)
-    return results
+    return _index_searcher(ICD, 'description', case_or_chapter, 11, 3)
 
 
-def task_2(obj):
+def task_2(case_or_chapter):
     """Task 2: Search through ATC codes."""
-    ix = create_or_open_index(ATC)
-    qp = QueryParser('title', schema=ix.schema, group=OrGroup)
-
-    results = []
-    with ix.searcher() as searcher:
-        for line in obj.text.split('\n'):
-            q = qp.parse(line)
-            objs = searcher.search(q)
-
-            # Add up to 3 hits if they are higher than 7 and closer than 2
-            codes = []
-            for hit in objs:
-                if ((hit.score < 7 and codes) or
-                        (hit.score + 2 < objs[0].score) or
-                        (len(codes) > 2)):
-                    break
-                codes.append(hit['code'])
-
-            results.append(codes)
-    return results
+    return _index_searcher(ATC, 'title', case_or_chapter, 7, 2)
 
 
-def task_3(case):
+def task_3(case, limit=10):
     """Task 3: Match patient cases to therapy chapters."""
     results = []
     for chapter in Therapy.ALL.values():
@@ -112,8 +55,8 @@ def task_3(case):
             AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
             results.append((chapter, AB_dotproduct / AB_magnitude))
 
-    results.sort(key=itemgetter(1), reverse=True)
-    return [[i] for i, v in results[:10]]
+    return [('%.2f' % s, str(c)) for c, s in
+            sorted(results, key=itemgetter(1), reverse=True)[:limit]]
 
 
 def task_4(case, medical=get_medical_terms()):
@@ -136,7 +79,7 @@ def task_5(case):
     pass
 
 
-def task_6a(case):
+def task_6a(case, limit=10):
     """Task 6 A: Rank relevant chapters with codes."""
     def load(cls, task, attr, code_cls, code_attr):
         if not hasattr(list(cls.ALL.values())[-1], attr):
@@ -166,8 +109,8 @@ def task_6a(case):
         chapters += list(ATC._chapter_map.get(code, []))
     scored = dict(Counter(chapters).items())
 
+    results = []
     for chapter, score in scored.items():
-
         # Score chapters with share parents higher
         shared = 0
         for i in range(score - 1):
@@ -178,23 +121,47 @@ def task_6a(case):
 
         # Score deeper chapters higher
         score += 2.0 - (chapter.count('.') / 2)
+        results.append((Therapy.ALL[chapter], score))
 
-        scored[chapter] = score
-
-    results = sorted(scored.items(), key=itemgetter(1), reverse=True)
-    return [[Therapy.ALL[chapter]] for chapter, score in results[:10]]
+    return [('%.2f' % s, str(c)) for c, s in
+            sorted(results, key=itemgetter(1), reverse=True)[:limit]]
 
 
-def task_6b(case):
+def task_6b(case, limit=10):
     """Task 6 B: Improve task 3 ranking."""
-    results1 = task_3(case)
-    results2 = task_6a(case)
-    print(results1, results2)
+    res3 = Counter({c: float(s) * 50 for s, c in task_3(case, 1000)})
+    res6 = Counter({c: float(s) for s, c in task_6a(case, 1000)})
+    overall = res3 + res6
+    return [('%.2f' % j, str(i)) for i, j in
+            sorted(overall.items(), key=itemgetter(1), reverse=True)[:limit]]
 
 
 def task_7(case):
     """Match results with gold standard."""
     pass
+
+
+def _index_searcher(cls, field, obj, lower=2, distance=2, max=2):
+    """Search a specific 'field' on the 'cls' index."""
+    ix = create_or_open_index(cls)
+    qp = QueryParser(field, schema=ix.schema, group=OrGroup)
+
+    results = []
+    with ix.searcher() as searcher:
+        for line in obj.text.split('\n'):
+            q = qp.parse(line)
+            objs = searcher.search(q)
+
+            codes = []
+            for hit in objs:
+                if ((hit.score < lower and codes) or
+                        (hit.score + distance < objs[0].score) or
+                        (len(codes) > max)):
+                    break
+                codes.append(hit['code'])
+
+            results.append(codes)
+    return results
 
 
 def _task_4_print_terms(results, medical=get_medical_terms()):
@@ -277,6 +244,8 @@ def _code_list_to_str(codes):
     """Convert a list of codes to a string of codes."""
     if not codes:
         return '.'
+    if isinstance(codes, str):
+        return codes
     if len(codes) > 6:
         codes = codes[:5] + ['...']
     return ', '.join(str(i) for i in codes)
@@ -289,7 +258,7 @@ def output_json(task, results, fields=None):
         output = OrderedDict()
         for case, lines in results.items():
             obj = OrderedDict()
-            for i, codes in enumerate(lines):
+            for i, codes in enumerate(lines, 1):
                 obj[i] = codes[:5]
             output[case] = obj
         json.dump(output, f, indent=4)
@@ -305,21 +274,23 @@ r'''\begin{table}[htbp] \footnotesize \center
 \caption{Task %s\label{tab:task%s}}
 \begin{tabular}{c c l}
     \toprule
-    %s & %s & %s \\
+    %s \\
     \midrule
-''' % (task, task, fields[0], fields[1], fields[2]))
+''' % (task, task, ' & '.join(fields)))
 
-        nr = ''
+        nr = 'first'
         for case_nr, lines in results.items():
-            if nr == 'add':
+            if nr != 'first':
                 f.write('\t\\addlinespace\n')
 
             nr = case_nr
-            for i, codes in enumerate(lines):
-                f.write('\t%s & %s & %s \\\\\n' % (
-                        nr, i + 1, _code_list_to_str(codes)))
+            for i, codes in enumerate(lines, 1):
+                if len(fields) == 4:
+                    args = (nr, str(i), codes[0], _code_list_to_str(codes[1]))
+                else:
+                    args = (nr, str(i), _code_list_to_str(codes))
+                f.write('    %s \\\\\n' % (' & '.join(args)))
                 nr = ''
-            nr = 'add'  # Hack
 
         f.write('\t\\bottomrule\n\\end{tabular}\n\\end{table}\n\n\n')
 
@@ -337,8 +308,12 @@ def output_print(task, results, fields):
         print("%s" % ' | '.join(fields) + " (task %s)" % task)
         print("--------------------------------------------")
 
-        for i, codes in enumerate(lines):
-            print("%s | %s | %s" % (case, i + 1, _code_list_to_str(codes)))
+        for i, codes in enumerate(lines, 1):
+            if len(fields) == 4:
+                args = (case, str(i), codes[0], _code_list_to_str(codes[1]))
+            else:
+                args = (case, str(i), _code_list_to_str(codes))
+            print(' | '.join(args))
 
         print()
 
@@ -366,10 +341,10 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '1b2': ('Chapter', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC'),
-               '3': ('Case', 'Rank', 'Relevant chapter'),
+               '3': ('Case', 'Rank','Score', 'Relevant chapter'),
                '4': ('Case', 'Rank', 'Relevant chapter'),
-               '6a': ('Case', 'Rank', 'Relevant chapter'),
-               '6b': ('Case', 'Rank', 'Relevant chapter')}
+               '6a': ('Case', 'Rank', 'Score', 'Relevant chapter'),
+               '6b': ('Case', 'Rank', 'Score', 'Relevant chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
