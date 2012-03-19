@@ -59,12 +59,30 @@ be found in \autoref{tab:stopwords} in \autoref{appendix}.
 
 \section{Task 1: Autocoding ICD-10}
 %----------------------------------
+The first task was to find the most relevant ICD-10 codes for each sentence in the cases. The ICD-10 codes have multiple fields that can be used to make this classification. We decided to solve task 1 in two different ways.
+\begin{enumerate}
+\item For each ICD-10 code, use only the label to find relevant codes for each sentence in the cases. 
+\item For each ICD-10 code, use all text  to find relevant codes for each sentence in the cases.
+\end{enumerate}
+We have decided to define all text as: label, terms, synonyms and inclusions.
 
+\paragraph{Scoring algorithm}
+To score and sort the results, we use the scoring module given by Whoosh\footnote{Scoring module: \url{http://packages.python.org/Whoosh/api/scoring.html\#whoosh.scoring}}. The module use the scoring algorithm BM25F to calculate the rankings of each code, and it returns a ranked list over relevant codes for each sentence.
 
+BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} is a bag-of-words retrieval function that ranks a set of documents based on the query terms appearing in a document. It calculates a score for each document based on the query. 
+
+\begin{equation} \label{eq:bm25f}
+	\text{score}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot (1 - b + b \cdot \frac{|D|}{\text{avgdl}})}
+\end{equation}
+
+\begin{equation} \label{eq:idf}
+	\text{IDF}(q_i) = \log \frac{N - n(q_i) + 0.5}{n(q_i) + 0.5}
+\end{equation}\\
+
+In our case the set of documents is all the ICD-10 codes. Each code gets a score, given by \autoref{eq:bm25f}, where D is ICD-10 code and Q is a sentence from the patient case. 
 
 %Describe first methods which are used in several tasks, like Whoosh default
 %ranking method BM25F.
-%\url{http://packages.python.org/Whoosh/api/scoring.html#whoosh.scoring.BM27F}
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------

@@ -92,6 +92,8 @@ takes to parse input data and loading JSON files in \autoref{tab:times}.
 
 \section{Task 1: Autocoding ICD-10}
 %----------------------------------
+A sentence can match zero to many ICD-10 codes, but only the most specific shall be claimed as a match and presented in the results. Whoosh gives us a ranked list of the codes, and from this ranking the most specific code is selected. If there is more than one ICD-10 code that scores high and the match scores of the top results are close, the top three results are presented. If there is no match, a . is printed in the result table. 
+
 Autocoding of ICD-10 codes against patient case 1, 4, 5, and 6 can be seen in
 \autoref{tab:task1a}, which list relevant ICD-10 codes for each sentence.
 \autoref{tab:task1b} list results for task 1 B (therapy chapter T1.1.1, T5.5,
