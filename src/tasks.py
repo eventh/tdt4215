@@ -138,11 +138,25 @@ def task_5(case):
 
 def task_6a(case):
     """Task 6 A: Rank relevant chapters with codes."""
+    def load(cls, task, attr, code_cls, code_attr):
+        if not hasattr(list(cls.ALL.values())[-1], attr):
+            if not hasattr(code_cls, code_attr):
+                setattr(code_cls, code_attr, defaultdict(set))
+            with open('etc/%s.json' % task, 'r') as f:
+                for cls_code, lines in json.load(f).items():
+                    codes = set()
+                    for i, line in sorted(lines.items()):
+                        codes |= set(line)
+                    setattr(cls.ALL[cls_code], attr, codes)
+
+                    for code in codes:
+                        getattr(code_cls, code_attr)[code].add(cls_code)
+
     # Load task 1 and 2 results
-    _task_6a_load(PatientCase, 'task1a', '_icd_codes', ICD, '_case_map')
-    _task_6a_load(PatientCase, 'task2a', '_atc_codes', ATC, '_case_map')
-    _task_6a_load(Therapy, 'task1b', '_icd_codes', ICD, '_chapter_map')
-    _task_6a_load(Therapy, 'task2b', '_atc_codes', ATC, '_chapter_map')
+    load(PatientCase, 'task1a', '_icd_codes', ICD, '_case_map')
+    load(PatientCase, 'task2a', '_atc_codes', ATC, '_case_map')
+    load(Therapy, 'task1b', '_icd_codes', ICD, '_chapter_map')
+    load(Therapy, 'task2b', '_atc_codes', ATC, '_chapter_map')
 
     # Get all relevant chapters, scored for each hit
     chapters = []
@@ -155,38 +169,27 @@ def task_6a(case):
     for chapter, score in scored.items():
 
         # Score chapters with share parents higher
-        #for i in range(score - 1):
-        #    parent = chapter.rsplit('.', i)[0]
-        #    score += len([c for c in scored.keys() if c.startswith(parent)])
+        shared = 0
+        for i in range(score - 1):
+            parent = chapter.rsplit('.', i)[0]
+            if [c for c in scored.keys() if c.startswith(parent)]:
+                shared += 1
+        score += shared / 2
 
         # Score deeper chapters higher
-        score += chapter.count('.')
+        score += 2.0 - (chapter.count('.') / 2)
 
         scored[chapter] = score
 
     results = sorted(scored.items(), key=itemgetter(1), reverse=True)
-    return [[chapter] for chapter, score in results[:10]]
-
-
-def _task_6a_load(cls, task, attr, code_cls, code_attr):
-    if not hasattr(list(cls.ALL.values())[-1], attr):
-        if not hasattr(code_cls, code_attr):
-            setattr(code_cls, code_attr, defaultdict(set))
-
-        with open('etc/%s.json' % task, 'r') as f:
-            for cls_code, lines in json.load(f).items():
-                codes = set()
-                for i, line in sorted(lines.items()):
-                    codes |= set(line)
-                setattr(cls.ALL[cls_code], attr, codes)
-
-                for code in codes:
-                    getattr(code_cls, code_attr)[code].add(cls_code)
+    return [[Therapy.ALL[chapter]] for chapter, score in results[:10]]
 
 
 def task_6b(case):
     """Task 6 B: Improve task 3 ranking."""
-    pass
+    results1 = task_3(case)
+    results2 = task_6a(case)
+    print(results1, results2)
 
 
 def task_7(case):
