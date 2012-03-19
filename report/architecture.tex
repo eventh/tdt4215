@@ -39,7 +39,7 @@ use Whoosh search functionality for the first two tasks.
 
 \section{Python modules}
 %-----------------------
-The system consists of four Python modules: parse.py, data.py, index.py, and tasks.py. Each module has its own features and tasks, and together they form the functional core of the system. An additional Python library, Whoosh, provides the core index and search functionality. In the following paragraphs each module is described in greater detail. For a full overview of the modules with their associated classes, attributes and methods, see the system's class diagram in \autoref{fig:classdiag}.
+The system consists of four Python modules: parse.py, data.py, index.py, and tasks.py. Each module has its own features and tasks, and together they form the functional core of the system. The external Python library, Whoosh, provides index and search functionality to the core. In the following paragraphs each module is described in greater detail. For a full overview of the modules with their associated classes, attributes and methods, see the system's class diagram in \autoref{fig:classdiag}.
 
 \begin{figure}[tbp]
 	\noindent\makebox[\textwidth]{%
@@ -63,7 +63,7 @@ This module contains the Command Line Interface (CLI), which makes the user able
 \section{Input files}
 %--------------------
 \label{sec:inputfiles}
-The system needs to support multiple file formats to be able to preprocess and parse the files given in the assignment. The ICD-10 file is a .xml file, the ATC file is a .pro file, the ``Norsk Legemiddel Håndbok'' is HTML and the cases are .txt files. So the parse module has support for: xml, pro, htm and txt. 
+The system needs to support multiple file formats to be able to preprocess and parse the files given in the assignment. The ICD-10 file is a .xml file, the ATC file is a .pro file, the ``Norsk Legemiddel Håndbok'' is HTML and the cases are .txt files. So the parse module has support for files ending with: .xml, .pro, .htm and .txt. 
 
 
 \section{Output files}
