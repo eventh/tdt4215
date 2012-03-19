@@ -14,7 +14,7 @@ import time
 import json
 from math import sqrt
 from operator import itemgetter
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict, Counter
 
 from whoosh.qparser import QueryParser, OrGroup
 
@@ -27,7 +27,7 @@ OUTPUT_FOLDER = 'output'  # Folder for storing json/tex files in.
 
 
 def task_1(obj):
-    """Task 1: Search through ICD10 codes."""
+    """Task 1: Search through ICD-10 codes."""
     ix = create_or_open_index(ICD)
     qp = QueryParser('label', schema=ix.schema, group=OrGroup)
 
@@ -51,7 +51,7 @@ def task_1(obj):
 
 
 def task_1_alt(obj):
-    """Task 1 alternative: Search through ICD10 codes."""
+    """Task 1 alternative: Search through ICD-10 codes."""
     ix = create_or_open_index(ICD)
     qp = QueryParser('description', schema=ix.schema, group=OrGroup)
 
@@ -123,13 +123,75 @@ def task_4(case, medical=get_medical_terms()):
     #    create_vectors(idf=_idf_prob, attr='vector2')  # B
     #    #create_vectors(tf=_tf_raw_freq, attr='vector2')  # C
     #    #create_vectors(tf=_tf_raw_freq, idf=_idf_prob, attr='vector3')  # D
-
     results = _task_4_search(case, medical)
     #results2 = _task_4_search(case, medical, 'vector3')
     #print("[%s]: Kendal Tau: %.3f" % (case.code, _kendall_tau(results, results2, 1000)))
     _task_4_print_terms(results)
     _task_4_precision(results)
     #_task_4_precision(results2)
+
+
+def task_5(case):
+    """Task 5: Exchange evaluations"""
+    pass
+
+
+def task_6a(case):
+    """Task 6 A: Rank relevant chapters with codes."""
+    # Load task 1 and 2 results
+    _task_6a_load(PatientCase, 'task1a', '_icd_codes', ICD, '_case_map')
+    _task_6a_load(PatientCase, 'task2a', '_atc_codes', ATC, '_case_map')
+    _task_6a_load(Therapy, 'task1b', '_icd_codes', ICD, '_chapter_map')
+    _task_6a_load(Therapy, 'task2b', '_atc_codes', ATC, '_chapter_map')
+
+    # Get all relevant chapters, scored for each hit
+    chapters = []
+    for code in case._icd_codes:
+        chapters += list(ICD._chapter_map.get(code, []))
+    for atc in case._atc_codes:
+        chapters += list(ATC._chapter_map.get(code, []))
+    scored = dict(Counter(chapters).items())
+
+    for chapter, score in scored.items():
+
+        # Score chapters with share parents higher
+        #for i in range(score - 1):
+        #    parent = chapter.rsplit('.', i)[0]
+        #    score += len([c for c in scored.keys() if c.startswith(parent)])
+
+        # Score deeper chapters higher
+        score += chapter.count('.')
+
+        scored[chapter] = score
+
+    results = sorted(scored.items(), key=itemgetter(1), reverse=True)
+    return [[chapter] for chapter, score in results[:10]]
+
+
+def _task_6a_load(cls, task, attr, code_cls, code_attr):
+    if not hasattr(list(cls.ALL.values())[-1], attr):
+        if not hasattr(code_cls, code_attr):
+            setattr(code_cls, code_attr, defaultdict(set))
+
+        with open('etc/%s.json' % task, 'r') as f:
+            for cls_code, lines in json.load(f).items():
+                codes = set()
+                for i, line in sorted(lines.items()):
+                    codes |= set(line)
+                setattr(cls.ALL[cls_code], attr, codes)
+
+                for code in codes:
+                    getattr(code_cls, code_attr)[code].add(cls_code)
+
+
+def task_6b(case):
+    """Task 6 B: Improve task 3 ranking."""
+    pass
+
+
+def task_7(case):
+    """Match results with gold standard."""
+    pass
 
 
 def _task_4_print_terms(results, medical=get_medical_terms()):
@@ -225,9 +287,9 @@ def output_json(task, results, fields=None):
         for case, lines in results.items():
             obj = OrderedDict()
             for i, codes in enumerate(lines):
-                obj[i] = _code_list_to_str(codes)
+                obj[i] = codes[:5]
             output[case] = obj
-        json.dump({'task%s' % task: output}, f, indent=4)
+        json.dump(output, f, indent=4)
     print("Dumped task %s results to '%s'" % (task, filename))
 
 
@@ -290,7 +352,7 @@ OUTPUTS = {'json': output_json, 'latex': output_latex,
 
 # Maps valid task names to functions which perform tasks
 CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2,
-              '3': task_3, '4': task_4}
+              '3': task_3, '4': task_4, '6a': task_6a, '6b': task_6b}
 CHAPTER_TASKS = {'1b': task_1, '1b2': task_1_alt, '2b': task_2}
 
 
@@ -302,7 +364,9 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC'),
                '3': ('Case', 'Rank', 'Relevant chapter'),
-               '4': ('Case', 'Rank', 'Relevant chapter')}
+               '4': ('Case', 'Rank', 'Relevant chapter'),
+               '6a': ('Case', 'Rank', 'Relevant chapter'),
+               '6b': ('Case', 'Rank', 'Relevant chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
