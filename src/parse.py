@@ -125,6 +125,8 @@ class NLHParser(HTMLParser):
             obj.text += data
             self.chapters.pop()
             if obj.code is not None:  # Broken html, T17.2 & T19.7
+                if obj.code[0] == '*':
+                    obj.code = obj.code[1:]
                 Therapy.ALL[obj.code] = obj
         else:
             if data and self.actions:

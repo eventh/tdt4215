@@ -81,6 +81,7 @@ def task_5(case):
 
 def task_6a(case, limit=10):
     """Task 6 A: Rank relevant chapters with codes."""
+    # Load task 1 and 2 results
     def load(cls, task, attr, code_cls, code_attr):
         if not hasattr(list(cls.ALL.values())[-1], attr):
             if not hasattr(code_cls, code_attr):
@@ -94,8 +95,6 @@ def task_6a(case, limit=10):
 
                     for code in codes:
                         getattr(code_cls, code_attr)[code].add(cls_code)
-
-    # Load task 1 and 2 results
     load(PatientCase, 'task1a', '_icd_codes', ICD, '_case_map')
     load(PatientCase, 'task2a', '_atc_codes', ATC, '_case_map')
     load(Therapy, 'task1b', '_icd_codes', ICD, '_chapter_map')
@@ -109,27 +108,36 @@ def task_6a(case, limit=10):
         chapters += list(ATC._chapter_map.get(code, []))
     scored = dict(Counter(chapters).items())
 
-    results = []
+    # Boost parents if they exists
     for chapter, score in scored.items():
-        # Score chapters with share parents higher
-        shared = 0
-        for i in range(score - 1):
-            parent = chapter.rsplit('.', i)[0]
-            if [c for c in scored.keys() if c.startswith(parent)]:
-                shared += 1
-        score += shared / 2
+        parent = chapter.rsplit('.', 1)[0]
+        if parent in scored:
+            scored[parent] += 1
 
-        # Score deeper chapters higher
-        score += 2.0 - (chapter.count('.') / 2)
-        results.append((Therapy.ALL[chapter], score))
+    # Merge chapters which share parents
+    def merge(chapters):
+        parent = lambda code: code.rsplit('.', 1)[0]
+        output = {}
+        while len(chapters):
+            chapter, score = chapters.popitem()
+            objs = [(c, s) for c, s in chapters.items() if
+                        parent(chapter) in (c, parent(c))]
+            if objs:
+                score += sum(j for i, j in objs) / len(objs)
+                for c, s in objs:
+                    del chapters[c]
+                chapter = parent(chapter)
+            output[chapter] = score
+        return output
+    scored = merge(scored)
 
-    return [('%.2f' % s, str(c)) for c, s in
-            sorted(results, key=itemgetter(1), reverse=True)[:limit]]
+    return [('%.2f' % s, str(Therapy.ALL[c])) for c, s in
+            sorted(scored.items(), key=itemgetter(1), reverse=True)[:limit]]
 
 
 def task_6b(case, limit=10):
     """Task 6 B: Improve task 3 ranking."""
-    res3 = Counter({c: float(s) * 50 for s, c in task_3(case, 1000)})
+    res3 = Counter({c: float(s) * 80 for s, c in task_3(case, 1000)})
     res6 = Counter({c: float(s) for s, c in task_6a(case, 1000)})
     overall = res3 + res6
     return [('%.2f' % j, str(i)) for i, j in
@@ -318,14 +326,8 @@ def output_print(task, results, fields):
         print()
 
 
-def output_none(*args, **vargs):
-    """Print nothing! WTF"""
-    pass
-
-
 # Maps valid output arguments to functions which generates output
-OUTPUTS = {'json': output_json, 'latex': output_latex,
-           '': output_print, 'none': output_none}
+OUTPUTS = {'json': output_json, 'latex': output_latex, '': output_print}
 
 
 # Maps valid task names to functions which perform tasks
