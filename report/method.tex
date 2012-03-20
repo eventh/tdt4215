@@ -133,6 +133,7 @@ returned the first 10 results.
 
 \section{Task 4: Evaluation}
 %---------------------------
+\label{sec:task4}
 The problem with automatic evaluation is deciding if a retrieved document
 is relevant or not. As the queries in this task is patient cases, which is
 known beforehand, we can create a criteria for whether a document is relevant
@@ -158,18 +159,29 @@ relative ordering of two rankings.
 
 \section{Task 6: Improving the ranking}
 %--------------------------------------
-For part A we process task 3 results by giving each patient case a list of
-relevant ICD-10 and ATC codes, and giving each code a list of relevant therapy
-chapters. Each patient case can have the same code listed several times, one
-for each line potentially. Each code can also have the same chapter listed
-several times. Therefor we created a list of the relevant therapy chapers for
-each patient case, with a weight for each with the number of times they are
-listed.
+For part A we process task 1 and 2 results by giving each patient case a list
+of relevant ICD-10 and ATC codes, and giving each ICD-10 and ATC code a list
+of relevant therapy chapters. Each patient case can have the same code listed
+several times, one for each line potentially. Each code can also have the same
+chapter listed several times. Therefor we created a list of the relevant
+therapy chapers for each patient case based on task 1 and 2 results, with a
+weight for each with the number of times they are listed. We use the
+hierarchical structure of the codes to add relevant chapters for parent codes,
+but with a smaller weight (0.1) for each chapter.
 
-We used the hierarchical structure of the codes to increase this weight by
-adding relevant chapters for parent codes, but with a smaller weight.
+We then used the hierarchical structure of therapy chapters to boost parent
+chapters if more than one if its sub-chapters were considered relevant. The
+parent chapter will get a weight of the max of its current weight and the
+weights if its children plus a bonus of the amount of children which are
+relevant.
 
+For part B we simply merge the results of task 3 and task 6 A where we
+multiply the score of task 3 results by a constant of 200. The constant was
+selected to give both set of results fairly equal weight, so that chapters
+in both sets gets the highest score.
 
+We will evaluate these results with the methods described in
+\autoref{sec:task4}: Precision at ten documents seen and R-precision.
 
 
 \section{Task 7: Gold standard}
