@@ -80,21 +80,22 @@ def task_5(case):
 
 
 def task_6a(case, limit=10):
-    """Task 6 A: Rank relevant chapters with codes."""
+    """Task 6 A: Rank relevant chapters by using task 1 and 2 results."""
     # Load task 1 and 2 results
     def load(cls, task, attr, code_cls, code_attr):
         if not hasattr(list(cls.ALL.values())[-1], attr):
             if not hasattr(code_cls, code_attr):
-                setattr(code_cls, code_attr, defaultdict(set))
+                setattr(code_cls, code_attr, defaultdict(list))
             with open('etc/%s.json' % task, 'r') as f:
                 for cls_code, lines in json.load(f).items():
-                    codes = set()
+                    codes = []
                     for i, line in sorted(lines.items()):
-                        codes |= set(line)
+                        codes += line
                     setattr(cls.ALL[cls_code], attr, codes)
 
                     for code in codes:
-                        getattr(code_cls, code_attr)[code].add(cls_code)
+                        getattr(code_cls, code_attr)[code].append(cls_code)
+
     load(PatientCase, 'task1a', '_icd_codes', ICD, '_case_map')
     load(PatientCase, 'task2a', '_atc_codes', ATC, '_case_map')
     load(Therapy, 'task1b', '_icd_codes', ICD, '_chapter_map')
@@ -103,33 +104,24 @@ def task_6a(case, limit=10):
     # Get all relevant chapters, scored for each hit
     chapters = []
     for code in case._icd_codes:
-        chapters += list(ICD._chapter_map.get(code, []))
+        chapters += ICD._chapter_map.get(code, [])
     for atc in case._atc_codes:
-        chapters += list(ATC._chapter_map.get(code, []))
+        chapters += ATC._chapter_map.get(code, [])
     scored = dict(Counter(chapters).items())
 
-    # Boost parents if they exists
-    for chapter, score in scored.items():
-        parent = chapter.rsplit('.', 1)[0]
-        if parent in scored:
-            scored[parent] += 1
-
-    # Merge chapters which share parents
-    def merge(chapters):
+    # Boost parents with max of children and parent ++
+    for depth in range(4, 0, -1):
         parent = lambda code: code.rsplit('.', 1)[0]
-        output = {}
-        while len(chapters):
-            chapter, score = chapters.popitem()
-            objs = [(c, s) for c, s in chapters.items() if
-                        parent(chapter) in (c, parent(c))]
-            if objs:
-                score += sum(j for i, j in objs) / len(objs)
-                for c, s in objs:
-                    del chapters[c]
-                chapter = parent(chapter)
-            output[chapter] = score
-        return output
-    scored = merge(scored)
+        updated = {}
+        for chapter, score in scored.items():
+            if chapter.count('.') == depth:
+                obj = parent(chapter)
+                similars = [s for c, s in scored.items()
+                                if obj == parent(c) and c.count('.') == depth]
+                if len(similars) > 1:
+                    updated[obj] = (0.5 + len(similars) / 10 +
+                                    max([scored.get(obj, 0)] + similars))
+        scored.update(updated)
 
     return [('%.2f' % s, str(Therapy.ALL[c])) for c, s in
             sorted(scored.items(), key=itemgetter(1), reverse=True)[:limit]]
