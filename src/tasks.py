@@ -129,7 +129,7 @@ def task_6a(case, limit=10):
 
 def task_6b(case, limit=10):
     """Task 6 B: Improve task 3 ranking."""
-    res3 = Counter({c: float(s) * 80 for s, c in task_3(case, 1000)})
+    res3 = Counter({c: float(s) * 100 for s, c in task_3(case, 1000)})
     res6 = Counter({c: float(s) for s, c in task_6a(case, 1000)})
     overall = res3 + res6
     return [('%.2f' % j, str(i)) for i, j in
