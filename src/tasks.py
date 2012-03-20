@@ -360,10 +360,8 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '2a': ('Clinical note', 'Sentence', 'ATC'),
                '2b': ('Chapter', 'Sentence', 'ATC'),
                '3': ('Case', 'Rank','Score', 'Relevant chapter'),
-               '4': ('Case', 'Rank', 'Relevant chapter'),
                '6a': ('Case', 'Rank', 'Score', 'Relevant chapter'),
-               '6b': ('Case', 'Rank', 'Score', 'Relevant chapter'),
-               '6c': ('Case', 'Rank', 'Score', 'Relevant chapter')}
+               '6b': ('Case', 'Rank', 'Score', 'Relevant chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):
