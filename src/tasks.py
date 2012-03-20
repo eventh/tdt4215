@@ -55,7 +55,7 @@ def task_3(case, limit=10):
             AB_magnitude = sqrt(A_magnitude) * sqrt(B_magnitude)
             results.append((chapter, AB_dotproduct / AB_magnitude))
 
-    return [('%.2f' % s, str(c)) for c, s in
+    return [('%.2f' % s, c) for c, s in
             sorted(results, key=itemgetter(1), reverse=True)[:limit]]
 
 
@@ -69,7 +69,7 @@ def task_4(case, medical=get_medical_terms()):
     results = _task_4_search(case, medical)
     #results2 = _task_4_search(case, medical, 'vector3')
     #print("[%s]: Kendal Tau: %.3f" % (case.code, _kendall_tau(results, results2, 1000)))
-    _task_4_print_terms(results)
+    #_task_4_print_terms(results)
     _task_4_precision(results)
     #_task_4_precision(results2)
 
@@ -134,7 +134,7 @@ def task_6a(case, limit=10):
                                     max([scored.get(obj, 0)] + similars))
         scored.update(updated)
 
-    return [('%.2f' % s, str(Therapy.ALL[c])) for c, s in
+    return [('%.2f' % s, Therapy.ALL[c]) for c, s in
             sorted(scored.items(), key=itemgetter(1), reverse=True)[:limit]]
 
 
@@ -143,8 +143,20 @@ def task_6b(case, limit=10):
     res3 = Counter({c: float(s) * 200 for s, c in task_3(case, 1000)})
     res6 = Counter({c: float(s) for s, c in task_6a(case, 1000)})
     overall = res3 + res6
-    return [('%.2f' % j, str(i)) for i, j in
+    return [('%.2f' % j, i) for i, j in
             sorted(overall.items(), key=itemgetter(1), reverse=True)[:limit]]
+
+
+def _task_6_eval(case, medical=get_medical_terms()):
+    """"Task 6 evaluation."""
+    relevant = lambda chapter: set(chapter.vector.keys()) & medical
+    #result_3 = [(c,) for s, c in task_3(case, 1000)]
+    result_6a = [(c, s, None, relevant(c)) for s, c in task_6a(case, 1000)]
+    result_6b = [(c, s, None, relevant(c)) for s, c in task_6b(case, 1000)]
+    #_task_4_precision(result_6a)
+    #_task_4_precision(result_6b)
+    print("[%s]: Kendal Tau: %.3f" % (case.code,
+            _kendall_tau(result_6a, result_6b, 1000)))
 
 
 def task_7(case):
@@ -255,10 +267,11 @@ def _code_list_to_str(codes):
     """Convert a list of codes to a string of codes."""
     if not codes:
         return '.'
-    if isinstance(codes, str):
-        return codes
-    if len(codes) > 6:
-        codes = codes[:5] + ['...']
+    try:
+        if len(codes) > 6:
+            codes = codes[:5] + ['...']
+    except TypeError:
+        return str(codes)
     return ', '.join(str(i) for i in codes)
 
 
@@ -334,8 +347,8 @@ OUTPUTS = {'json': output_json, 'latex': output_latex, '': output_print}
 
 
 # Maps valid task names to functions which perform tasks
-CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2,
-              '3': task_3, '4': task_4, '6a': task_6a, '6b': task_6b}
+CASE_TASKS = {'1a': task_1, '1a2': task_1_alt, '2a': task_2, '3': task_3,
+                '4': task_4, '6a': task_6a, '6b': task_6b, '6c': _task_6_eval}
 CHAPTER_TASKS = {'1b': task_1, '1b2': task_1_alt, '2b': task_2}
 
 
@@ -349,7 +362,8 @@ TASK_FIELDS = {'1a': ('Clinical note', 'Sentence', 'ICD-10'),
                '3': ('Case', 'Rank','Score', 'Relevant chapter'),
                '4': ('Case', 'Rank', 'Relevant chapter'),
                '6a': ('Case', 'Rank', 'Score', 'Relevant chapter'),
-               '6b': ('Case', 'Rank', 'Score', 'Relevant chapter')}
+               '6b': ('Case', 'Rank', 'Score', 'Relevant chapter'),
+               '6c': ('Case', 'Rank', 'Score', 'Relevant chapter')}
 
 
 def _perform_task(task_name, func, inputs, output, progress=False):

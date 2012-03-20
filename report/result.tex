@@ -510,7 +510,10 @@ results (task 6 A) can be seen in \autoref{tab:task6a1} and
 \autoref{tab:task6a2}. These results merged with task 3 results (task 6 B)
 is listed in \autoref{tab:task6b1} and \autoref{tab:task6b2}.
 
-TODO: add a table with compares precision/kendall tau for task 3, 6a and 6b.
+We have calculated precision at ten documents seen and R-precision for both
+task 6 A and B, which are listed in \autoref{tab:task6eval}.
+\autoref{tab:task6kendall} lists Kendall tau coefficients between the results
+of the three ranking methods.
 
 \begin{table}[htbp] \footnotesize \center
 \caption{Task 6 A results (part 1)\label{tab:task6a1}}
@@ -720,6 +723,47 @@ TODO: add a table with compares precision/kendall tau for task 3, 6a and 6b.
      & 8 & 10.80 & T1.12: Osteomyelitt \\
      & 9 & 10.50 & T1.13: Nekrotiserende fasciitt \\
      & 10 & 9.70 & T1.7: Seksuelt overførbare infeksjoner (Soi) \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 6 evaluations\label{tab:task6eval}}
+\begin{tabular}{c c c c c c c}
+    \toprule
+    & \multicolumn{3}{c}{Precision @ 10} & \multicolumn{3}{c}{R-precision} \\
+	\cmidrule(r){2-7}
+	Case & Task 3 & Task 6 A & \textbf{Task 6 B} & Task 3 & Task 6 A & \textbf{Task 6 B} \\
+    \midrule
+	1 & 60\% & 50\% & 70\% & 0.67 & 0.40 & 0.57 \\
+	2 & 50\% & 40\% & 70\% & 0.80 & 0.25 & 0.86 \\
+	3 & 90\% & 40\% & 100\% & 0.89 & 0.25 & 1.00 \\
+	4 & 70\% & 70\% & 90\% & 0.71 & 0.86 & 0.89 \\
+	5 & 80\% & 50\% & 90\% & 0.88 & 0.60 & 0.89 \\
+	6 & 80\% & 30\% & 90\% & 0.75 & 0.33 & 0.89 \\
+	7 & 100\% & 50\% & 900\% & 1.00 & 0.60 & 1.00 \\
+	8 & 90\% & 30\% & 80\% & 0.89 & 0.67 & 0.88 \\
+	Avg & 77.5\% & 45.0\% & \textbf{85.0\%} & 0.82 & 0.49 & \textbf{0.87} \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 6 Kendall tau coefficients\label{tab:task6kendall}}
+\begin{tabular}{c c c c}
+    \toprule
+	Case & Task 3 vs Task 6 A & Task 3 vs Task 6 B & Task 6 A vs Task 6 B \\
+    \midrule
+	1 & 0.725 & 0.795 & 0.810 \\
+	2 & 0.611 & 0.790 & 0.792 \\
+	3 & 0.606 & 0.818 & 0.733 \\
+	4 & 0.692 & 0.815 & 0.762 \\
+	5 & 0.688 & 0.832 & 0.813 \\
+	6 & 0.740 & 0.778 & 0.690 \\
+	7 & 0.627 & 0.827 & 0.716 \\
+	8 & 0.663 & 0.791 & 0.808 \\
+    \midrule
+	Avg & 0.669 & 0.806 & 0.765 \\
 	\bottomrule
 \end{tabular}
 \end{table}
