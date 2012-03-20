@@ -505,57 +505,62 @@ Kendall tau coefficients.
 
 \section{Task 6: Improving the ranking}
 %--------------------------------------
-Ranked lists of relevant therapy chapters for each patient case can be found
-in \autoref{tab:task6a1} and \autoref{tab:task6a2}.
+Results of ranking relevant therapy chapters with only using task 1 and 2
+results (task 6 A) can be seen in \autoref{tab:task6a1} and
+\autoref{tab:task6a2}. These results merged with task 3 results (task 6 B)
+is listed in \autoref{tab:task6b1} and \autoref{tab:task6b2}.
+
+TODO: add a table with compares precision/kendall tau for task 3, 6a and 6b.
+
 \begin{table}[htbp] \footnotesize \center
 \caption{Task 6 A results (part 1)\label{tab:task6a1}}
 \begin{tabular}{c c c l}
     \toprule
     Case & Rank & Score & Relevant chapter \\
     \midrule
-    1 & 1 & 11.00 & T3.1: Diabetes mellitus \\
-     & 2 & 9.90 & T24.2.1: Nukleærmedisinsk diagnostikk \\
-     & 3 & 8.00 & T24.2.1.10: Nyrescintigrafi \\
-     & 4 & 8.00 & T24.2.1.13: Skjelettscintigrafi \\
-     & 5 & 6.40 & T12: Mage-tarmsykdommer \\
-     & 6 & 6.00 & T12.2.2: Kronisk pankreatitt \\
-     & 7 & 6.00 & T24.2.1.19: Okkult tumor \\
-     & 8 & 5.70 & T12.10: Anorektale forstyrrelser \\
-     & 9 & 5.70 & T10: Nedre luftveissykdommer \\
-     & 10 & 5.00 & T12.4.2: Hemokromatose \\
+    1 & 1 & 22.90 & T3: Endokrine sykdommer \\
+     & 2 & 22.20 & T3.1: Diabetes mellitus \\
+     & 3 & 13.10 & T24.2: Nukleærmedisin \\
+     & 4 & 12.40 & T24.2.1: Nukleærmedisinsk diagnostikk \\
+     & 5 & 10.40 & T24.2.1.10: Nyrescintigrafi \\
+     & 6 & 10.40 & T24.2.1.13: Skjelettscintigrafi \\
+     & 7 & 8.20 & T3.2.1: Hypersekresjonstilstander \\
+     & 8 & 7.90 & T12: Mage-tarmsykdommer \\
+     & 9 & 7.80 & T24.2.1.19: Okkult tumor \\
+     & 10 & 7.50 & T3.2.1.3: Hypofysært betinget Cushings syndrom \\
 	\addlinespace
-    2 & 1 & 6.90 & T15.3: Amming \\
-     & 2 & 6.00 & T15.3.7: Liten melkeproduksjon \\
-     & 3 & 5.00 & T10.2.2: Kronisk obstruktiv lungesykdom (kols) \\
-     & 4 & 4.90 & T10: Nedre luftveissykdommer \\
-     & 5 & 4.00 & T15.3.1: Såre brystknopper \\
-     & 6 & 4.00 & T10.10: Cystisk fibrose \\
-     & 7 & 3.80 & T1: Infeksjonssykdommer \\
-     & 8 & 3.40 & T8: Hjerte- og karsykdommer \\
-     & 9 & 3.00 & T6.4.1: Essensiell tremor \\
-     & 10 & 3.00 & T15.3.6: Manglende eller svak utdrivningsrefleks \\
+    2 & 1 & 13.30 & T3.1: Diabetes mellitus \\
+     & 2 & 9.80 & T10: Nedre luftveissykdommer \\
+     & 3 & 9.70 & T1: Infeksjonssykdommer \\
+     & 4 & 8.80 & T15: Graviditet, fødsel og amming \\
+     & 5 & 8.80 & T24.2: Nukleærmedisin \\
+     & 6 & 8.50 & T10.2: Obstruktiv lungesykdom \\
+     & 7 & 8.30 & T17.1: Betennelsesaktige, revmatiske sykdommer \\
+     & 8 & 8.30 & T11: Sykdommer i øvre luftveier, øre, munn og svelg \\
+     & 9 & 8.20 & T14.1.1.1: Livmorinnlegg \\
+     & 10 & 8.10 & T15.3: Amming \\
 	\addlinespace
-    3 & 1 & 6.00 & T1: Infeksjonssykdommer \\
-     & 2 & 5.00 & T1.2: Influensa \\
-     & 3 & 2.60 & T14: Gynekologiske sykdommer og antikonsepsjon \\
-     & 4 & 2.60 & T15: Graviditet, fødsel og amming \\
-     & 5 & 2.50 & T7: Øyesykdommer \\
-     & 6 & 2.00 & T6.1.2: Feberkramper \\
-     & 7 & 2.00 & T4.5.1: Hemofili A \\% (faktor VIII mangel) og B (faktor IX mangel) \\
-     & 8 & 2.00 & T7.8.2: Glaukom med åpen kammervinkel \\
-     & 9 & 1.90 & T15.3: Amming \\
-     & 10 & 1.80 & T14.6: Infeksjoner i gynekologien \\
+    3 & 1 & 9.80 & T1: Infeksjonssykdommer \\
+     & 2 & 9.60 & T6: Nevrologiske sykdommer \\
+     & 3 & 8.90 & T6.1: Epilepsi, feberkramper \\
+     & 4 & 8.30 & T1.2: Influensa \\
+     & 5 & 8.20 & T6.1.2: Feberkramper \\
+     & 6 & 6.30 & T17: Muskel- og skjelettsykdommer \\
+     & 7 & 6.10 & T3.1: Diabetes mellitus \\
+     & 8 & 5.80 & T24.2: Nukleærmedisin \\
+     & 9 & 5.60 & T17.1: Betennelsesaktige, revmatiske sykdommer \\
+     & 10 & 5.10 & T24.2.1: Nukleærmedisinsk diagnostikk \\
 	\addlinespace
-    4 & 1 & 5.00 & T8.3.1: Stabil koronarsykdom (stabil angina pectoris) \\
-     & 2 & 3.80 & T15.3: Amming \\
-     & 3 & 3.00 & T15.3.7: Liten melkeproduksjon \\
-     & 4 & 3.00 & T8.3.2.2: Hjerteinfarkt med ST-elevasjon \\
-     & 5 & 2.90 & T19: Feber, kvalme, svimmelhet m.m. \\
-     & 6 & 2.80 & T14: Gynekologiske sykdommer og antikonsepsjon \\
-     & 7 & 2.60 & T1: Infeksjonssykdommer \\
-     & 8 & 2.50 & T8: Hjerte- og karsykdommer \\
-     & 9 & 2.00 & T1.1.7: Kikhoste \\
-     & 10 & 2.00 & T15.3.1: Såre brystknopper \\
+    4 & 1 & 16.40 & T8: Hjerte- og karsykdommer \\
+     & 2 & 15.30 & T8.3: Koronarsykdom \\
+     & 3 & 14.60 & T8.3.1: Stabil koronarsykdom (stabil angina pectoris) \\
+     & 4 & 11.30 & T8.3.2: Ustabil koronarsykdom (ustabil angina) \\%, hjerteinfarkt uten ST-elevasjon, hjerteinfarkt med ST-elevasjon) \\
+     & 5 & 10.60 & T8.3.2.2: Hjerteinfarkt med ST-elevasjon \\
+     & 6 & 6.90 & T24.2: Nukleærmedisin \\
+     & 7 & 6.20 & T24.2.1: Nukleærmedisinsk diagnostikk \\
+     & 8 & 5.70 & T3.1: Diabetes mellitus \\
+     & 9 & 5.60 & T1: Infeksjonssykdommer \\
+     & 10 & 5.30 & T17.1: Betennelsesaktige, revmatiske sykdommer \\
 	\bottomrule
 \end{tabular}
 \end{table}
@@ -566,49 +571,49 @@ in \autoref{tab:task6a1} and \autoref{tab:task6a2}.
     \toprule
     Case & Rank & Score & Relevant chapter \\
     \midrule
-    5 & 1 & 5.50 & T1: Infeksjonssykdommer \\
-     & 2 & 4.80 & T1.6: Infeksiøse enteritter \\
-     & 3 & 4.00 & T1.6.2: Bakterielle, inflammatoriske enteritter \\
-     & 4 & 3.60 & T12: Mage-tarmsykdommer \\
-     & 5 & 3.00 & T12.5.1: Gallestein \\
-     & 6 & 3.00 & T1.6.2.1: Clostridium difficile enterokolitt \\
-     & 7 & 2.80 & T1.6.4: Protozoenteritter \\
-     & 8 & 2.80 & T12.10: Anorektale forstyrrelser \\
-     & 9 & 2.70 & T1.14: Innvollsmark \\
-     & 10 & 2.00 & T7.5.3: Spesielle uveitter \\
+    5 & 1 & 10.50 & T1: Infeksjonssykdommer \\
+     & 2 & 9.00 & T1.6: Infeksiøse enteritter \\
+     & 3 & 8.80 & T24.2: Nukleærmedisin \\
+     & 4 & 8.20 & T1.6.2: Bakterielle, inflammatoriske enteritter \\
+     & 5 & 8.10 & T24.2.1: Nukleærmedisinsk diagnostikk \\
+     & 6 & 8.10 & T12: Mage-tarmsykdommer \\
+     & 7 & 7.20 & T1.6.2.4: Shigellose \\
+     & 8 & 7.00 & T23.3.1.1: Hypovolemisk sjokk \\
+     & 9 & 6.60 & T12.10: Anorektale forstyrrelser \\
+     & 10 & 6.50 & T6: Nevrologiske sykdommer \\
 	\addlinespace
-    6 & 1 & 3.50 & T1: Infeksjonssykdommer \\
-     & 2 & 2.70 & T1.7: Seksuelt overførbare infeksjoner (Soi) \\
-     & 3 & 2.00 & T1.10: Akutt bakteriell meningitt \\
-     & 4 & 2.00 & T1.7.6: Ulcus molle \\
-     & 5 & 2.00 & T23.6: Instillasjon i urinblæren \\
-     & 6 & 2.00 & T10.3.4: Pneumonier, bakterielle og med ukjent etiologi \\
-     & 7 & 1.70 & T11.4: Tenner, munnsykdommer og plager \\
-     & 8 & 1.00 & T1.7.9: Herpes genitalis \\
-     & 9 & 1.00 & T16.5.2.2: Herpes simplex \\
-     & 10 & 1.00 & T20.2.3.1: Praktisk gjennomføring av smertebehandling \\% hos pasienter med kort livsprognose \\
+    6 & 1 & 4.60 & T7.9: Øyeskader \\
+     & 2 & 4.10 & T1: Infeksjonssykdommer \\
+     & 3 & 3.90 & T7.9.2: Perforerende skader (øye) \\
+     & 4 & 3.60 & T10: Nedre luftveissykdommer \\
+     & 5 & 3.50 & T11.4: Tenner, munnsykdommer og plager \\
+     & 6 & 2.90 & T1.7: Seksuelt overførbare infeksjoner (Soi) \\
+     & 7 & 2.80 & T10.3: Akutte infeksjoner i nedre luftveier og lunger \\
+     & 8 & 2.70 & T11.4.7: Akutt nekrotiserende gingivitt \\
+     & 9 & 2.40 & T4.4.1: Defekt blodplatefunksjon \\
+     & 10 & 2.40 & T16.9: Kutane bivirkninger av systemiske legemidler \\
 	\addlinespace
-    7 & 1 & 5.80 & T24.2.2: Nukleærmedisinsk behandling \\
-     & 2 & 5.40 & T15: Graviditet, fødsel og amming \\
-     & 3 & 5.00 & T24.2.2.1: Radiojodbehandling av hypertyreose \\
-     & 4 & 4.70 & T15.1: Graviditet \\
-     & 5 & 4.50 & T14: Gynekologiske sykdommer og antikonsepsjon \\
-     & 6 & 4.50 & T7: Øyesykdommer \\
-     & 7 & 4.00 & T15.1.3: Bekkenløsning \\
-     & 8 & 3.80 & T15.3: Amming \\
-     & 9 & 3.80 & T7.9: Øyeskader \\
-     & 10 & 3.80 & T7.7: Netthinne, årehinne og synsnerve \\
+    7 & 1 & 15.30 & T8.3.2.2: Hjerteinfarkt med ST-elevasjon \\
+     & 2 & 11.80 & T21.1: Lindring av smerter og andre plager i palliativ \\
+     & 3 & 11.30 & T22.4: Postoperativ fase \\
+     & 4 & 11.10 & T21.1.1: Smerter \\
+     & 5 & 10.50 & T22.4.1: Postoperativ smertebehandling \\
+     & 6 & 10.30 & T21.1.1.1: Nociseptive smerter \\
+     & 7 & 9.70 & T22.4.1.3: Opioider i postoperativ smertebehandling \\
+     & 8 & 9.10 & T20: Smerter \\
+     & 9 & 8.50 & T15: Graviditet, fødsel og amming \\
+     & 10 & 8.40 & T20.2: Akutte og kroniske smerter \\
 	\addlinespace
-    8 & 1 & 3.90 & T1: Infeksjonssykdommer \\
-     & 2 & 2.80 & T1.7: Seksuelt overførbare infeksjoner (Soi) \\
-     & 3 & 2.70 & T12.5: Galleveissykdommer \\
-     & 4 & 2.50 & T11.4: Tenner, munnsykdommer og plager \\
-     & 5 & 2.00 & T12.5.4: Akutt kolangitt \\
-     & 6 & 2.00 & T1.7.6: Ulcus molle \\
-     & 7 & 2.00 & T1.6.2.1: Clostridium difficile enterokolitt \\
-     & 8 & 2.00 & T15.3.3: Brystabscess \\
-     & 9 & 2.00 & T23.6: Instillasjon i urinblæren \\
-     & 10 & 1.70 & T11.4.11: Orale soppinfeksjoner \\
+    8 & 1 & 11.30 & T1: Infeksjonssykdommer \\
+     & 2 & 9.60 & T1.5: Urinveisinfeksjoner \\
+     & 3 & 9.30 & T24.2: Nukleærmedisin \\
+     & 4 & 8.90 & T1.5.1: Nedre urinveisinfeksjon \\
+     & 5 & 8.60 & T24.2.1: Nukleærmedisinsk diagnostikk \\
+     & 6 & 7.30 & T12: Mage-tarmsykdommer \\
+     & 7 & 7.00 & T24.2.1.16: Okkult bakteriell infeksjon. Inflammatorisk tarm \\
+     & 8 & 6.90 & T15: Graviditet, fødsel og amming \\
+     & 9 & 6.60 & T12.5: Galleveissykdommer \\
+     & 10 & 6.20 & T15.3: Amming \\
 	\bottomrule
 \end{tabular}
 \end{table}

@@ -81,8 +81,6 @@ BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} i
 
 In our case the set of documents is all the ICD-10 codes. Each code gets a score, given by \autoref{eq:bm25f}, where D is ICD-10 code and Q is a sentence from the patient case. 
 
-%Describe first methods which are used in several tasks, like Whoosh default
-%ranking method BM25F.
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------
@@ -160,6 +158,18 @@ relative ordering of two rankings.
 
 \section{Task 6: Improving the ranking}
 %--------------------------------------
+For part A we process task 3 results by giving each patient case a list of
+relevant ICD-10 and ATC codes, and giving each code a list of relevant therapy
+chapters. Each patient case can have the same code listed several times, one
+for each line potentially. Each code can also have the same chapter listed
+several times. Therefor we created a list of the relevant therapy chapers for
+each patient case, with a weight for each with the number of times they are
+listed.
+
+We used the hierarchical structure of the codes to increase this weight by
+adding relevant chapters for parent codes, but with a smaller weight.
+
+
 
 
 \section{Task 7: Gold standard}

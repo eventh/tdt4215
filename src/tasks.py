@@ -101,13 +101,24 @@ def task_6a(case, limit=10):
     load(Therapy, 'task1b', '_icd_codes', ICD, '_chapter_map')
     load(Therapy, 'task2b', '_atc_codes', ATC, '_chapter_map')
 
-    # Get all relevant chapters, scored for each hit
-    chapters = []
+    # Get all relevant chapters, scored for each hit, also get parent codes
+    counter = Counter()
+    def count_chapter(code, cls, weight):
+            codes = cls._chapter_map.get(code, [])
+            counter.update({i: weight * codes.count(i) for i in set(codes)})
+
     for code in case._icd_codes:
-        chapters += ICD._chapter_map.get(code, [])
-    for atc in case._atc_codes:
-        chapters += ATC._chapter_map.get(code, [])
-    scored = dict(Counter(chapters).items())
+        count_chapter(code, ICD, 1)
+        for other in [i.code for i in ICD.ALL.values() if ICD.ALL[code].parent
+                        and i.code.startswith(ICD.ALL[code].parent)]:
+            count_chapter(other, ICD, 0.1)
+
+    for code in case._atc_codes:
+        count_chapter(code, ATC, 1)
+        for other in [i.code for i in ATC.ALL if code.startswith(i.code)]:
+            count_chapter(other, ATC, 0.1)
+
+    scored = dict(counter.items())
 
     # Boost parents with max of children and parent ++
     for depth in range(4, 0, -1):
@@ -116,8 +127,8 @@ def task_6a(case, limit=10):
         for chapter, score in scored.items():
             if chapter.count('.') == depth:
                 obj = parent(chapter)
-                similars = [s for c, s in scored.items()
-                                if obj == parent(c) and c.count('.') == depth]
+                similars = [s for c, s in scored.items() if s > 0.3 and
+                                obj == parent(c) and c.count('.') == depth]
                 if len(similars) > 1:
                     updated[obj] = (0.5 + len(similars) / 10 +
                                     max([scored.get(obj, 0)] + similars))

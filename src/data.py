@@ -139,7 +139,7 @@ class ICD(BaseData):
         for i in cls._lists + cls._fields:
             if i in values:
                 setattr(obj, i, values[i])
-        ICD.ALL[values['short']] = obj
+        ICD.ALL[obj.code] = obj
         return obj
 
 
