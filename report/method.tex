@@ -70,7 +70,7 @@ We have defined all text as: label, terms, synonyms and inclusions.
 \paragraph{Scoring algorithm}
 To score and sort the results, we use the default scoring module given by Whoosh\footnote{Scoring module: \url{http://packages.python.org/Whoosh/api/scoring.html\#whoosh.scoring}}. The module use the scoring algorithm BM25F to calculate the rankings of each code, and it returns a ranked list over relevant codes for each sentence.
 
-BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} is a bag-of-words retrieval function that ranks a set of documents based on the query terms appearing in a document. It calculates a score for each document based on the query. 
+BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} is a retrieval function that computes the best match for a given query over a set of documents.  For each document in the set there is calculated a score based on inverse document frequency (IDF), term frequency(TF) and document length normalization. The terms are taken for an query \(Q\), which can consist of several query terms \(q_{1}, ... , q_{n}\). See \autoref{eq:bm25f} for BM25F's mathematical equation.
 
 \begin{equation} \label{eq:bm25f}
 	\text{score}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot (1 - b + b \cdot \frac{|D|}{\text{avgdl}})}
@@ -79,9 +79,15 @@ BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} i
 \begin{equation} \label{eq:idf}
 	\text{IDF}(q_i) = \log \frac{N - n(q_i) + 0.5}{n(q_i) + 0.5}
 \end{equation}\\
+\begin{itemize}
+\item Where \( f(q_i, D) \)  is \(q_{i}'s\) term frequency in the document \(D\).
+\item \(k_{1}\) and \(b\) free parameters.
+\item \(|D|\) the length of document \(D\) in words.
+\item \(avgdl\) the average document length.
+\item \(N\) total number of documents in the set and \(n(q_{i})\) the number of documents containing \(q_{i}\).
 
-In our case the set of documents is all the ICD-10 codes. Each code gets a score, given by \autoref{eq:bm25f}, where D is ICD-10 code and Q is a sentence from the patient case. 
-
+\end{itemize}
+In our case the set of documents is the set of ICD-10 codes, each code representing a document. For each patient case, there is several sentences. A sentence forms one query, where the words in the sentence are classified as terms. By using BM25F, we get a ranked list of best matching ICD-10 codes to the sentence, and thereby an indication of what is wrong with the patient. 
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------
