@@ -3,8 +3,10 @@
 %---------------
 \label{cha:method}
 This section describes methods used to solve the tasks of the assignment, including
-preprocessing and parsing of input files.
+preprocessing and parsing of input files. The first two tasks uses a probablistic method to find the most relevant results.
 
+In task 3 a better, but more complex solution, is applied; the use of vector models to determine the proximity in addition to the probablistic models. 
+TODO: write some sentences about all tasks
 
 \section{Preprocessing and parsing}
 %----------------------------------
@@ -60,17 +62,19 @@ be found in \autoref{tab:stopwords} in \autoref{appendix}.
 \section{Task 1: Autocoding ICD-10}
 %----------------------------------
 \label{sec:task1}
-The first task was to find the most relevant ICD-10 codes for each sentence in the cases. The ICD-10 codes have multiple fields that can be used to make this classification. We decided to solve task 1 in two different ways.
+The first task was to find the most relevant ICD-10 code and therapy chapter for each sentence in the cases. The ICD-10 codes have multiple fields that can be used to make this classification. We decided to solve task 1 in two different ways.
 \begin{description}
 	\item[Method A] For each ICD-10 code, use only the label to find relevant codes for each sentence in the cases. 
 	\item[Method B] For each ICD-10 code, use all text to find relevant codes for each sentence in the cases.
 \end{description}
 We have defined all text as: label, terms, synonyms and inclusions.
+% ha med?
+% A therapy chapter can be a chapter, a sub or subsub chapter. 
 
 \paragraph{Scoring algorithm}
 To score and sort the results, we use the default scoring module given by Whoosh\footnote{Scoring module: \url{http://packages.python.org/Whoosh/api/scoring.html\#whoosh.scoring}}. The module use the scoring algorithm BM25F to calculate the rankings of each code, and it returns a ranked list over relevant codes for each sentence.
 
-BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} is a retrieval function that computes the best match for a given query over a set of documents.  For each document in the set there is calculated a score based on inverse document frequency (IDF), term frequency(TF) and document length normalization. The terms are taken for an query \(Q\), which can consist of several query terms \(q_{1}, ... , q_{n}\). See \autoref{eq:bm25f} for BM25F's mathematical equation.
+BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} is a retrieval function that computes the best match for a given query over a set of documents.  For each document in the set there is calculated a score based on inverse document frequency (IDF), term frequency(TF) and document length normalization. The terms are taken from an query \(Q\), which can consist of several query terms \(q_{1}, ... , q_{n}\). See \autoref{eq:bm25f} for BM25F's mathematical equation.
 
 \begin{equation} \label{eq:bm25f}
 	\text{score}(D,Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot (1 - b + b \cdot \frac{|D|}{\text{avgdl}})}
@@ -85,13 +89,18 @@ BM25F\footnote{BM25F algorithm: \url{http://en.wikipedia.org/wiki/Okapi_BM25}} i
 \item \(|D|\) the length of document \(D\) in words.
 \item \(avgdl\) the average document length.
 \item \(N\) total number of documents in the set and \(n(q_{i})\) the number of documents containing \(q_{i}\).
-
 \end{itemize}
-In our case the set of documents is the set of ICD-10 codes, each code representing a document. For each patient case, there is several sentences. A sentence forms one query, where the words in the sentence are classified as terms. By using BM25F, we get a ranked list of best matching ICD-10 codes to the sentence, and thereby an indication of what is wrong with the patient. 
+Applied to our task, the function uses the following as set of documents:
+\begin{description}
+\item[1a.] The ICD-10 codes, each code representing a document.
+\item[1b.] The therapy chapters, each chapter representing a document. 
+\end{description}
+ For each patient case, there are several sentences. A sentence forms one query, where the words in the sentence are classified as terms. By using BM25F, we get a ranked list of best matching documents to the sentence, and thereby an indication of what is wrong with the patient. 
+
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------
-
+The second task is very similar to the first, the only difference is that the set of documents are ATC-classifications. As mentioned, each classification consist of a code and a title. The title is the field that we use to find the most relevant classification as descibed in task 1. The fact that we convert all input files to JSON, make our use of BM25F generalized and applicable to all kind of document sets.
 
 \section{Task 3: Ranking using vector models}
 %--------------------------------------------
