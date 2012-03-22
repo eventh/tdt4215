@@ -6,6 +6,16 @@
 \section{Limitations}
 One obvious limitation to the assignment was that only approved libraries could be used to solve the tasks. This point was up for negotiation, and other libraries could be used if approved by the staff. The students would start out by looking at the limited set of choices, and most probably choose one of the suggested. This limitation might have served a good cause; leading the students in to well know libraries that were sure to work for the given tasks.
 
+\section{Efficient and precise results}
+The goal of the system was to provide clinicians with an efficient and precise search interface, to help them make therapy recommendations. The correctness of these recommendations is crucial for the system to be trusted by the users.
+
+To make the system fulfill the necessary properties, we had to make some fundamental architectural and design decisions.
+High performance had to be prioritized to make the system efficient. To achieve this we use the fast and lightweight programming language Python, and we convert all the input files to JSON format. By having files stored as JSON, the loading time is substantially reduced.
+
+As correctness is the most crucial property, we have devoted much of our time to tweak algorithms and manually check that the results corresponds with the patient cases. For the two first tasks, we use BM25F, which is a well known algorithm that uses probability to find the most relevant results. In task 3 we make use of a vector model to determine the proximity of the terms to calculate the relevance. In task 6 the probabilistic model and vector model from the prior tasks create a new function to find the most relevant results.    
+
+By aggregating a retrieval function based on the algorithms used in task 1,2 and 3, we end up with a system that comply with the initial requirements; efficient and precise. Essential mathematical ranking techniques like term frequency, inverse document frequency and term proximity are core parts. These are sound and well known techniques, and used correctly they give our system a very good therapy recommendation capability. 
+
 \section{Potential improvements}
 
 
