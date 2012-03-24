@@ -19,7 +19,7 @@ from collections import OrderedDict, defaultdict, Counter
 from whoosh.qparser import QueryParser, OrGroup
 
 from index import create_or_open_index, get_empty_indices
-from data import (ATC, ICD, Therapy, PatientCase,
+from data import (ATC, ICD, Therapy, PatientCase, BaseData,
                   populate_all, get_medical_terms)
 
 
@@ -70,13 +70,19 @@ def task_4(case, medical=get_medical_terms()):
     #results2 = _task_4_search(case, medical, 'vector3')
     #print("[%s]: Kendal Tau: %.3f" % (case.code, _kendall_tau(results, results2, 1000)))
     #_task_4_print_terms(results)
-    _task_4_precision(results)
-    #_task_4_precision(results2)
+    _precision(results)
+    #_precision(results2)
 
 
-def task_5(case):
+def task_5(medical=get_medical_terms()):
     """Task 5: Exchange evaluations"""
-    pass
+    relevant = lambda chapter: set(chapter.vector.keys()) & medical
+    with open('etc/groups.json', 'r') as f:
+        groups = json.load(f)
+    values = groups['Group 3']
+    for case_code, results in sorted(values.items(), key=itemgetter(0)):
+        filtered = [Therapy.ALL[i] for i in results if i in Therapy.ALL]
+        _precision([(c, None, None, relevant(c)) for c in filtered])
 
 
 def task_6a(case, limit=10):
@@ -153,8 +159,8 @@ def _task_6_eval(case, medical=get_medical_terms()):
     #result_3 = [(c,) for s, c in task_3(case, 1000)]
     result_6a = [(c, s, None, relevant(c)) for s, c in task_6a(case, 1000)]
     result_6b = [(c, s, None, relevant(c)) for s, c in task_6b(case, 1000)]
-    #_task_4_precision(result_6a)
-    #_task_4_precision(result_6b)
+    #_precision(result_6a)
+    #_precision(result_6b)
     print("[%s]: Kendal Tau: %.3f" % (case.code,
             _kendall_tau(result_6a, result_6b, 1000)))
 
@@ -225,7 +231,7 @@ def _task_4_search(case, medical, attr='vector'):
     return sorted(results, key=itemgetter(1), reverse=True)
 
 
-def _task_4_precision(results, count=10, hack=[]):
+def _precision(results, count=10, hack=[]):
     """Calculate precision at 'count' and R-precision."""
     rel_count = sum([0] + [1 for r in results[:count] if r[3]])
     r_precision = sum([0] + [1 for r in results[:rel_count] if r[3]])
@@ -281,6 +287,11 @@ def output_json(task, results, fields=None):
     with open(filename, 'w') as f:
         output = OrderedDict()
         for case, lines in results.items():
+            # Hack for tasks which returns score, object pairs
+            if lines[0] and isinstance(lines[0][1], BaseData):
+                output[case] = [i[1].code for i in lines if i[1]]
+                continue
+
             obj = OrderedDict()
             for i, codes in enumerate(lines, 1):
                 obj[i] = codes[:5]
@@ -409,8 +420,11 @@ def main(script, task='', case='', output=''):
 
     populate_all()
 
+    if task == '5':
+        task_5()
+
     # Perform a task which uses patient cases as input
-    if task in CASE_TASKS:
+    elif task in CASE_TASKS:
         cases = {name: obj for name, obj in PatientCase.ALL.items()
                     if (not case or name == case)}
         if not cases:
