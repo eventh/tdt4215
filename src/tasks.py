@@ -79,7 +79,7 @@ def task_5(medical=get_medical_terms()):
     relevant = lambda chapter: set(chapter.vector.keys()) & medical
     with open('etc/groups.json', 'r') as f:
         groups = json.load(f)
-    values = groups['Group 3']
+    values = groups['Group 14']
     for case_code, results in sorted(values.items(), key=itemgetter(0)):
         filtered = [Therapy.ALL[i] for i in results if i in Therapy.ALL]
         _precision([(c, None, None, relevant(c)) for c in filtered])

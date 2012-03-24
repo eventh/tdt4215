@@ -499,6 +499,55 @@ Kendall tau coefficients.
 
 \section{Task 5: Exchange evaluations}
 %-------------------------------------
+We have calculated precision at ten documents retrieved and R-precision
+for the groups which published their results of task 3, including our own
+results. Precision at ten can be seen in \autoref{tab:task5precision} while
+\autoref{tab:task5r} list R-precision. Group 2 was not included as their
+results did not contain any therapy-chapters. It is important to point out
+that other groups might have handled parsing of therapy-chapters differently,
+which would affect greatly the content of chapters and therefor the rankings.
+For example the content of a sub-chapter could be included or excluded in the
+parent chapter, we use the latter option.
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 5 precision at ten documents retrieved\label{tab:task5precision}}
+\begin{tabular}{c c c c c c}
+    \toprule
+	Case & Group 1 & Group 3 & Group 4 & Group 5 & Group 14 \\
+    \midrule
+	1 & 60\% & 60\% & 40\% & 80\% & 60\% \\
+	2 & 50\% & 70\% & 50\% & 80\% & 40\% \\
+	3 & 90\% & 60\% & 70\% & 90\% & 30\% \\
+	4 & 70\% & 30\% & 50\% & 70\% & 20\% \\
+	5 & 80\% & 60\% & 50\% & 70\% & 80\% \\
+	6 & 80\% & 30\% & 50\% & 80\% & 10\% \\
+	7 & 100\% & 40\% & 30\% & 80\% & 50\% \\
+	8 & 90\% & 50\% & 70\% & 80\% & 50\% \\
+    \midrule
+	Avg & 77.5\% & 50.0\% & 51.2\% & 78.8\% & 42.5\% \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp] \footnotesize \center
+\caption{Task 5 R-precision\label{tab:task5r}}
+\begin{tabular}{c c c c c c}
+    \toprule
+	Case & Group 1 & Group 3 & Group 4 & Group 5 & Group 14 \\
+    \midrule
+	1 & 0.67 & 0.67 & 0.50 & 0.75 & 0.67 \\
+	2 & 0.80 & 0.71 & 0.60 & 0.75 & 0.25 \\
+	3 & 0.89 & 0.67 & 0.71 & 0.89 & 0.33 \\
+	4 & 0.71 & 1.00 & 0.60 & 0.71 & 0.00 \\
+	5 & 0.88 & 0.67 & 0.40 & 0.71 & 0.75 \\
+	6 & 0.75 & 0.00 & 0.80 & 0.75 & 0.00 \\
+	7 & 1.00 & 0.50 & 0.00 & 0.88 & 0.20 \\
+	8 & 0.89 & 0.60 & 0.86 & 0.88 & 0.20 \\
+    \midrule
+	Avg & 0.82 & 0.60 & 0.56 & 0.79 & 0.30 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 
 \section{Task 6: Improving the ranking}
