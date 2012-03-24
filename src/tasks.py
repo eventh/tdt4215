@@ -110,8 +110,8 @@ def task_6a(case, limit=10):
     # Get all relevant chapters, scored for each hit, also get parent codes
     counter = Counter()
     def count_chapter(code, cls, weight):
-            codes = cls._chapter_map.get(code, [])
-            counter.update({i: weight * codes.count(i) for i in set(codes)})
+        codes = cls._chapter_map.get(code, [])
+        counter.update({i: weight * codes.count(i) for i in set(codes)})
 
     for code in case._icd_codes:
         count_chapter(code, ICD, 1)
