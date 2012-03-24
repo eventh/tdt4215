@@ -6,8 +6,35 @@
 \section{Limitations}
 One obvious limitation to the assignment was that only approved libraries could be used to solve the tasks. This point was up for negotiation, and other libraries could be used if approved by the staff. The students would start out by looking at the limited set of choices, and most probably choose one of the suggested. This limitation might have served a good cause; leading the students in to well know libraries that were sure to work for the given tasks.
 
-\section{Potential improvements}
+\section{Efficient and precise results}
+\subsection{Information retrieval system}
+The goal of the system was to provide clinicians with an efficient and precise search interface, to help them make therapy recommendations. The correctness of these recommendations is crucial for the system to be trusted by the users.
 
+To make the system fulfill the necessary properties, we had to make some fundamental architectural and design decisions.
+High performance had to be prioritized to make the system efficient. To achieve this we use the fast and lightweight programming language Python, and we convert all the input files to JSON format. By having files stored as JSON, the loading time is substantially reduced.
+
+As correctness is the most crucial property, we have devoted much of our time to tweak algorithms and manually check that the results corresponds with the patient cases. For the two first tasks, we use BM25F, which is a well known algorithm that uses probability to find the most relevant results. In task 3 we make use of a vector model to determine the proximity of the terms to calculate the relevance. In task 6 the probabilistic model and vector model from the prior tasks create a new function to find the most relevant results.    
+
+By aggregating a retrieval function based on the algorithms used in task 1,2 and 3, we end up with a system that comply with the initial requirements; efficient and precise. Mathematical ranking techniques like term frequency, inverse document frequency and term proximity are core parts of the system. These are sound and well known techniques, and used correctly they should give our system a very good therapy recommendation capability.
+
+\subsection{Task results}
+%----------------------
+To see that our results were correct during the work, we did manual evaluations of the results. We are not experts in the medical field, but when reading a case and the suggested result, we could easily determine if the result was relevant or not (at least to a certain degree). After a closer look at the 10 suggested results for each case, we saw that most of the suggested results were relevant.
+
+For task 1 and 2, where the probabilistic method is used, the results depends purely on the summed value of each term included in the query. This approach works, and in most cases the results are relevant. The problem is that terms should not be treated equally, some terms contains more value in the task of classifying than others. For instance the terms "motivert" and "sukkersyke", taken from case 1 sentence 4, should not be thought of as equally significant to the search. We eliminate parts of this problem by removing stopwords from the patient cases before we run the classification. In a perfect world the system would recognize words and understand the meaning/value in a given case, and weight them accordingly to get the perfect results. 
+
+For the therapy chapter classification in task 3, we used proximity of the terms to find the most relevant results. This should give more correct classifications than the probabilistic method used in task 1 and 2. Each patient case is compared to all therapy chapters to find the closest match, which is the most relevant result. The importance of individual terms are reduced, and instead all the text in a patient case is used to classify it. Making use of more information should yield better results.
+
+After a manual evaluation of the results from task 3, we can determine the following. Only one case retrieves low amount of relevant therapy chapters, but by looking at the R-precision we can tell that the chapters that actually were relevant must have been among the top results. Probably result 1, 2 and 3. For the other cases, we see the same tendency; R-precision values are high. This suggests that our algorithm for finding the relevant results is good. 
+
+It is important to consider how many therapy chapters that actually can be relevant for a case. It might only exist three relevant chapters for case 2, thereby the rest of the results are not relevant. In such cases it is important to have the relevant chapters as top results, which our system seems to handle well.
+
+\subsection{System results}
+The final system make use of all the methods used to solve the tasks. This is the system we have developed to support clinicians in their work. Evaluating the results from the system give great insight in what level of quality and correctness they can expect from it. If a doctor were to base treatment of a patient on the results of our system, it is crucial to know the reliability of the results. A consequence of incorrect results could lead to wrong treatment and even death.
+
+
+\section{Potential improvements}
+A potential improvement to the system would be to use prior knowledge about patient cases as extra input to our algorithms. Provided with case and correct classification, the system could weight treatments as more probable based on history and similarity. It could well be that a patient case does not give an exact image of what the patient's problem really is, and then it would be beneficial to have a big reference base to help classifying. 
 
 
 
