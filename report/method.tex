@@ -147,8 +147,14 @@ returned the first 10 results.
 \section{Task 4: Evaluation}
 %---------------------------
 \label{sec:task4}
-The problem with automatic evaluation is deciding if a retrieved document
-is relevant or not. As the queries in this task are patient cases, which is
+Evaluating results for a given query give great insight in what level of quality
+and correctness you can expect from an information retrieval system. This evaluation requires human relevance judgement. 
+The problem is that it is a complex task, 
+which is difficult and time consuming for humans to
+do. It would be beneficial to be able to automatically evaluate the results.
+
+Automatic evaluation has the problem of deciding if a retrieved document
+is relevant or not without human intervention. As the queries in this task are patient cases, which is
 known beforehand, we can create a criteria for whether a document is relevant
 or not. We have simply taken all the words in the patient cases and created a
 list of those with medical importance, and if both the query and a retrieved
@@ -168,7 +174,7 @@ relative ordering of two rankings.
 
 \section{Task 5: Exchange evaluations}
 %-------------------------------------
-Task 5 is to evaulate each task 4 method used by other groups.
+Task 5 is to evaluate each task 4 method used by other groups.
 We have received reports of the results of task 4 from six other groups. 
 None of the other groups seems to have actually implemented automatic
 evaluation of results.
@@ -178,7 +184,7 @@ evaluation of results.
 		matching, but task 3 match patient case with therapy chapters, while
 		task 1 and 2 match patient case with ICD and ATC codes. Its not
 		obvious how we would achieve such matching.
-	\item[Group 3] suggest we could calcuate harmonic mean and E-measure.
+	\item[Group 3] suggest we could calculate harmonic mean and E-measure.
 	\item[Group 4] suggest we use user feedback for automatic evaluation of
 		results.
 	\item[Group 5] suggest no method for automatic evaluation.
