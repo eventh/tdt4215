@@ -23,7 +23,7 @@ store as attributes on a single ICD object. ICD-10 codes that lack both label
 and code\_compacted we also throw away.
 
 \subsection{ATC}
-Parsing of ATC is very staight forward. Each line represent a code, title
+Parsing ATC is very staight forward. Each line represent a code, title
 pair where codes are not unique.
 
 \subsection{Therapy chapters}
@@ -50,8 +50,8 @@ created a text file for each case, and made sure they were in utf-8 charset.
 \section{Stopwords}
 %------------------
 To reduce the number of terms in documents, and to remove words which provide
-little or no relevant information value, we removed stopwords.
-We used a list of Norwegian stopwords in both Bokmål and Norwegian Nynorsk
+little or no relevant information value, we remove stopwords.
+We use a list of Norwegian stopwords in both Bokmål and Norwegian Nynorsk
 which we found
 online\footnote{Stopword source: \url{http://www.wisweb.no/999/147/33899-170.html}},
 and we added a few words ourself. A complete list of these stopwords can
@@ -61,14 +61,12 @@ be found in \autoref{tab:stopwords} in \autoref{appendix}.
 \section{Task 1: Autocoding ICD-10}
 %----------------------------------
 \label{sec:task1}
-The first task was to find the most relevant ICD-10 code and therapy chapter for each sentence in the cases. The ICD-10 codes have multiple fields that can be used to make this classification. We decided to solve task 1 in two different ways.
+The first task was to find the most relevant ICD-10 code and therapy chapter for each sentence in the cases. The ICD-10 codes have multiple fields that can be used to make this classification. We decided to solve task 1a in two different ways.
 \begin{description}
 	\item[Method A] For each ICD-10 code, use only the label to find relevant codes for each sentence in the cases. 
 	\item[Method B] For each ICD-10 code, use all text to find relevant codes for each sentence in the cases.
 \end{description}
-We have defined all text as: label, terms, synonyms and inclusions.
-% ha med?
-% A therapy chapter can be a chapter, a sub or subsub chapter. 
+We have defined all text as the following fields: label, terms, synonyms and inclusions.
 
 \paragraph{Scoring algorithm}
 To score and sort the results, we use the default scoring module given by Whoosh\footnote{Scoring module: \url{http://packages.python.org/Whoosh/api/scoring.html\#whoosh.scoring}}. The module use the scoring algorithm BM25F to calculate the rankings of each code, and it returns a ranked list over relevant codes for each sentence.
