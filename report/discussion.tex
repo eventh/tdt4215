@@ -4,7 +4,9 @@
 \label{cha:discussion}
 
 \section{Limitations}
-One obvious limitation to the assignment was that only approved libraries could be used to solve the tasks. This point was up for negotiation, and other libraries could be used if approved by the staff. The students would start out by looking at the limited set of choices, and most probably choose one of the suggested. This limitation might have served a good cause; leading the students in to well know libraries that were sure to work for the given tasks.
+One obvious limitation to the assignment was that only approved libraries could be used to solve the tasks. This point was up for negotiation, and other libraries could be used if approved by the staff. Typically the students would start out by looking at the limited set of choices, and most probably choose one of the suggested. This limitation might have served a good cause; leading the students in to well know libraries that were sure to work for the given tasks.
+
+Another limitation was the lack of domain knowledge. When we do manual evaluation of results to a patient case, we can not be completely sure that the results are relevant. It might look relevant to a untrained eye. A domain expert would also discover that relevant results are missing in a result set. Testing in a real environment would overcome this limitation, see \autoref{sec:potentialimp} for more details.
 
 \section{Efficient and precise results}
 \subsection{Information retrieval system}
@@ -34,7 +36,22 @@ The final system make use of all the methods used to solve the tasks. This is th
 
 
 \section{Potential improvements}
+\label{sec:potentialimp}
+This section describes possible improvements to the system. Improvements to fields such as user experience, usability, performance, algorithms and results. This could be accomplished by tweaking of the system on our own or by doing in-field testing with real patients and clinicians. The latter is the most preferred one. 
+
+\subsection{Reference collection}
 A potential improvement to the system would be to use prior knowledge about patient cases as extra input to our algorithms. Provided with case and correct classification, the system could weight treatments as more probable based on history and similarity. It could well be that a patient case does not give an exact image of what the patient's problem really is, and then it would be beneficial to have a big reference base to help classifying. 
+
+\subsection{In-field testing}
+By doing a field test of the system, we would collect valuable data that could tell us: how the system would be used, how experts want it to be, see how good our results really are, is the system to slow to be used on real cases, is the user interface not intuitive and so on. Experts would get hands-on experience and could quickly determine pros and cons of the system. We believe that this is the most important point in improving the system considerably.
+
+\subsection{More input}
+If the system was deployed in a real environment, the results from prior cases could be given as extra input to the algorithms. This input could make up a probabilistic model of what that classifications that are often correct, often wrong or where uncertainties often occur. All extra information assist the system in giving the best possible results. Clinicians could record what the system determined as treatment, what they determined as treatment, and then weeks after the treatment see if it was a correct classification or not, and feed this back in to the system.
+
+
+
+
+
 
 
 
