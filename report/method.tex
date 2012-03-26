@@ -5,7 +5,8 @@
 This section describes methods used to solve the tasks of the assignment, including
 preprocessing and parsing of input files. 
 
-The first two tasks are solved using a probablistic method. The third task includes a more complex solution; both the probablistic model and the relative proximity of terms are taken into account to find the best results. For task 6, we combine the results from prior tasks to achive the most correct matching of documents for each patient case. This matching will be compared to a gold standard, to see how well our classification really is. 
+The first two tasks are solved using a probabilistic method. The third task includes a more complex solution; both the probabilistic model and the relative proximity of terms are taken into account to find the best results. For task 6, we combine the results from prior tasks to achieve the most correct matching of documents for each patient case. This matching will be compared to a gold standard, to see how well our classification really is.
+
 
 \section{Preprocessing and parsing}
 %----------------------------------
@@ -23,7 +24,7 @@ store as attributes on a single ICD object. ICD-10 codes that lack both label
 and code\_compacted we also throw away.
 
 \subsection{ATC}
-Parsing ATC is very staight forward. Each line represent a code, title
+Parsing ATC is very straight forward. Each line represent a code, title
 pair where codes are not unique.
 
 \subsection{Therapy chapters}
@@ -92,12 +93,13 @@ Applied to our task, the function uses the following as set of documents:
 \item[1a.] The ICD-10 codes, each code representing a document.
 \item[1b.] The therapy chapters, each chapter representing a document. 
 \end{description}
- For each patient case, there are several sentences. A sentence forms one query, where the words in the sentence are classified as terms. By using BM25F, we get a ranked list of best matching documents to the sentence, and thereby an indication of what is wrong with the patient. 
+For each patient case, there are several sentences. A sentence forms one query, where the words in the sentence are classified as terms. By using BM25F, we get a ranked list of best matching documents to the sentence, and thereby an indication of what is wrong with the patient. 
 
 
 \section{Task 2: Autocoding ATC}
 %-------------------------------
-The second task is very similar to the first, the only difference is that the set of documents are ATC-classifications. As mentioned, each classification consist of a code and a title. The title is the field that we use to find the most relevant classification as descibed in task 1. The fact that we convert all input files to JSON, make our use of BM25F generalized and applicable to all kind of document sets.
+The second task is very similar to the first, the only difference is that the set of documents are ATC-classifications. As mentioned, each classification consist of a code and a title. The title is the field that we use to find the most relevant classification as described in task 1.
+
 
 \section{Task 3: Ranking using vector models}
 %--------------------------------------------
@@ -117,7 +119,7 @@ probabilistic inverse frequency (\( \log(\frac{N - n_{i}}{n_{i}}) \)).
 \begin{description}
 	\item[Method A] log normalization and inverse frequency as seen in \autoref{eq:tfidf}
 	\item[Method B] log normalization and probabilistic inverse frequency
-	\item[Method C] raw frequency and inverse frequency 
+	\item[Method C] raw frequency and inverse frequency
 	\item[Method D] raw frequency and probabilistic inverse frequency
 \end{description}
 \( f_{i,j} \) is the frequency of term \( i \) in document
@@ -141,7 +143,7 @@ in \autoref{eq:sim}, where \( d_{j} \) is the term vector of therapy chapter \( 
 				  &= \frac{\sum_{i=1}^{t} w_{i,j} \times w_{i,q}}{\sqrt{\sum_{i=1}^{t} w_{i,j}^2} \times \sqrt{\sum_{i=1}^{t} w_{i,q}^2}}
 \end{align}
 We sorted results based on their similarity score (highest first), and
-returned the first 10 results.
+returned the first ten results.
 
 
 \section{Task 4: Evaluation}
@@ -202,7 +204,7 @@ of relevant ICD-10 and ATC codes, and giving each ICD-10 and ATC code a list
 of relevant therapy chapters. Each patient case can have the same code listed
 several times, one for each line potentially. Each code can also have the same
 chapter listed several times. Therefor we created a list of the relevant
-therapy chapers for each patient case based on task 1 and 2 results, with a
+therapy chapters for each patient case based on task 1 and 2 results, with a
 weight for each with the number of times they are listed. We use the
 hierarchical structure of the codes to add relevant chapters for parent codes,
 but with a smaller weight (0.1) for each chapter.
