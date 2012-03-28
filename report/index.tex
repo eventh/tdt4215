@@ -67,7 +67,7 @@ Weilin \textsc{Wang}
 
 % Bottom of the page
 \vfill
-{\large Word count: 5065}\\[0.2cm]
+{\large Word count: 5125}\\[0.2cm]
 {\large \today}
 \end{center}
 \end{titlepage}
@@ -144,13 +144,17 @@ Classifying treatment to patients can be complicated and error-prone. It could b
 %------------------
 \autoref{tab:stopwords} contains a list of Norwegian stopwords used on search
 queries such as patient cases and therapy chapters.
-An initial list were %% TODO: add a reference to
-Additional words with low relevenance, but which are frequently used in
-patient cases, have been added.
+We found started with an initial list of stopwords that we found
+online\footnote{Stopword source: \url{http://www.wisweb.no/999/147/33899-170.html}}.
+We added additional words with low relevance that are frequently used in
+patient cases.
 
 
 \section{Medical terms}
 %----------------------
+\autoref{tab:medicalterms} list medical terms which we found in patient cases.
+These are used for automatically evaluating if a search result is relevant or
+not.
 
 
 \section{Patient cases}

@@ -40,7 +40,7 @@ stored on the objects. We stored links as a list on each object, while we
 preserved their text in the object text. Sections which list relevant drugs
 were removed from the text but stored as they might be useful later.
 
-We manually removed subchapter T17.2 and T19.7 as they had no title nor
+We manually removed sub-chapter T17.2 and T19.7 as they had no title nor
 contained any text.
 
 \subsection{Patient cases}
@@ -179,22 +179,28 @@ relative ordering of two rankings.
 Task 5 is to evaluate each task 4 method used by other groups.
 We have received reports of the results of task 4 from six other groups. 
 None of the other groups seems to have actually implemented automatic
-evaluation of results. For each of the identified automatic evaluation methods, we have written a short evaluation.
+evaluation of results. For each of the identified automatic evaluation methods,
+we have written a short evaluation.
 
-\begin{description}
-	\item[Group 2] suggest we compare results of task 3 with ICD and ATC
-		matching, but task 3 match patient case with therapy chapters, while
-		task 1 and 2 match patient case with ICD and ATC codes. 
+\paragraph{Group 2} suggest we compare results of task 3 with ICD and ATC
+matching, but task 3 match patient case with therapy chapters, while task 1
+and 2 match patient case with ICD and ATC codes. While this might be a good idea,
+it is not obvious how they would achieve the matching by means of implementation.
 
-The idea to use these three measures to generate a more trustworthy result is very clever, but it is not
-		obvious how they would achieve the matching by means of implementation.
-	\item[Group 3] suggest we could calculate harmonic mean and E-measure.
-	\item[Group 4] suggest we use user feedback for automatic evaluation of
-		results.
-	\item[Group 5] suggest no method for automatic evaluation. They states that an automatic evaluation would be too subjective.
-	\item[Group 8] 
-	\item[Group 14]
-\end{description}
+\paragraph{Group 3} suggest we could calculate harmonic mean and E-measure,
+which would require calculating precision and recall. We are not sure how we
+would be able to calculate recall as we do not have knowledge of all relevant
+documents.
+
+\paragraph{Group 4} suggest we use user feedback for automatic evaluation of
+results.
+
+\paragraph{Group 5} suggest no method for automatic evaluation. They states
+that an automatic evaluation would be too subjective.
+
+\paragraph{Group 8}
+
+\paragraph{Group 14}
 
 
 \section{Task 6: Improving the ranking}
@@ -226,5 +232,7 @@ We will evaluate these results with the methods described in
 
 \section{Task 7: Gold standard}
 %------------------------------
+We have been unable to complete this task as a gold standard has not been
+provided.
 
 
