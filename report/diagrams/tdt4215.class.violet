@@ -8,6 +8,7 @@
       <void property="contents"> 
        <void property="text"> 
         <string>get_stopwords()
+get_medical_terms()
 populate_all()</string> 
        </void> 
       </void> 
@@ -246,6 +247,10 @@ task_1_alt()
 task_2()
 task_3()
 task_4()
+task_5()
+task_6a
+task_6b
+task_7
 output_json()
 output_latex()
 output_print()
@@ -279,7 +284,7 @@ output_print()
    <object idref="PackageNode1"/> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>49.0</double> 
+     <double>41.0</double> 
      <double>68.0</double> 
     </void> 
    </object> 
