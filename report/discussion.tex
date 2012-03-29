@@ -4,7 +4,9 @@
 \label{cha:discussion}
 In this chapter we discuss task results, limitations to the assignment and look at potential improvements to the system. 
 
+
 \section{Efficient and precise results}
+%--------------------------------------
 The goal of the system was to provide clinicians with an efficient and precise search interface, to help them make therapy recommendations. The correctness of these recommendations is crucial for the system to be trusted by the users.
 
 \subsection{Information retrieval system}
@@ -16,7 +18,6 @@ As correctness is the most crucial property, we devoted much of our time to twea
 By aggregating a retrieval function based on the algorithms used in task 1,2 and 3, we end up with a system that comply with the initial requirements; efficient and precise. Mathematical ranking techniques like term frequency, inverse document frequency and term proximity are core parts of the system. These are sound and well known techniques, and used correctly they should give our system a very good therapy recommendation capability.
 
 \subsection{Task results}
-%----------------------
 To see that our results were correct during the work, we did manual evaluations of the results. We are not experts in the medical field, but when reading a case and the suggested result, we could easily determine if the result was relevant or not (at least to a certain degree). After a closer look at the 10 suggested results for each case, we saw that most of the suggested results were relevant.
 
 For task 1 and 2, where the probabilistic method is used, the results depends purely on the summed value of each term included in the query. This approach works, and in most cases the results are relevant. The problem is that terms should not be treated equally, some terms contains more value in the task of classifying than others. For instance the terms "motivert" and "sukkersyke", taken from case 1 sentence 4, should not be thought of as equally significant to the search. We eliminate parts of this problem by removing stopwords from the patient cases before we run the classification. In a perfect world the system would recognize words and understand the meaning/value in a given case, and weight them accordingly to get the perfect results. 
@@ -30,14 +31,23 @@ It is important to consider how many therapy chapters that actually can be relev
 \subsection{System results}
 The final system make use of all the methods used to solve the tasks. This is the system we have developed to support clinicians in their work. Evaluating the results from the system give great insight in what level of quality and correctness they can expect from it. If a doctor were to base treatment of a patient on the results of our system, it is crucial to know the reliability of the results. A consequence of incorrect results could lead to wrong treatment and even death.
 
+
 \section{Limitations}
+%--------------------
 An obvious limitation to the assignment was that only approved libraries could be used to solve the tasks. This point was up for negotiation, and other libraries could be used if approved by the staff. Typically the students would start out by looking at the limited set of choices, and most probably choose one of the suggested. This limitation might have served a good cause; leading the students in to well know libraries that were sure to work for the given tasks.
+We spend a significant amount of time creating the parser of therapy chapters using only standard Python libraries, while we believe we could have solved this challenge faster using a well-known Python library
+html5lib\footnote{html5lib: \url{http://code.google.com/p/html5lib/}}.
 
 Another limitation was the lack of domain knowledge. When we do manual evaluation of results to a patient case, we can not be completely sure that the results are relevant. It might look relevant to a untrained eye. A domain expert would also discover that relevant results are missing in a result set. Testing in a real environment would overcome this limitation, see \autoref{sec:potentialimp} for more details.
 
+
 \section{Potential improvements}
+%-------------------------------
 \label{sec:potentialimp}
-This section describes possible improvements to the system. Improvements to fields such as user experience, usability, performance, algorithms and results. This could be accomplished by tweaking of the system on our own or by doing in-field testing with real patients and clinicians. The latter is the most preferred one. 
+This section describes possible improvements to the system. Improvements to fields such as user experience, usability, performance, algorithms and results. This could be accomplished by tweaking of the system on our own or by doing in-field testing with real patients and clinicians. The latter is the most preferred one.
+
+\subsection{Stemmer}
+We did not use any stemming on the documents, as we were unaware of any known Norwegian stemmer algorithms, but we believe using a stemmer might improve the system.
 
 \subsection{Reference collection}
 A potential improvement to the system would be to use prior knowledge about patient cases as extra input to our algorithms. Provided with case and correct classification, the system could weight treatments as more probable based on history and similarity. It could well be that a patient case does not give an exact image of what the patient's problem really is, and then it would be beneficial to have a big reference base to help classifying. 
@@ -48,12 +58,6 @@ By doing a field test of the system, we would collect valuable data that could t
 \subsection{More input}
 If the system was deployed in a real environment, the results from prior cases could be given as extra input to the algorithms. This input could make up a probabilistic model of what that classifications that are often correct, often wrong or where uncertainties often occur. All extra information assist the system in giving the best possible results. Clinicians could record what the system determined as treatment, what they determined as treatment, and then weeks after the treatment see if it was a correct classification or not, and feed this back in to the system.
 
-
-
-
-
-
-
-
-
+\subsection{N-grams}
+Instead of using a bag of words based vector space model, a possible improvement might be to test letter-based n-grams, where each vector cell consist of for example 4 letters found next to each other in documents. Or possibly word-based n-grams like bigrams or trigrams. Such methods would have the benefit of also taking into account proximity of letters and/or words.
 
