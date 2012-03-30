@@ -9,8 +9,8 @@ goto :eof
 :make
 	pdflatex -output-directory tmp index.tex
 	pdflatex -output-directory tmp index.tex
-	move /Y tmp\index.pdf index.pdf
-	start index.pdf
+	move /Y tmp\index.pdf presentation.pdf
+	start presentation.pdf
 	goto :eof
 
 :clean

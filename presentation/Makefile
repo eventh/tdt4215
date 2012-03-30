@@ -3,8 +3,8 @@
 	@mkdir .tmp -p
 	@pdflatex -output-directory .tmp index.tex
 	@pdflatex -output-directory .tmp index.tex
-	@mv .tmp/index.pdf index.pdf
-	evince index.pdf
+	@mv .tmp/index.pdf presentation.pdf
+	evince presentation.pdf
 
 clean:
 	@echo "Removing LaTeX build files"
