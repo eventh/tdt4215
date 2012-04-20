@@ -49,23 +49,27 @@ Weilin Wang%
 \section{Methods and results}
 %============================
 
+%--------------------------
+\subsection{ICD-10 and ATC}
+%--------------------------
+\begin{frame}{Autocoding ICD-10 and ATC codes}
+\begin{itemize}
+	\item Bag-of-words scoring algorithm
+	\item BMF25F
+\end{itemize}
+\end{frame}
+
 %------------------------
-\subsection{Task 1 and 2}
+\subsection{Vector model}
 %------------------------
-\begin{frame}{Task 1 and 2 method}
-We've used Whoosh + BMF25F something something
-\end{frame}
-
-\begin{frame}{Task 1 and 2 results}
-\end{frame}
-
-%------------------
-\subsection{Task 3}
-%------------------
-\begin{frame}{Task 3 method}
-\end{frame}
-
-\begin{frame}{Task 3 result}
+\begin{frame}{Clinical notes and therapy similarities}
+\begin{description}
+	\item[Algorithm] Vector space model based on TF-IDF
+	\item[Method A] log normalization and inverse frequency
+	\item[Method B] log normalization and probabilistic inverse frequency
+	\item[Method C] raw frequency and inverse frequency
+	\item[Method D] raw frequency and probabilistic inverse frequency
+\end{description}
 \end{frame}
 
 %------------------
