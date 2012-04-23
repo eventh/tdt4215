@@ -1,0 +1,38 @@
+Slide 1: Welcome
+-----------------
+Good day. My name is Even, over there is Terje and Weilin.
+We are group 1, and this is our presentation.
+
+
+Slide 2: System architecture
+-----------------------------
+Lets talk about system architecture.
+
+First, Whoosh. Indexing and searching for task 1 and 2.
+
+We decided early ... to store to disk as JSON.
+
+data.py contains classes representing input ... methods for storing to and from JSON.
+
+parse.py .. icd10 with a standard XML parser. therapy chapters with a custom HTML parser we wrote.
+
+preprocessed to convert everything to UTF-8.
+
+tasks.py implements the different tasks in the project, with a function for each.
+
+
+Slide 6: Improvement based on result evaluation
+------------------------------------------------
+Lets talk about result evaluation.
+
+We simply defined a set of words as relevant medical terms. Manually.
+If both a patient case and a therapy chapter contained one of these words,
+we deemed the chapter to be a relevant result.
+
+Crude, but sufficient to allow automatic evaluation.
+
+With automatic evaluation we were able to tweak individual parts of our
+system and see how it affected the end results. It gave us feedback
+for manually optimizing the classification algorithm. But it could also
+be used for automatic optimizations.
+
