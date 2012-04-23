@@ -1,4 +1,6 @@
 ﻿# Ekorn
+*.nav
+*.snm
 *.aux
 *.log
 *.lof
