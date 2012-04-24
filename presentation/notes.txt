@@ -21,7 +21,28 @@ preprocessed to convert everything to UTF-8.
 tasks.py implements the different tasks in the project, with a function for each.
 
 
-Slide 6: Improvement based on result evaluation
+Slide 3: Workflow --- TERJE
+Slide 4: Autocoding --- TERJE
+Slide 5: Vector model --- TERJE
+
+
+Slide 6: Improve results:
+----------------------------
+For the third iteration we combine the results of the previous two iterations.
+
+We use the hierarchical nature of the ICD and ATC codes to boost the score of
+parents. Parent codes to any relevant codes will recieve a score of 0.1 of
+their childrens score.
+
+We also take into account the hierarchical nature of therapy chapters.
+So parent chapters will recieve a boost to their score depending on how many
+children are found to be relevant.
+
+Finally we merge these values with the results of iteration 2 by weighting
+them so they are almost equal.
+
+
+Slide 7: Improvement based on result evaluation
 ------------------------------------------------
 Lets talk about result evaluation.
 
@@ -35,4 +56,18 @@ With automatic evaluation we were able to tweak individual parts of our
 system and see how it affected the end results. It gave us feedback
 for manually optimizing the classification algorithm. But it could also
 be used for automatic optimizations.
+
+We calculated precision at 10 documents seen and R-precision, and as you
+can see our results are very good based in this evaluation method.
+
+
+Slide 8: Our results --- WEILIN
+Slide 9: Discussion --- WEILIN
+Slide 10: Summary --- WEILIN
+
+
+Slide 11: Any questions
+-------------------------
+That concludes our presentation, are there any questions?
+
 
